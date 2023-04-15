@@ -1,6 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
-import io.inferiority.demo.springsecurity.model.User;
+import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.apache.commons.codec.binary.Hex;
@@ -37,8 +37,8 @@ public class AuthServiceImpl implements IAuthService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public void login(User user) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+    public void login(UserVo user) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         //将用户存入上下文中
@@ -52,12 +52,11 @@ public class AuthServiceImpl implements IAuthService {
             throw new RuntimeException("parse jwt key error");
         }
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        // TODO: 2023/4/15 密码不放进token中
         response.setHeader(tokenHeader, JwtUtil.createJwt(privateKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
     }
 
     @Override
-    public void logout(User user) {
+    public void logout(UserVo user) {
         //清除上下文
         SecurityContextHolder.clearContext();
     }
