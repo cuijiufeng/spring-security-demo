@@ -12,13 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @Class HelpController
  * @Date 2023/4/14 15:46
  */
-@RequestMapping("help")
 @RestController
+@RequestMapping("help")
 public class HelpController {
 
-    @PreAuthorize("hasAnyAuthority('help:hello')")
+    @PreAuthorize("hasAnyRole('ROLE_admin')")
     @GetMapping("/hello")
     public JsonResult<Object> help() {
         return JsonResultUtil.successJson("help security");
+    }
+
+    @PreAuthorize("hasAnyAuthority('help:other')")
+    @GetMapping("/other")
+    public JsonResult<Object> other() {
+        return JsonResultUtil.successJson("help other");
     }
 }

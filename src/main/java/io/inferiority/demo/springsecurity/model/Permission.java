@@ -16,6 +16,9 @@ import java.io.Serializable;
 public class Permission implements Serializable {
     @TableId
     private String id;
-    private String name;
+    private String menuCode;
+    private String menuName;
+    private String permissionCode;
+    private String permissionName;
     private Boolean required;
 }

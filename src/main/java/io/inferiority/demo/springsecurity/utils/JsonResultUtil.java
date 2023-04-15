@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.utils;
 
+import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
 import io.inferiority.demo.springsecurity.model.JsonResult;
 
 /**
@@ -8,6 +9,10 @@ import io.inferiority.demo.springsecurity.model.JsonResult;
  * @author: cjf
  */
 public class JsonResultUtil {
+    public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.UNKNOWN);
+    public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.UNAUTHORIZED);
+    public static final JsonResult<BaseErrorEnum> FORBIDDEN = JsonResultUtil.errorJson(403, BaseErrorEnum.FORBIDDEN);
+
     /**
      * 返回成功，无交互数据
      * @return java.lang.String json串
@@ -31,7 +36,7 @@ public class JsonResultUtil {
      * @return io.inferiority.demo.springsecurity.model.JsonResult<io.inferiority.demo.springsecurity.model.JsonResult.ErrorData>
      * @throws
     */
-    public static JsonResult<JsonResult.ErrorData> errorJson(int code, JsonResult.ErrorData error) {
+    public static JsonResult<BaseErrorEnum> errorJson(int code, BaseErrorEnum error) {
         return new JsonResult<>(code, error);
     }
 }

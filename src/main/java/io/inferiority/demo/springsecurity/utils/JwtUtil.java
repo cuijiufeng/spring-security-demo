@@ -1,14 +1,23 @@
 package io.inferiority.demo.springsecurity.utils;
 
-import io.jsonwebtoken.Claims;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.IOException;
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,7 +30,7 @@ public class JwtUtil {
     private JwtUtil() {
     }
 
-    public static String createJwt(Key priv, Map<String, Object> data, long duration) {
+    public static String createJwt(Key priv, Object data, long duration) {
         Objects.requireNonNull(priv, "private key can't be null");
         long nowMillis = System.currentTimeMillis();
         long expMillis = nowMillis + duration;
@@ -31,16 +40,39 @@ public class JwtUtil {
                 .setIssuer("easysec")
                 .setIssuedAt(new Date(nowMillis))
                 .setExpiration(new Date(expMillis))
-                .addClaims(data)
+                .addClaims(Collections.singletonMap(ADDITIONAL, data))
                 .signWith(SignatureAlgorithm.RS256, priv);
         return builder.compact();
     }
 
-    public static Claims parseJwt(Key pub, String token){
+    public static HashMap<String, Object> parseJwt(Key pub, String token){
         Objects.requireNonNull(pub, "public key can't be null");
         if (StringUtils.isBlank(token)) {
             throw new NullPointerException("the token can not be null");
         }
-        return Jwts.parser().setSigningKey(pub).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(pub).parseClaimsJws(token).getBody().get(ADDITIONAL, HashMap.class);
+    }
+
+    public static class UserVoJsonSerialize extends JsonSerializer<SimpleGrantedAuthority> {
+        @Override
+        public void serialize(SimpleGrantedAuthority value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            if (value == null) {
+                gen.writeNull();
+            } else {
+                gen.writeString(value.getAuthority());
+            }
+        }
+
+    }
+    public static class UserVoJsonDeserialize extends JsonDeserializer<SimpleGrantedAuthority> {
+        @Override
+        public SimpleGrantedAuthority deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+            if (p.getValueAsString() == null) {
+                return null;
+            } else {
+                return new SimpleGrantedAuthority(p.getValueAsString());
+            }
+        }
+
     }
 }

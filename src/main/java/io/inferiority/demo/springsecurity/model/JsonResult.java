@@ -21,15 +21,4 @@ public class JsonResult<T> implements Serializable {
         this.code = code;
         this.data = data;
     }
-
-    @Data
-    public static class ErrorData {
-        private String err;
-        private String msg;
-
-        public ErrorData(String err, String msg) {
-            this.err = err;
-            this.msg = msg;
-        }
-    }
 }

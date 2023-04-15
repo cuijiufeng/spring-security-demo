@@ -1,16 +1,15 @@
 package io.inferiority.demo.springsecurity.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.inferiority.demo.springsecurity.model.vo.UserVo;
+import io.inferiority.demo.springsecurity.model.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author cuijiufeng
- * @Class UserMapper
- * @Date 2023/4/14 16:02
+ * @date 2023/4/15 17:47
  */
 @Mapper
 @Repository
-public interface UserMapper extends BaseMapper<UserVo> {
+public interface RoleMapper extends BaseMapper<Role> {
 }

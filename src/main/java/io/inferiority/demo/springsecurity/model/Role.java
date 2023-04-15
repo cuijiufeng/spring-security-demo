@@ -3,7 +3,6 @@ package io.inferiority.demo.springsecurity.model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,7 +14,7 @@ import java.util.Date;
  */
 @Data
 @TableName("sys_role")
-public class Role implements Serializable, GrantedAuthority {
+public class Role implements Serializable {
     @TableId
     private String id;
     private String name;
@@ -23,9 +22,4 @@ public class Role implements Serializable, GrantedAuthority {
     private Integer level;
     private String createUser;
     private Date createTime;
-
-    @Override
-    public String getAuthority() {
-        return name;
-    }
 }
