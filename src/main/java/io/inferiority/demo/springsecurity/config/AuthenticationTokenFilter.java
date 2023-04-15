@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,24 +57,32 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         }
         // 1、从请求头中获取token，如果请求头中不存在token
         String token = request.getHeader(tokenHeader);
-        if(StringUtils.isBlank(token)) {
+        try {
+            // 2、对token进行解析
+            Map<String, Object> user = JwtUtil.parseJwt(jwtPubKey, token);
+            UserVo userVo = new ObjectMapper().convertValue(user, UserVo.class);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, userVo.getAuthorities()) ;
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            // 5、放行
+            filterChain.doFilter(request , response);
+
+            //刷新token
+            token = JwtUtil.createJwt(jwtPrivKey, user, tokenDuration.toMillis());
+            log.debug("refresh token: {}", token);
+            response.setHeader(tokenHeader, token);
+        } catch (ExpiredJwtException e) {
+            log.warn("-------------------- Jwt is expire! --------------------: {}", e.getMessage());
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
             response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            return;
+        } catch (NullPointerException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException e) {
+            log.warn("-------------------- invalid token! --------------------: {}", e.getMessage());
+            response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNKNOWN));
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         }
-
-        // 2、对token进行解析
-        Map<String, Object> user = JwtUtil.parseJwt(jwtPubKey, token);
-        UserVo userVo = new ObjectMapper().convertValue(user, UserVo.class);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, userVo.getAuthorities()) ;
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        // 5、放行
-        filterChain.doFilter(request , response);
-
-        //刷新token
-        token = JwtUtil.createJwt(jwtPrivKey, user, tokenDuration.toMillis());
-        log.debug("refresh token: {}", token);
-        response.setHeader(tokenHeader, token);
     }
 }

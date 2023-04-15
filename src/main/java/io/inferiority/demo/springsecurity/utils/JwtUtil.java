@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
@@ -47,9 +46,7 @@ public class JwtUtil {
 
     public static HashMap<String, Object> parseJwt(Key pub, String token){
         Objects.requireNonNull(pub, "public key can't be null");
-        if (StringUtils.isBlank(token)) {
-            throw new NullPointerException("the token can not be null");
-        }
+        Objects.requireNonNull(token, "token can't be null");
         return Jwts.parser().setSigningKey(pub).parseClaimsJws(token).getBody().get(ADDITIONAL, HashMap.class);
     }
 
