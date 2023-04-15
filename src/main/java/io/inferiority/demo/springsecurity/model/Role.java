@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author cuijiufeng
@@ -18,6 +19,10 @@ public class Role implements Serializable, GrantedAuthority {
     @TableId
     private String id;
     private String name;
+    private String parentId;
+    private Integer level;
+    private String createUser;
+    private Date createTime;
 
     @Override
     public String getAuthority() {

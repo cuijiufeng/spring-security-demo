@@ -2,6 +2,7 @@ package io.inferiority.demo.springsecurity.web;
 
 import io.inferiority.demo.springsecurity.model.JsonResult;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelpController {
 
+    @PreAuthorize("hasAnyAuthority('help:hello')")
     @GetMapping("/hello")
     public JsonResult<Object> help() {
-        return JsonResultUtil.successJson("help - hello security");
+        return JsonResultUtil.successJson("help security");
     }
 }

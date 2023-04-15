@@ -6,8 +6,10 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author cuijiufeng
@@ -19,35 +21,26 @@ import java.util.Collection;
 public class User implements Serializable, UserDetails {
     @TableId
     private String id;
+    @NotEmpty(message = "用户号不能为空")
     private String username;
+    @NotEmpty(message = "密码不能为空")
     private String password;
-    private Boolean accountExpired;
-    private Boolean credentialsExpired;
-    private Boolean accountLocked;
-    private Boolean enabled;
+    private PasswordIntensity passwordIntensity;
+    private String roleId;
+    private Date createTime;
+    private Date lastLoginTime;
+    private Date lastUpdatePasswordTime;
+    private boolean accountNonExpired;
+    private boolean credentialsNonExpired;
+    private boolean accountNonLocked;
+    private boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+    public enum  PasswordIntensity {
+        LOW,MEDIUM,HIGH
     }
 }

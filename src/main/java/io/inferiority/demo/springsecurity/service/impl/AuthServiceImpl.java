@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class AuthServiceImpl implements IAuthService {
 
         if (Objects.isNull(authenticate)) {
             //用户名密码错误
-            throw new RuntimeException();
+            throw new UsernameNotFoundException("用户不存在");
         }
 
         //将用户存入上下文中

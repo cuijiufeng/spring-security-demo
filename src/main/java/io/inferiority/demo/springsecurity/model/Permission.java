@@ -17,4 +17,5 @@ public class Permission implements Serializable {
     @TableId
     private String id;
     private String name;
+    private Boolean required;
 }

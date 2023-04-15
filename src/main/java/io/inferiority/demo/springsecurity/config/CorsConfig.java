@@ -1,7 +1,6 @@
-package io.inferiority.demo.springsecurity.config.security;
+package io.inferiority.demo.springsecurity.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -11,7 +10,7 @@ import org.springframework.web.filter.CorsFilter;
  * @Class CorsConfig
  * @Date 2023/4/14 17:58
  */
-@Configuration
+//@Configuration
 public class CorsConfig {
     @Bean
     public CorsFilter cors() {
