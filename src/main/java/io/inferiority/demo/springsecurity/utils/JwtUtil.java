@@ -44,7 +44,7 @@ public class JwtUtil {
         return builder.compact();
     }
 
-    public static HashMap<String, Object> parseJwt(Key pub, String token){
+    public static Object parseJwt(Key pub, String token){
         Objects.requireNonNull(pub, "public key can't be null");
         Objects.requireNonNull(token, "token can't be null");
         return Jwts.parser().setSigningKey(pub).parseClaimsJws(token).getBody().get(ADDITIONAL, HashMap.class);

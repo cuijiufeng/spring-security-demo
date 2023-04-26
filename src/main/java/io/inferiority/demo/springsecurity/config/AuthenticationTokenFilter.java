@@ -25,7 +25,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * @author cuijiufeng
@@ -59,7 +58,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         String token = request.getHeader(tokenHeader);
         try {
             // 2、对token进行解析
-            Map<String, Object> user = JwtUtil.parseJwt(jwtPubKey, token);
+            Object user = JwtUtil.parseJwt(jwtPubKey, token);
             UserVo userVo = new ObjectMapper().convertValue(user, UserVo.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, userVo.getAuthorities()) ;
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

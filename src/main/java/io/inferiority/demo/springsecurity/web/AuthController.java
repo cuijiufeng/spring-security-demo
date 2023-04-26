@@ -1,19 +1,14 @@
 package io.inferiority.demo.springsecurity.web;
 
-import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
-import io.inferiority.demo.springsecurity.exception.ServiceException;
 import io.inferiority.demo.springsecurity.model.JsonResult;
-import io.inferiority.demo.springsecurity.model.vo.UserVo;
+import io.inferiority.demo.springsecurity.model.User;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 /**
  * @author cuijiufeng
@@ -27,19 +22,13 @@ public class AuthController {
     private IAuthService authService;
 
     @PostMapping("login")
-    public JsonResult<Object> login(@Valid UserVo user, BindingResult bindingResult) {
-        if (bindingResult.getFieldErrorCount("username") > 0 || bindingResult.getFieldErrorCount("password") > 0) {
-            throw new ServiceException(BaseErrorEnum.UNKNOWN);
-        }
+    public JsonResult<Object> login(@Validated User user) {
         authService.login(user);
         return JsonResultUtil.successJson();
     }
 
     @PostMapping("logout")
-    public JsonResult<Object> logout(UserVo user) {
-        if (StringUtils.isBlank(user.getId())) {
-            throw new ServiceException(BaseErrorEnum.UNKNOWN);
-        }
+    public JsonResult<Object> logout(User user) {
         authService.logout(user);
         return JsonResultUtil.successJson();
     }

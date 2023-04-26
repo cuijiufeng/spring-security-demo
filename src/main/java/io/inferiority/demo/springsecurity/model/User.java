@@ -1,9 +1,12 @@
 package io.inferiority.demo.springsecurity.model;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -29,12 +32,17 @@ public class User implements Serializable {
     private Date createTime;
     private Date lastLoginTime;
     private Date lastUpdatePasswordTime;
-    private boolean accountNonExpired;
-    private boolean credentialsNonExpired;
-    private boolean accountNonLocked;
-    private boolean enabled;
+    private Boolean accountNonExpired;
+    private Boolean credentialsNonExpired;
+    private Boolean accountNonLocked;
+    private Boolean enabled;
 
+    @AllArgsConstructor
+    @Getter
     public enum  PasswordIntensity {
-        LOW,MEDIUM,HIGH
+        LOW(1), MEDIUM(2), HIGH(3);
+        //标记数据库存的值是枚举
+        @EnumValue
+        private final int code;
     }
 }

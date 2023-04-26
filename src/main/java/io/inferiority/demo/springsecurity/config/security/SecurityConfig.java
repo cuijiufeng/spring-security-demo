@@ -38,14 +38,14 @@ import java.time.Duration;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     public static final AuthenticationEntryPoint AUTHENTICATION_ENTRY_POINT = (request, response, ex) -> {
-        log.info(ex.getMessage());
+        log.warn(ex.getMessage());
         response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
-        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
     public static final AccessDeniedHandler ACCESS_DENIED_HANDLER = (request, response, ex) -> {
-        log.info(ex.getMessage());
+        log.warn(ex.getMessage());
         response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.FORBIDDEN));
-        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
 
     @Value("${token.header:Authorization}")

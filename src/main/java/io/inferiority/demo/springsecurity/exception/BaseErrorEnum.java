@@ -1,6 +1,7 @@
 package io.inferiority.demo.springsecurity.exception;
 
 import java.io.Serializable;
+import java.util.function.BiFunction;
 
 /**
  * @Class: BaseErrorEnum
@@ -8,34 +9,14 @@ import java.io.Serializable;
  * @auth: cuijiufeng
  */
 public interface BaseErrorEnum extends Serializable {
-    BaseErrorEnum UNKNOWN = new BaseErrorEnum() {
+    BiFunction<String, String, BaseErrorEnum> BUILD = (c, m) -> new BaseErrorEnum() {
         @Override
         public String getCode() {
-            return "-1";
+            return c;
         }
         @Override
         public String getMessage() {
-            return "unknown";
-        }
-    };
-    BaseErrorEnum UNAUTHORIZED = new BaseErrorEnum() {
-        @Override
-        public String getCode() {
-            return "10401";
-        }
-        @Override
-        public String getMessage() {
-            return "unauthorized";
-        }
-    };
-    BaseErrorEnum FORBIDDEN = new BaseErrorEnum() {
-        @Override
-        public String getCode() {
-            return "10403";
-        }
-        @Override
-        public String getMessage() {
-            return "forbidden";
+            return m;
         }
     };
 
@@ -44,6 +25,6 @@ public interface BaseErrorEnum extends Serializable {
     String getMessage();
 
     default String toLogString() {
-        return "[code=" + getCode() + ",message=" + getMessage() + "]";
+        return "[code=" + getCode() + ", message=" + getMessage() + "]";
     }
 }

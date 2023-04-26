@@ -1,6 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
-import io.inferiority.demo.springsecurity.model.vo.UserVo;
+import io.inferiority.demo.springsecurity.model.User;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +34,8 @@ public class AuthServiceImpl implements IAuthService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public void login(UserVo user) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, user.getPassword());
+    public void login(User user) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         //将用户存入上下文中
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public void logout(UserVo user) {
+    public void logout(User user) {
         //清除上下文
         SecurityContextHolder.clearContext();
         //token

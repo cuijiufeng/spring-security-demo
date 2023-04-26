@@ -9,9 +9,9 @@ import io.inferiority.demo.springsecurity.model.JsonResult;
  * @author: cjf
  */
 public class JsonResultUtil {
-    public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.UNKNOWN);
-    public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.UNAUTHORIZED);
-    public static final JsonResult<BaseErrorEnum> FORBIDDEN = JsonResultUtil.errorJson(403, BaseErrorEnum.FORBIDDEN);
+    public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", "unknown"));
+    public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.BUILD.apply("10401", "unauthorized"));
+    public static final JsonResult<BaseErrorEnum> FORBIDDEN = JsonResultUtil.errorJson(403, BaseErrorEnum.BUILD.apply("10403", "forbidden"));
 
     /**
      * 返回成功，无交互数据

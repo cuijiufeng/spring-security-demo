@@ -8,8 +8,10 @@ import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.model.Permission;
 import io.inferiority.demo.springsecurity.model.Role;
 import io.inferiority.demo.springsecurity.model.RolePermission;
+import io.inferiority.demo.springsecurity.model.User;
 import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author cuijiufeng
@@ -36,8 +39,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserVo user = userMapper.selectOne(Wrappers.<UserVo>lambdaQuery()
-                .eq(UserVo::getUsername, username));
+        UserVo user = userMapper.selectOneVo(Wrappers.<User>lambdaQuery()
+                .select(User.class, i -> true)
+                .eq(User::getUsername, username));
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
@@ -45,7 +49,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
         List<RolePermission> rolePermissions = rolePermissionMapper.selectList(Wrappers.<RolePermission>lambdaQuery()
                 .eq(RolePermission::getRId, user.getRoleId()));
         List<Permission> permissions = permissionMapper.selectBatchIds(rolePermissions.stream().map(RolePermission::getPId).collect(Collectors.toList()));
-        user.setAuthorities(role, permissions);
+        List<SimpleGrantedAuthority> authorities = Stream.concat(
+                Stream.of(role).map(Role::getName).map(SimpleGrantedAuthority::new),
+                permissions.stream().map(p -> p.getMenuCode() + ":" + p.getPermissionCode()).map(SimpleGrantedAuthority::new)).collect(Collectors.toList());
+        user.setAuthorities(authorities);
         //返回用户
         return user;
     }
