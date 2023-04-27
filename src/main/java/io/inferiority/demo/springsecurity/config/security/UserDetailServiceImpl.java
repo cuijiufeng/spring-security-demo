@@ -17,9 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author cuijiufeng
@@ -45,13 +46,18 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        Role role = roleMapper.selectById(user.getRoleId());
         List<RolePermission> rolePermissions = rolePermissionMapper.selectList(Wrappers.<RolePermission>lambdaQuery()
                 .eq(RolePermission::getRId, user.getRoleId()));
-        List<Permission> permissions = permissionMapper.selectBatchIds(rolePermissions.stream().map(RolePermission::getPId).collect(Collectors.toList()));
-        List<SimpleGrantedAuthority> authorities = Stream.concat(
-                Stream.of(role).map(Role::getName).map(SimpleGrantedAuthority::new),
-                permissions.stream().map(p -> p.getMenuCode() + ":" + p.getPermissionCode()).map(SimpleGrantedAuthority::new)).collect(Collectors.toList());
+        List<Permission> permissions = rolePermissions.isEmpty()
+                ? Collections.emptyList()
+                : permissionMapper.selectBatchIds(rolePermissions.stream().map(RolePermission::getPId).collect(Collectors.toList()));
+        List<SimpleGrantedAuthority> authorities = permissions.stream()
+                .map(p -> p.getMenuCode() + ":" + p.getPermissionCode()).map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        Role role = roleMapper.selectById(user.getRoleId());
+        if (Objects.nonNull(role)) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
         user.setAuthorities(authorities);
         //返回用户
         return user;

@@ -11,6 +11,7 @@ import org.springframework.web.filter.CorsFilter;
  * @Date 2023/4/14 17:58
  */
 //@Configuration
+@Deprecated
 public class CorsConfig {
     @Bean
     public CorsFilter cors() {

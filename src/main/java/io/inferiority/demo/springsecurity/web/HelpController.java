@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("help")
 public class HelpController {
 
-    @PreAuthorize("hasAnyRole('ROLE_admin')")
+    @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/hello")
     public JsonResult<Object> help() {
         return JsonResultUtil.successJson("help security");

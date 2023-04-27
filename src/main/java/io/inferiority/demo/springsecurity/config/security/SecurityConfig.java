@@ -52,11 +52,11 @@ public class SecurityConfig {
     private String tokenHeader;
     @Value("#{T(org.springframework.boot.convert.DurationStyle).detectAndParse('${token.duration:5m}')}")
     private Duration tokenDuration;
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePublicKey('${jwt.pub.key:classpath:rsa.pub.der}')}")
+    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePublicKey('${jwt.pub.key:classpath:jwt/rsa.pub.der}')}")
     private PublicKey jwtPubKey;
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePrivateKey('${jwt.priv.key:classpath:rsa.der}')}")
+    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
-    @Value("#{'${auth.white.list:/auth/**}'.split(',')}")
+    @Value("${auth.white.list:/auth/**}")
     private String[] authWhiteList;
     @Autowired
     private UserDetailsService userDetailsService;
