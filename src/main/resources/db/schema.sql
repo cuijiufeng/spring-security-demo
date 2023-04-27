@@ -31,10 +31,6 @@ CREATE TABLE `sys_permission`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 -- ----------------------------
--- Records of sys_permission
--- ----------------------------
-
--- ----------------------------
 -- Table structure for sys_role
 -- ----------------------------
 CREATE TABLE `sys_role`  (
@@ -48,10 +44,6 @@ CREATE TABLE `sys_role`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 -- ----------------------------
--- Records of sys_role
--- ----------------------------
-
--- ----------------------------
 -- Table structure for sys_role_permission
 -- ----------------------------
 CREATE TABLE `sys_role_permission`  (
@@ -60,10 +52,6 @@ CREATE TABLE `sys_role_permission`  (
   `p_id` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
-
--- ----------------------------
--- Records of sys_role_permission
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -84,8 +72,21 @@ CREATE TABLE `sys_user`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
+
 -- ----------------------------
--- Records of sys_user
+-- Table structure for sys_log
 -- ----------------------------
+CREATE TABLE `sys_log`  (
+  `id` varchar(32) NOT NULL,
+  `opt_user` varchar(255) DEFAULT NULL,
+  `opt_desc` varchar(255) DEFAULT NULL,
+  `result_code` int DEFAULT NULL,
+  `err_code` varchar(32) DEFAULT NULL,
+  `err_msg` varchar(8092) DEFAULT NULL,
+  `opt_time` datetime DEFAULT NULL,
+  `mac` varchar(64) DEFAULT NULL,
+  `audited` tinyint DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

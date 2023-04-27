@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Data
 @TableName("sys_role")
-public class Role implements Serializable {
+public class RoleEntity implements Serializable {
     @TableId
     private String id;
     private String name;

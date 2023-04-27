@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Data
 @TableName("sys_user")
-public class User implements Serializable {
+public class UserEntity implements Serializable {
     @TableId
     private String id;
     @NotEmpty(message = "用户号不能为空")

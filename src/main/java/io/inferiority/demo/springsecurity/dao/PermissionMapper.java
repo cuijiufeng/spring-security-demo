@@ -1,7 +1,7 @@
 package io.inferiority.demo.springsecurity.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.inferiority.demo.springsecurity.model.Permission;
+import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface PermissionMapper extends BaseMapper<Permission> {
+public interface PermissionMapper extends BaseMapper<PermissionEntity> {
 }

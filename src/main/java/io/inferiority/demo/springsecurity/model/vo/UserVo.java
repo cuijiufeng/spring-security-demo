@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.inferiority.demo.springsecurity.model.User;
+import io.inferiority.demo.springsecurity.model.UserEntity;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import lombok.Setter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +18,7 @@ import java.util.Collection;
  */
 @Setter
 @TableName("sys_user")
-public class UserVo extends User implements UserDetails {
+public class UserVo extends UserEntity implements UserDetails {
     @TableField(exist = false)
     private Collection<SimpleGrantedAuthority> authorities;
 

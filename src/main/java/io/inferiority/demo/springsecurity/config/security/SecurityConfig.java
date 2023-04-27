@@ -19,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -39,12 +40,12 @@ import java.time.Duration;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     public static final AuthenticationEntryPoint AUTHENTICATION_ENTRY_POINT = (request, response, ex) -> {
-        log.warn(ex.getMessage());
+        log.warn("{} --> {}", request.getServletPath(), ex.toString());
         response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
     public static final AccessDeniedHandler ACCESS_DENIED_HANDLER = (request, response, ex) -> {
-        log.warn(ex.getMessage());
+        log.warn("{} --> {}", request.getServletPath(), ex.toString());
         response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.FORBIDDEN));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
@@ -64,6 +65,11 @@ public class SecurityConfig {
     //public WebSecurityCustomizer webSecurityCustomizer() {
     //}
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     /**
      * 全局认证管理器
      * @param http
@@ -71,10 +77,10 @@ public class SecurityConfig {
      * @throws Exception
      */
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder())
+                .passwordEncoder(passwordEncoder)
                 .and()
                 .build();
     }

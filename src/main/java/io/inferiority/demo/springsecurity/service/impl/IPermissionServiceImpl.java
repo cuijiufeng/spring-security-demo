@@ -2,7 +2,7 @@ package io.inferiority.demo.springsecurity.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
-import io.inferiority.demo.springsecurity.model.Permission;
+import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class IPermissionServiceImpl implements IPermissionService {
     private PermissionMapper permissionMapper;
 
     @Override
-    public List<Permission> allPermissions() {
+    public List<PermissionEntity> allPermissions() {
         return permissionMapper.selectList(Wrappers.lambdaQuery());
     }
 }

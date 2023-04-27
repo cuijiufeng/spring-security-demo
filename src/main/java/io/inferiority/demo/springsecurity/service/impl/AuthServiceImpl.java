@@ -1,6 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
-import io.inferiority.demo.springsecurity.model.User;
+import io.inferiority.demo.springsecurity.model.UserEntity;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements IAuthService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public void login(User user) {
+    public void login(UserEntity user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public void logout(User user) {
+    public void logout(UserEntity user) {
         //清除上下文
         SecurityContextHolder.clearContext();
         //token

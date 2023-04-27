@@ -1,7 +1,6 @@
 package io.inferiority.demo.springsecurity.config.async;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +19,10 @@ import java.util.stream.Collectors;
  * @Date: 2023/4/27 13:00
  * @author: cuijiufeng
  */
+@Slf4j
 @EnableAsync
 @Configuration
 public class ExecutorPoolBean implements AsyncConfigurer {
-    private static final Logger log = LoggerFactory.getLogger(ExecutorPoolBean.class);
     private final ThreadPoolTaskExecutor executor;
 
     public ExecutorPoolBean(@Value("${executor.core-pool-size:10}") int corePoolSize,

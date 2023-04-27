@@ -26,6 +26,19 @@ import java.util.stream.Collectors;
 public class GlobalExceptionAdvice {
 
     /**
+     * 业务异常
+     * @param e
+     * @return org.springframework.http.ResponseEntity<io.inferiority.demo.springsecurity.model.JsonResult<?>>
+     * @throws
+    */
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<JsonResult<?>> serviceException(ServiceException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .body(JsonResultUtil.errorJson(500, e.getError()));
+    }
+
+    /**
      * validate参数绑定异常
      * @param e
      * @return org.springframework.http.ResponseEntity<java.lang.String>
@@ -40,9 +53,14 @@ public class GlobalExceptionAdvice {
                 .body(JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", errMsg)));
     }
 
+    /**
+     * spring security异常交给security filter处理
+     * @param e
+     * @return void
+     * @throws
+    */
     @ExceptionHandler({AuthenticationException.class, AccessDeniedException.class})
     public void authenticationException(Exception e) throws Exception {
-        //security exception交给security filter处理
         throw e;
     }
 

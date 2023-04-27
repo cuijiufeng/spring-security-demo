@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("sys_role_permission")
-public class RolePermission implements Serializable {
+public class RolePermissionEntity implements Serializable {
     @TableId
     private String id;
     private String rId;
