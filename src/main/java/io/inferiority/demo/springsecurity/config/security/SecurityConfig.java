@@ -1,7 +1,7 @@
 package io.inferiority.demo.springsecurity.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.inferiority.demo.springsecurity.config.AuthenticationTokenFilter;
+import io.inferiority.demo.springsecurity.config.web.AuthenticationTokenFilter;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

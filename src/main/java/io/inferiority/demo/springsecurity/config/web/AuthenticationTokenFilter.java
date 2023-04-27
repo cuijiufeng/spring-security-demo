@@ -1,4 +1,4 @@
-package io.inferiority.demo.springsecurity.config;
+package io.inferiority.demo.springsecurity.config.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inferiority.demo.springsecurity.model.vo.UserVo;
@@ -71,15 +71,15 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             log.debug("refresh token: {}", token);
             response.setHeader(tokenHeader, token);
         } catch (ExpiredJwtException e) {
-            log.warn("-------------------- Jwt is expire! --------------------: {}", e.getMessage());
+            log.warn("--------------------> jwt is expire: {} - {}", request.getServletPath(), e.getMessage());
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
             response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         } catch (NullPointerException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException e) {
-            log.warn("-------------------- invalid token! --------------------: {}", e.getMessage());
+            log.warn("--------------------> invalid token: {} - {}", request.getServletPath(), e.getMessage());
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
             response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("--------------------> exception: {}", request.getServletPath(), e);
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNKNOWN));
             response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         }

@@ -1,4 +1,4 @@
-package io.inferiority.demo.springsecurity.config;
+package io.inferiority.demo.springsecurity.config.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
