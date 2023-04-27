@@ -24,8 +24,6 @@ import java.time.Duration;
  */
 @Service
 public class AuthServiceImpl implements IAuthService {
-    @Value("${token.header:Authorization}")
-    private String tokenHeader;
     @Value("#{T(org.springframework.boot.convert.DurationStyle).detectAndParse('${token.duration:5m}')}")
     private Duration tokenDuration;
     @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
@@ -42,7 +40,7 @@ public class AuthServiceImpl implements IAuthService {
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        response.setHeader(tokenHeader, JwtUtil.createJwt(jwtPrivKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
+        response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
     }
 
     @Override
@@ -51,6 +49,6 @@ public class AuthServiceImpl implements IAuthService {
         SecurityContextHolder.clearContext();
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        response.setHeader(tokenHeader, JwtUtil.createJwt(jwtPrivKey, null, 0));
+        response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
     }
 }

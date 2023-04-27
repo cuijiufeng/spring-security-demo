@@ -1,5 +1,7 @@
 package io.inferiority.demo.springsecurity.config.swagger;
 
+import io.inferiority.demo.springsecurity.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -12,12 +14,18 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
 import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +48,23 @@ public class SwaggerConfig {
                 // 是否启用Swagger
                 .enable(enable)
                 .apiInfo(info())
-                //.securitySchemes(Collections.singletonList(securityScheme()))
-                //.securityContexts(Collections.singletonList(securityContext()))
+                .securitySchemes(Collections.singletonList(securityScheme()))
+                .securityContexts(Collections.singletonList(securityContext()))
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
+                .build();
+    }
+
+    private SecurityScheme securityScheme() {
+        return new ApiKey(JwtUtil.TOKEN_HEADER, "ApiKey", SecuritySchemeIn.HEADER.name());
+    }
+
+    private SecurityContext securityContext() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "");
+        SecurityReference securityReference = new SecurityReference(JwtUtil.TOKEN_HEADER, new AuthorizationScope[]{authorizationScope});
+        return SecurityContext.builder()
+                .securityReferences(Collections.singletonList(securityReference))
                 .build();
     }
 

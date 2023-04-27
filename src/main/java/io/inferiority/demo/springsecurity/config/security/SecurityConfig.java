@@ -3,6 +3,7 @@ package io.inferiority.demo.springsecurity.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inferiority.demo.springsecurity.config.web.AuthenticationTokenFilter;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
+import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,8 +49,6 @@ public class SecurityConfig {
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
 
-    @Value("${token.header:Authorization}")
-    private String tokenHeader;
     @Value("#{T(org.springframework.boot.convert.DurationStyle).detectAndParse('${token.duration:5m}')}")
     private Duration tokenDuration;
     @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePublicKey('${jwt.pub.key:classpath:jwt/rsa.pub.der}')}")
@@ -93,7 +92,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 //添加token验证过滤器
-                .addFilterBefore(new AuthenticationTokenFilter(tokenHeader, tokenDuration, jwtPubKey, jwtPrivKey, authWhiteList), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AuthenticationTokenFilter(JwtUtil.TOKEN_HEADER, tokenDuration, jwtPubKey, jwtPrivKey, authWhiteList), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
                 //白名单
                 .antMatchers(authWhiteList).permitAll()

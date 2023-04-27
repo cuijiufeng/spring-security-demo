@@ -25,6 +25,7 @@ import java.util.UUID;
  * @date: 2023/4/15 10:33
  */
 public class JwtUtil {
+    public static final String TOKEN_HEADER = "Authorization";
     public static final String ADDITIONAL = "additional";
     private JwtUtil() {
     }
