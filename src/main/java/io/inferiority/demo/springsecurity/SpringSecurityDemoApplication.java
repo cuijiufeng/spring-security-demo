@@ -3,6 +3,11 @@ package io.inferiority.demo.springsecurity;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @Class: SpringSecurityDemoApplication
+ * @Date: 2023/4/28 10:21
+ * @author: cuijiufeng
+ */
 @SpringBootApplication
 public class SpringSecurityDemoApplication {
 

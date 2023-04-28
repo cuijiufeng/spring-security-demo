@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.aop.log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inferiority.demo.springsecurity.dao.LogMapper;
 import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.Date;
 
@@ -47,21 +49,25 @@ public class LogAdvice {
      */
     @AfterReturning(pointcut = "pt()", returning = "rs")
     public void afterReturning(JoinPoint joinPoint, Object rs) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Log log = signature.getMethod().getAnnotation(Log.class);
-        LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.getCurrentUser(jwtPubKey).getUsername(),
-                log.value(), null, null, null, new Date(), null, null);
-        if (rs instanceof JsonResult) {
-            JsonResult<?> result = (JsonResult<?>) rs;
-            logEntity.setResultCode(result.getCode());
-            if (result.getData() instanceof BaseErrorEnum) {
-                BaseErrorEnum error = (BaseErrorEnum) result.getData();
-                logEntity.setErrCode(error.getCode());
-                logEntity.setErrMsg(error.getMessage());
+        try {
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            Log log = signature.getMethod().getAnnotation(Log.class);
+            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.currentUsername(jwtPubKey),
+                    log.value(), null, null, null, new Date(), null, null);
+            if (rs instanceof JsonResult) {
+                JsonResult<?> result = (JsonResult<?>) rs;
+                logEntity.setResultCode(result.getCode());
+                if (result.getData() instanceof BaseErrorEnum) {
+                    BaseErrorEnum error = (BaseErrorEnum) result.getData();
+                    logEntity.setErrCode(error.getCode());
+                    logEntity.setErrMsg(error.getMessage());
+                }
             }
+            logEntity.setMac(genMac(logEntity));
+            logMapper.insert(logEntity);
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
         }
-        logEntity.setMac(genMac(logEntity));
-        logMapper.insert(logEntity);
     }
 
     /**
@@ -71,29 +77,29 @@ public class LogAdvice {
      */
     @AfterThrowing(pointcut = "pt()", throwing = "e")
     public void afterThrowing(JoinPoint joinPoint, Throwable e) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Log log = signature.getMethod().getAnnotation(Log.class);
-        LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.getCurrentUser(jwtPubKey).getUsername(),
-                log.value(), 500, null, null, new Date(), null, null);
-        if (e instanceof ServiceException) {
-            BaseErrorEnum error = ((ServiceException) e).getError();
-            logEntity.setErrCode(error.getCode());
-            logEntity.setErrMsg(error.getMessage());
-        } else {
-            logEntity.setErrCode("-1");
-            logEntity.setErrMsg(e.getMessage());
+        try {
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            Log log = signature.getMethod().getAnnotation(Log.class);
+            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.currentUsername(jwtPubKey),
+                    log.value(), 500, null, null, new Date(), null, null);
+            if (e instanceof ServiceException) {
+                BaseErrorEnum error = ((ServiceException) e).getError();
+                logEntity.setErrCode(error.getCode());
+                logEntity.setErrMsg(error.getMessage());
+            } else {
+                logEntity.setErrCode("-1");
+                logEntity.setErrMsg(e.getMessage());
+            }
+            logEntity.setMac(genMac(logEntity));
+            logMapper.insert(logEntity);
+        } catch (Exception ex) {
+            log.warn(ex.getMessage(), ex);
         }
-        logEntity.setMac(genMac(logEntity));
-        logMapper.insert(logEntity);
     }
 
-    private String genMac(LogEntity logEntity) {
-        try {
-            byte[] logBytes = new ObjectMapper().writeValueAsBytes(logEntity);
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            return Hex.encodeHexString(md5.digest(logBytes));
-        } catch (Exception e) {
-            return null;
-        }
+    private String genMac(LogEntity logEntity) throws JsonProcessingException, NoSuchAlgorithmException {
+        byte[] logBytes = new ObjectMapper().writeValueAsBytes(logEntity);
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        return Hex.encodeHexString(md5.digest(logBytes));
     }
 }

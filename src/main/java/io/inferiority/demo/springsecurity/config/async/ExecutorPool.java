@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @EnableAsync
 @Configuration
-public class ExecutorPoolBean implements AsyncConfigurer {
+public class ExecutorPool implements AsyncConfigurer {
     private final ThreadPoolTaskExecutor executor;
 
-    public ExecutorPoolBean(@Value("${executor.core-pool-size:10}") int corePoolSize,
-                            @Value("${executor.max-pool-size:100}") int maxPoolSize,
-                            @Value("${executor.keep-alive-seconds:60}") int keepAliveSeconds,
-                            @Value("${executor.queue-capacity:1000}") int queueCapacity) {
+    public ExecutorPool(@Value("${executor.core-pool-size:10}") int corePoolSize,
+                        @Value("${executor.max-pool-size:100}") int maxPoolSize,
+                        @Value("${executor.keep-alive-seconds:60}") int keepAliveSeconds,
+                        @Value("${executor.queue-capacity:1000}") int queueCapacity) {
         executor = new ThreadPoolTaskExecutor();
         //设置线程名字，好区分
         executor.setThreadFactory(new CustomizableThreadFactory("thread-executors-"));

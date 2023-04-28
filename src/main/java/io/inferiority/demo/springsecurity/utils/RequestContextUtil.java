@@ -6,6 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Objects;
 
@@ -16,10 +17,22 @@ import java.util.Objects;
  */
 public class RequestContextUtil {
 
-    public static UserVo getCurrentUser(Key jwtPubKey) {
+    public static String currentUsername(Key jwtPubKey) {
+        UserVo user = currentUser(jwtPubKey);
+        return Objects.isNull(user) ? null : user.getUsername();
+    }
+
+    public static UserVo currentUser(Key jwtPubKey) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String tokenHeader = request.getHeader(JwtUtil.TOKEN_HEADER);
-        Objects.requireNonNull(tokenHeader, "token can't be null");
+        if (Objects.isNull(tokenHeader)) {
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+            Objects.requireNonNull(response, "response can't be null");
+            tokenHeader = response.getHeader(JwtUtil.TOKEN_HEADER);
+        }
+        if (Objects.isNull(tokenHeader)) {
+            return null;
+        }
         Object user = JwtUtil.parseJwt(jwtPubKey, tokenHeader);
         return new ObjectMapper().convertValue(user, UserVo.class);
     }
