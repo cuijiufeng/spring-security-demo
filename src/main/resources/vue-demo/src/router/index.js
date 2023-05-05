@@ -5,12 +5,12 @@ export const constantRoutes = [
   {
     path: "/404",
     name: "404",
-    component: () => import("@/views/404/index.vue")
+    component: () => import("@/views/404")
   },
   {
     path: "/",
     name: "Root",
-    component: () => import("@/layout/index.vue"),
+    component: () => import("@/layout/index"),
     // children: routers
   }
 ]
@@ -20,7 +20,7 @@ export const dynamicRoutes = [
   {
     path: "/",
     name: "Root",
-    component: () => import("@/layout/index.vue"),
+    component: () => import("@/layout/index"),
     // children: routers
   }
 ]

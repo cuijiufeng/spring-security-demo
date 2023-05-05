@@ -1,19 +1,29 @@
 <template>
   <div class="app-home">
-    <header-view class="app-header"/>
+    <header-view class="app-header" :sidebar-expand="sidebarExpand"/>
     <div class="app-body">
-      <!-- <router-view/> -->
+      <sidebar-view class="app-sidebar" :sidebar-expand="sidebarExpand"/>
+      <div class="app-main">
+        <!-- <router-view/> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 export default {
   name: 'Home',
   components: {
     'header-view': Header,
+    'sidebar-view': Sidebar,
   },
+  data() {
+    return {
+      sidebarExpand: true
+    }
+  }
 }
 </script>
 
