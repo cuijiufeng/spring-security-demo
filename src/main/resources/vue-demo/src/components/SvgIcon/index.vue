@@ -34,7 +34,7 @@ export default {
   width: 1em;
   height: 1em;
   position: relative;
-  top: 0.1em;
+  top: 0.06em;
   fill: currentColor;
 }
 </style>

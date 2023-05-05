@@ -36,7 +36,7 @@ export default {
     width: 100vw;
     height: var(--headerHeight);
     background-color: var(--headerBg);
-    box-shadow: 5px 3px 5px #888888;
+    box-shadow: 5px 3px 5px #ccc;
   }
   .app-body{
     width: 100vw;

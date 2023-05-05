@@ -1,17 +1,22 @@
 <template>
   <div class="lang">
-    <svg-icon v-if="i18n.locale.value == 'zh'" 
-      icon-class="lang-en" class-name="lang-icon" @click="switchLanguage('en')"/>
+    <svg-icon v-if="i18n.locale.value == 'en'" 
+      icon-class="lang-en" class-name="lang-icon" @click="switchLanguage('zh')"/>
     <svg-icon v-else 
-      icon-class="lang-zh" class-name="lang-icon" @click="switchLanguage('zh')"/>
+      icon-class="lang-zh" class-name="lang-icon" @click="switchLanguage('en')"/>
   </div>
 </template>
 
 <script setup>
-import {useI18n } from 'vue-i18n';
-const i18n = useI18n()
-function switchLanguage(lang){
-  i18n.locale.value = lang
+import { LANGUAGE } from '@/utils/config';
+import { useI18n } from 'vue-i18n';
+const i18n = useI18n();
+//初始化
+i18n.locale.value = localStorage.getItem(LANGUAGE) || 'zh';
+
+function switchLanguage(lang) {
+  i18n.locale.value = lang;
+  localStorage.setItem(LANGUAGE, lang);
 }
 </script>
 
