@@ -1,9 +1,6 @@
-window.canvasjs__login__render = null
-function loginBgRender (render = true) {
-  debugger
-  window.canvasjs__login__render && window.cancelAnimationFrame(canvasjs__login__render)
-  var canvas = document.querySelector('canvas')
-  if (canvas == null || render === false) return
+
+export const loginBgRender = () => {
+  var canvas = document.querySelector('canvas');
   var ctx = canvas.getContext('2d')
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
@@ -76,13 +73,13 @@ function loginBgRender (render = true) {
   }
 
   function createDots () {
-    for (i = 0; i < dots.nb; i++) {
+    for (let i = 0; i < dots.nb; i++) {
       dots.array.push(new Dot())
     }
   }
 
   function moveDots () {
-    for (i = 0; i < dots.nb; i++) {
+    for (let i = 0; i < dots.nb; i++) {
       var dot = dots.array[i]
 
       if (dot.y < 0 || dot.y > canvas.height) {
@@ -98,10 +95,10 @@ function loginBgRender (render = true) {
   }
 
   function connectDots () {
-    for (i = 0; i < dots.nb; i++) {
-      for (j = 0; j < dots.nb; j++) {
-        i_dot = dots.array[i]
-        j_dot = dots.array[j]
+    for (let i = 0; i < dots.nb; i++) {
+      for (let j = 0; j < dots.nb; j++) {
+        let i_dot = dots.array[i]
+        let j_dot = dots.array[j]
 
         if ((i_dot.x - j_dot.x) < dots.distance && (i_dot.y - j_dot.y) < dots.distance && (i_dot.x - j_dot.x) > -dots.distance && (i_dot.y - j_dot.y) > -dots.distance) {
           if ((i_dot.x - mousePosition.x) < dots.d_radius && (i_dot.y - mousePosition.y) < dots.d_radius && (i_dot.x - mousePosition.x) > -dots.d_radius && (i_dot.y - mousePosition.y) > -dots.d_radius) {
@@ -118,7 +115,7 @@ function loginBgRender (render = true) {
   }
 
   function drawDots () {
-    for (i = 0; i < dots.nb; i++) {
+    for (let i = 0; i < dots.nb; i++) {
       var dot = dots.array[i]
       dot.draw()
     }
@@ -129,7 +126,7 @@ function loginBgRender (render = true) {
     moveDots()
     connectDots()
     drawDots()
-    window.canvasjs__login__render = requestAnimationFrame(animateDots)
+    requestAnimationFrame(animateDots)
   }
 
   canvas.onmousemove = function (e) {
@@ -142,8 +139,5 @@ function loginBgRender (render = true) {
   }
 
   createDots()
-  window.canvasjs__login__render = requestAnimationFrame(animateDots)
+  requestAnimationFrame(animateDots)
 }
-
-// window.onload = loginBgRender
-window.loginBgRender = loginBgRender
