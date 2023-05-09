@@ -35,7 +35,7 @@ import java.util.Date;
 @Aspect
 @Component
 public class LogAdvice {
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePublicKey('${jwt.pub.key:classpath:jwt/rsa.pub.der}')}")
+    @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePublicKey('${jwt.pub.key:classpath:jwt/rsa.pub.der}')}")
     private PublicKey jwtPubKey;
     @Autowired
     private LogMapper logMapper;

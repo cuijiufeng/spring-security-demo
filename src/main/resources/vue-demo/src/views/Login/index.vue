@@ -14,7 +14,7 @@
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" :type="passwordHide ? 'password' : 'text'" 
-          :placeholder="$t('login.please input password')" prefix-icon="Key">
+          :placeholder="$t('login.please input password')" prefix-icon="Key" @keydown.enter="onSubmit">
           <template #suffix>
             <el-icon style="cursor: pointer" @click="passwordHide = !passwordHide">
               <View v-if="passwordHide"/>
@@ -25,7 +25,8 @@
       </el-form-item>
       <el-form-item prop="verifyCode">
         <img style="height: 32px;width: 100px;margin-right: 40px;" src="@/assets/logo/logo.png"/>
-        <el-input style="width: calc(100% - 140px);" v-model="loginForm.verifyCode" :placeholder="$t('login.please input verify code')"/>
+        <el-input style="width: calc(100% - 140px);" v-model="loginForm.verifyCode" 
+          :placeholder="$t('login.please input verify code')" @keydown.enter="onSubmit"/>
       </el-form-item>
       <el-button style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">{{ $t('login.login') }}</el-button>
     </el-form>
@@ -55,7 +56,6 @@ export default {
         }
         login(this.loginForm).then(([data, headers]) => {
           this.$store.commit('login', data);
-          this.$router.replace("/");
         }).catch(([err, headers]) => {
           this.$message({ type: 'error', message: err.message, });
         });

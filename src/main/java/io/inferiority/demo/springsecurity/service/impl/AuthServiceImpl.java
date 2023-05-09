@@ -32,7 +32,7 @@ import java.util.List;
 public class AuthServiceImpl implements IAuthService {
     @Value("#{T(org.springframework.boot.convert.DurationStyle).detectAndParse('${token.duration:5m}')}")
     private Duration tokenDuration;
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.RsaKeyUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
+    @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
     @Autowired
     private AuthenticationManager authenticationManager;

@@ -14,6 +14,6 @@ public class PasswordEncoderTest {
     @Test
     public void testPasswordEncoder() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        log.info(passwordEncoder.encode("admin"));
+        log.info(passwordEncoder.encode("d82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892"));
     }
 }

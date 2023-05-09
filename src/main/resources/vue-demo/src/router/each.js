@@ -11,15 +11,15 @@ export default {
       return;
     }
     //当没有登录时显示登录页面
-    if(store.getters.userInfo == undefined) {
+    if(store.getters.currentUser == undefined) {
       router.replace('/login');
       return;
     }
     //没有初始化系统时不准进入主页面
-    if(to.fullPath == "/" && !store.getters.initialized) {
-      router.replace('/init');
-      return;
-    }
+    // if(to.fullPath == "/" && !store.getters.initialized) {
+    //   router.replace('/init');
+    //   return;
+    // }
     //当前页面不存在
     if (to.matched.length == 0) {
       router.push('/404');

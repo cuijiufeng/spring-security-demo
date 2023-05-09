@@ -1,4 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
+import each from "./each";
 import routes from "./routes";
 
 // 公共路由
@@ -29,8 +30,8 @@ const router = createRouter({
 })
 
 //加载路由守卫前置守卫
-// router.beforeEach(each.beforeEach);
+router.beforeEach(each.beforeEach);
 //加载路由后置守卫
-// router.afterEach(each.afterEach);
+router.afterEach(each.afterEach);
 
 export default router

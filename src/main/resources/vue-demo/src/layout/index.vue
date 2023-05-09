@@ -1,9 +1,10 @@
 <template>
   <div class="app-home">
-    <header-view class="app-header" :sidebar-expand="sidebarExpand"/>
+    <header-view class="app-header" :sidebar-expand.sync="sidebarExpand"/>
     <div class="app-body">
-      <sidebar-view class="app-sidebar" :sidebar-expand="sidebarExpand"/>
-      <div class="app-main">
+      <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']" 
+        :sidebar-expand="sidebarExpand"/>
+      <div class="app-main" :class="sidebarExpand ? 'sidebar-expand_main' : 'sidebar-fold_main'">
         <!-- <router-view/> -->
       </div>
     </div>
@@ -21,7 +22,7 @@ export default {
   },
   data() {
     return {
-      sidebarExpand: true
+      sidebarExpand: false
     }
   }
 }
@@ -41,25 +42,29 @@ export default {
   .app-body{
     width: 100vw;
     height: calc(100vh - var(--headerHeight));
+    display: flex;
+    .app-sidebar {
+      height: 100%;
+      border: 1px solid red;
+    }
+    .app-main {
+      height: 100%;
+    }
   }
 }
 //隐藏侧边栏的滚动条
 .app-sidebar::-webkit-scrollbar {display:none}
 //侧边栏收缩样式
-.open {
-  &-sidebar {
-    width: var(--sidebarWidth);
-  }
-  &-sidebar-main {
-    width: calc(100vw - var(--sidebarWidth));
-  }
+.sidebar-expand {
+  width: var(--sidebarWidth);
 }
-.close {
-  &-sidebar {
-    width: var(--sidebarWidthClose);
-  }
-  &-sidebar-main {
-      width: calc(100vw - var(--sidebarWidthClose));
-  }
+.sidebar-fold {
+  width: var(--sidebarFoldWidth);
+}
+.sidebar-expand_main {
+  width: calc(100vw - var(--sidebarWidth));
+}
+.sidebar-fold_main {
+  width: calc(100vw - var(--sidebarFoldWidth));
 }
 </style>

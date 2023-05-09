@@ -30,6 +30,9 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 // 全局方法挂载
 // app.config.globalProperties.useDict = useDict
 
+//应用启动
+store.dispatch("appCreate");
+
 app.use(store)
   .use(router)
   .use(ElementPlus)

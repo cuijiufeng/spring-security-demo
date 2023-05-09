@@ -1,9 +1,11 @@
 import router, {dynamicRoute} from '@/router'
-import {LOGIN_INFO} from '@/utils/config'
+import {AUTHENTICATION, LOGIN_INFO} from '@/utils/config'
 
 export default {
   state: {
-    currentUser: undefined,
+    currentUser: {
+      username: '',
+    },
   },
   getters: {
     currentUser: (state) => { return state.currentUser; },
@@ -18,6 +20,7 @@ export default {
       recursionFilterRoute(dynamicRoute, currentPermission);
       //添加路由router
       router.addRoute(dynamicRoute);
+      router.replace('/');
 
       //递归过滤路由
       function recursionFilterRoute(route, permissions) {
@@ -35,11 +38,12 @@ export default {
       }
     },
     logout(state) {
-      state.currentUser = undefined;
-      sessionStorage.removeItem(LOGIN_INFO);
       router.replace('/login');
-      //此行是为了重路由，但是退出登录之后也进不去主页了，重新登录之后又会重新生成路由，所以删除此行
-      location.reload();
+      sessionStorage.removeItem(LOGIN_INFO);
+      localStorage.removeItem(AUTHENTICATION);
+      state.currentUser = {
+        username: '',
+      };
     }
   },
   actions: {

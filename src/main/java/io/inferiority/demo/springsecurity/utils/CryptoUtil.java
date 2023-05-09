@@ -16,7 +16,7 @@ import java.security.spec.X509EncodedKeySpec;
  * @author cuijiufeng
  * @date 2023/4/16 0:09
  */
-public class RsaKeyUtil {
+public class CryptoUtil {
 
     public static PrivateKey parsePrivateKey(String urlPath) throws IOException, GeneralSecurityException {
         URL url = ResourceUtils.getURL(urlPath);

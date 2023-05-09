@@ -4,8 +4,10 @@
       <img class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo.png">
     </div>
     <div class="header-center">
-      <el-icon size="20" v-if="sidebarExpand"><Fold/></el-icon>
-      <el-icon size="20" v-else><Expand /></el-icon>
+      <el-icon size="20" @click="$emit('update:sidebarExpand', !sidebarExpand)">
+        <Fold v-if="sidebarExpand"/>
+        <Expand v-else/>
+      </el-icon>
     </div>
     <div class="header-right">
       <language/>
@@ -13,13 +15,13 @@
         <div class="dropdown-user-link">
           <svg-icon icon-class="user" class-name="user-icon"/>
           <div style="width: 6px"/>
-          <div style="color: black;size: 18px;">admin</div>
+          <div style="color: black;size: 18px;">{{currentUser.username}}</div>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item icon="User">{{$t('layout.personal center')}}</el-dropdown-item>
             <el-dropdown-item icon="Key">{{$t('layout.change password')}}</el-dropdown-item>
-            <el-dropdown-item divided icon="SwitchButton">{{$t('layout.logout')}}</el-dropdown-item>
+            <el-dropdown-item divided icon="SwitchButton" @click="logout">{{$t('layout.logout')}}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -28,6 +30,7 @@
 </template>
 
 <script>
+import { logout } from '@/api/system'
 export default {
   name: 'Header',
   components: {
@@ -35,8 +38,13 @@ export default {
   props: {
     sidebarExpand: Boolean,
   },
-  data() {
-    return {
+  methods: {
+    logout() {
+      logout({username: this.currentUser.username}).then(([data, headers]) => {
+        this.$store.commit('logout');
+      }).catch(([err, headers]) => {
+        this.$message({ type: 'error', message: err.message, });
+      });
     }
   },
   computed: {
