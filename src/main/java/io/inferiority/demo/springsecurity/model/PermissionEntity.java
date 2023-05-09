@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class PermissionEntity implements Serializable {
     @TableId
     private String id;
+    private String groupName;
     private String menuCode;
     private String menuName;
     private String permissionCode;

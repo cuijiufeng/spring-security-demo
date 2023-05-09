@@ -30,8 +30,8 @@ INSERT INTO `sys_role` VALUES ('1', 'ROLE_admin', NULL, 1, 'ROLE_admin', '2023-0
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
-INSERT INTO `sys_permission` VALUES ('1', 'help', 'help', 'hello', 'hello', 1);
-INSERT INTO `sys_permission` VALUES ('2', 'help', 'help', 'other', 'other', 0);
+INSERT INTO `sys_permission` VALUES ('1', '', ''help', 'help', 'hello', 'hello', 1);
+INSERT INTO `sys_permission` VALUES ('2', '', ''help', 'help', 'other', 'other', 0);
 
 -- ----------------------------
 -- Records of sys_role_permission

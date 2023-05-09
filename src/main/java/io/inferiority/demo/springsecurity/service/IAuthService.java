@@ -1,6 +1,7 @@
 package io.inferiority.demo.springsecurity.service;
 
 import io.inferiority.demo.springsecurity.model.UserEntity;
+import io.inferiority.demo.springsecurity.model.vo.AuthVo;
 
 /**
  * @author cuijiufeng
@@ -9,7 +10,7 @@ import io.inferiority.demo.springsecurity.model.UserEntity;
  */
 public interface IAuthService {
 
-    void login(UserEntity user);
+    AuthVo login(UserEntity user);
 
     void logout(UserEntity user);
 }

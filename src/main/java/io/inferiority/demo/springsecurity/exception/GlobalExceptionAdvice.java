@@ -33,7 +33,8 @@ public class GlobalExceptionAdvice {
     */
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<JsonResult<?>> serviceException(ServiceException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        log.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .body(JsonResultUtil.errorJson(500, e.getError()));
     }
@@ -48,7 +49,7 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<JsonResult<?>> bindException(BindException e) {
         log.warn(e.getMessage());
         String errMsg = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(","));
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .body(JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", errMsg)));
     }
@@ -67,7 +68,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<JsonResult<?>> defaultErrorHandler(Exception e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .body(JsonResultUtil.UNKNOWN);
     }

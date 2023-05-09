@@ -25,8 +25,7 @@ public class AuthController {
     @Log("登录")
     @PostMapping("login")
     public JsonResult<Object> login(@Validated UserEntity user) {
-        authService.login(user);
-        return JsonResultUtil.successJson();
+        return JsonResultUtil.successJson(authService.login(user));
     }
 
     @Log("登出")

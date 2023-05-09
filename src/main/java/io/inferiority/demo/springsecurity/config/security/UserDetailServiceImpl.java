@@ -1,15 +1,13 @@
 package io.inferiority.demo.springsecurity.config.security;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.inferiority.demo.springsecurity.dao.PermissionMapper;
 import io.inferiority.demo.springsecurity.dao.RoleMapper;
-import io.inferiority.demo.springsecurity.dao.RolePermissionMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.RoleEntity;
-import io.inferiority.demo.springsecurity.model.RolePermissionEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
-import io.inferiority.demo.springsecurity.model.vo.UserVo;
+import io.inferiority.demo.springsecurity.model.vo.TokenVo;
+import io.inferiority.demo.springsecurity.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -34,23 +31,17 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
-    private PermissionMapper permissionMapper;
-    @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private IPermissionService permissionService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserVo user = userMapper.selectOneVo(Wrappers.<UserEntity>lambdaQuery()
+        TokenVo user = userMapper.selectOneTokenVo(Wrappers.<UserEntity>lambdaQuery()
                 .select(UserEntity.class, i -> true)
                 .eq(UserEntity::getUsername, username));
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        List<RolePermissionEntity> rolePermissions = rolePermissionMapper.selectList(Wrappers.<RolePermissionEntity>lambdaQuery()
-                .eq(RolePermissionEntity::getRId, user.getRoleId()));
-        List<PermissionEntity> permissions = rolePermissions.isEmpty()
-                ? Collections.emptyList()
-                : permissionMapper.selectBatchIds(rolePermissions.stream().map(RolePermissionEntity::getPId).collect(Collectors.toList()));
+        List<PermissionEntity> permissions = permissionService.roleHasPermissions(user.getRoleId());
         List<SimpleGrantedAuthority> authorities = permissions.stream()
                 .map(p -> p.getMenuCode() + ":" + p.getPermissionCode()).map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

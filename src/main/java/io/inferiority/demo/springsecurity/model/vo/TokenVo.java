@@ -18,7 +18,7 @@ import java.util.Collection;
  */
 @Setter
 @TableName("sys_user")
-public class UserVo extends UserEntity implements UserDetails {
+public class TokenVo extends UserEntity implements UserDetails {
     @TableField(exist = false)
     private Collection<SimpleGrantedAuthority> authorities;
 

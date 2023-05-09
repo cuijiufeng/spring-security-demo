@@ -1,7 +1,8 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
+import routes from "./routes";
 
 // 公共路由
-export const constantRoutes = [
+export const defaultRoutes = [
   {
     path: "/404",
     name: "404",
@@ -11,28 +12,20 @@ export const constantRoutes = [
     path: "/login",
     name: "Login",
     component: () => import("@/views/Login"),
-  },
-  {
-    path: "/",
-    name: "Root",
-    component: () => import("@/layout/index"),
-    // children: routers
   }
 ]
 
 // 动态路由
-export const dynamicRoutes = [
-  {
-    path: "/",
-    name: "Root",
-    component: () => import("@/layout/index"),
-    // children: routers
-  }
-]
+export const dynamicRoute = {
+  path: "/",
+  name: "Root",
+  component: () => import("@/layout/index"),
+  children: routes
+}
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: constantRoutes
+  routes: defaultRoutes
 })
 
 //加载路由守卫前置守卫

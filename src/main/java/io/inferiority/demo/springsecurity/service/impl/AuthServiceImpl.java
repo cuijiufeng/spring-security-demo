@@ -1,7 +1,12 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.inferiority.demo.springsecurity.dao.UserMapper;
+import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
+import io.inferiority.demo.springsecurity.model.vo.AuthVo;
 import io.inferiority.demo.springsecurity.service.IAuthService;
+import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletResponse;
 import java.security.PrivateKey;
 import java.time.Duration;
+import java.util.List;
 
 /**
  * @author cuijiufeng
@@ -30,9 +36,13 @@ public class AuthServiceImpl implements IAuthService {
     private PrivateKey jwtPrivKey;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private IPermissionService permissionService;
 
     @Override
-    public void login(UserEntity user) {
+    public AuthVo login(UserEntity user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -41,6 +51,13 @@ public class AuthServiceImpl implements IAuthService {
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
+
+        AuthVo auth = userMapper.selectOneAuthVo(Wrappers.<UserEntity>lambdaQuery()
+                .select(UserEntity.class, i -> true)
+                .eq(UserEntity::getUsername, user.getUsername()));
+        List<PermissionEntity> permissions = permissionService.roleHasPermissions(auth.getRoleId());
+        auth.setPermissions(permissions);
+        return auth;
     }
 
     @Override

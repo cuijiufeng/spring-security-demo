@@ -154,8 +154,7 @@ public class SnowflakeId {
     private static long getWorkId() {
         try {
             String hostAddress = Inet4Address.getLocalHost().getHostAddress();
-            int[] ints = StringUtils.toCodePoints(hostAddress);
-            return Arrays.stream(ints).sum() % 32;
+            return Arrays.stream(StringUtils.toCodePoints(hostAddress)).sum() % 32;
         } catch (UnknownHostException e) {
             // 如果获取失败，则使用随机数备用
             return RandomUtils.nextLong(0, 31);
@@ -169,7 +168,7 @@ public class SnowflakeId {
             for (byte b : bytes) {
                 sum += b;
             }
-            return sum % 32;
+            return Math.abs(sum % 32);
         }catch (Exception e){
             // 如果获取失败，则使用随机数备用
             return RandomUtils.nextLong(0, 31);

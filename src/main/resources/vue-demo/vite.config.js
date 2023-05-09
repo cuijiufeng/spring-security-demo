@@ -3,21 +3,11 @@ import {defineConfig} from 'vite'
 
 import vue from '@vitejs/plugin-vue'
 import {createSvgIconsPlugin} from 'vite-plugin-svg-icons';
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    //element自动导入
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
     //svg-icon导入
     createSvgIconsPlugin({
       iconDirs: [path.resolve(process.cwd(), 'src/assets/icons/svg')],
@@ -42,12 +32,12 @@ export default defineConfig({
     open: false,
     // 是否开启 https
     https: false,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://127.0.0.1:8080',
-    //     changeOrigin: true,
-    //     rewrite: path => path.replace(/^\/api/, '')
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '')
+      }
+    }
   }
 })

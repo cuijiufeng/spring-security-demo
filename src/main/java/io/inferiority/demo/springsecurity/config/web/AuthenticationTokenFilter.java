@@ -1,7 +1,7 @@
 package io.inferiority.demo.springsecurity.config.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.inferiority.demo.springsecurity.model.vo.UserVo;
+import io.inferiority.demo.springsecurity.model.vo.TokenVo;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -59,8 +59,8 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         try {
             // 2、对token进行解析
             Object user = JwtUtil.parseJwt(jwtPubKey, token);
-            UserVo userVo = new ObjectMapper().convertValue(user, UserVo.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, userVo.getAuthorities()) ;
+            TokenVo tokenVo = new ObjectMapper().convertValue(user, TokenVo.class);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, tokenVo.getAuthorities()) ;
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             // 5、放行

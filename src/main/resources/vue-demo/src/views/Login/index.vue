@@ -1,24 +1,33 @@
 <template>
   <div class="login-body">
-    <canvas id="login-canvas" style="width: 100%;height: 100%"/>
-    <language class="lang"/>
-    <el-form class="login-form" :model="loginForm" ref="loginForm" label-width="70px" :rules="{
+    <canvas id="login-canvas"/>
+    <language style="position: absolute;top: 10%;right: 7%;"/>
+    <el-form class="login-form" :model="loginForm" ref="loginForm" :rules="{
         username: [{ required: true, message: this.$t('login.please input username'), trigger: 'blur' }],
         password: [{ required: true, message: this.$t('login.please input password'), trigger: 'blur' }],
         verifyCode: [{ required: true, message: this.$t('login.please input verify code'), trigger: 'blur' }],
       }">
         <img class="logo-img" style="width: 220px;height: 60px;margin-bottom: 10px;" src="@/assets/logo/logo.png">
-      <el-form-item :label="$t('login.username')+':'" prop="username">
-        <el-input v-model="loginForm.username" :placeholder="$t('login.please input username')"/>
+      <el-form-item prop="username">
+        <el-input v-model="loginForm.username" :placeholder="$t('login.please input username')"
+          prefix-icon="User"/>
       </el-form-item>
-      <el-form-item :label="$t('login.password')+':'" prop="password">
-        <el-input v-model="loginForm.password" type="password" :placeholder="$t('login.please input password')"/>
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" :type="passwordHide ? 'password' : 'text'" 
+          :placeholder="$t('login.please input password')" prefix-icon="Key">
+          <template #suffix>
+            <el-icon style="cursor: pointer" @click="passwordHide = !passwordHide">
+              <View v-if="passwordHide"/>
+              <Hide v-else/>
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item prop="verifyCode">
         <img style="height: 32px;width: 100px;margin-right: 40px;" src="@/assets/logo/logo.png"/>
         <el-input style="width: calc(100% - 140px);" v-model="loginForm.verifyCode" :placeholder="$t('login.please input verify code')"/>
       </el-form-item>
-      <el-button style="margin: 0 auto" type="primary" @click="onSubmit">{{ $t('login.login') }}</el-button>
+      <el-button style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">{{ $t('login.login') }}</el-button>
     </el-form>
   </div>
 </template>
@@ -30,6 +39,7 @@ export default {
   name: 'Login',
   data() {
     return {
+      passwordHide: true,
       loginForm: {
         username: '',
         password: '',
@@ -43,11 +53,11 @@ export default {
         if (!valid) {
           return false;
         }
-        login(this.loginForm).then(([data]) => {
+        login(this.loginForm).then(([data, headers]) => {
           this.$store.commit('login', data);
           this.$router.replace("/");
-        }).catch(([err]) => {
-          this.$message({ type: 'error', message: err.errMsg, });
+        }).catch(([err, headers]) => {
+          this.$message({ type: 'error', message: err.message, });
         });
       });
     },
@@ -63,18 +73,11 @@ export default {
   width: 100vw;
   height: 100vh;
   background: #000000;
-  .lang {
-    position: absolute;
-    top: 10%;
-    right: 7%;
-  }
   .login-form {
     width: 30vw;
-    height: 35vh;
     padding: 4vh 5vw 5vh 5vw;
     text-align: center;
-    border: 1px solid #424242;
-    background: rgba(50, 50, 50, 0.7);
+    background: rgba(255, 255, 255, 0.1);;
     border-radius: 3px;
     position: absolute;
     left: 50%;

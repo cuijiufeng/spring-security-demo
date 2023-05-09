@@ -1,5 +1,5 @@
-import axios from "axios";
 import store from "@/store";
+import axios from "axios";
 import qs from 'qs'
 import {AUTHENTICATION, LANGUAGE} from './config';
 
@@ -20,7 +20,6 @@ param: {
   responseType //返回类型
   root    //是否返回全部的响应数据
   data    //请求数据
-  dataJson//post请求数据是否为json数据
 }
 */
 export default (param) => {
@@ -38,13 +37,11 @@ export default (param) => {
     if(param.method.toUpperCase() == 'GET') {
       getParam = '?t='+new Date().getTime() + (param.data ? '&'+qs.stringify(param.data) : '');
     } else if (param.method.toUpperCase() == 'POST') {
-      let postData = new FormData();
       for(let key in param.data){
         if(param.data[key] !== undefined) {
-          postData.append(key, param.data[key]);
+          postParam.append(key, param.data[key]);
         }
       }
-      postParam = (param.dataJson ? param.data : postData);
     }
     //请求
     axios({
@@ -63,14 +60,7 @@ export default (param) => {
         localStorage.setItem(AUTHENTICATION, headers[AUTHENTICATION]);
       }
       if(param.root) {
-        try{
-          let res = JSON.parse(new TextDecoder('utf-8').decode(new Uint8Array(result)));
-          if(res.code !== 200) {
-            reject([res, headers]);
-          }
-        } catch(e) {
-          resolve([result, headers]);
-        }
+        resolve([result, headers]);
       }
       if (result.code == 200) {
         resolve([result.data, headers]);
@@ -82,7 +72,8 @@ export default (param) => {
       }
     }).catch(err => {
       // router.replace("/500");
-      reject(err.response);
+      // reject(err.response);
+      console.log(err.response);
     })
   });
 }
