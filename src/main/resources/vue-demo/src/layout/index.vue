@@ -1,6 +1,6 @@
 <template>
   <div class="app-home">
-    <header-view class="app-header" :sidebar-expand.sync="sidebarExpand"/>
+    <header-view class="app-header" v-model:sidebar-expand="sidebarExpand"/>
     <div class="app-body">
       <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']" 
         :sidebar-expand="sidebarExpand"/>
@@ -14,6 +14,7 @@
 <script>
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import { SIDEBAR_EXPAND } from '@/utils/config';
 export default {
   name: 'Home',
   components: {
@@ -22,8 +23,16 @@ export default {
   },
   data() {
     return {
-      sidebarExpand: false
+      sidebarExpand: undefined
     }
+  },
+  watch: {
+    sidebarExpand(newVal, oldVal) {
+      localStorage.setItem(SIDEBAR_EXPAND, newVal);
+    }
+  },
+  created() {
+    this.sidebarExpand = eval(localStorage.getItem(SIDEBAR_EXPAND));
   }
 }
 </script>
@@ -45,7 +54,6 @@ export default {
     display: flex;
     .app-sidebar {
       height: 100%;
-      border: 1px solid red;
     }
     .app-main {
       height: 100%;
@@ -53,7 +61,7 @@ export default {
   }
 }
 //隐藏侧边栏的滚动条
-.app-sidebar::-webkit-scrollbar {display:none}
+// .app-sidebar::-webkit-scrollbar {display:none}
 //侧边栏收缩样式
 .sidebar-expand {
   width: var(--sidebarWidth);

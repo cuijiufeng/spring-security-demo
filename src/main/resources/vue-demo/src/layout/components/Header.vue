@@ -4,7 +4,7 @@
       <img class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo.png">
     </div>
     <div class="header-center">
-      <el-icon size="20" @click="$emit('update:sidebarExpand', !sidebarExpand)">
+      <el-icon style="cursor: pointer;" size="20" @click="this.$emit('update:sidebarExpand', !this.sidebarExpand)">
         <Fold v-if="sidebarExpand"/>
         <Expand v-else/>
       </el-icon>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { logout } from '@/api/system'
+import { logout } from '@/api/system';
 export default {
   name: 'Header',
   components: {
@@ -45,7 +45,7 @@ export default {
       }).catch(([err, headers]) => {
         this.$message({ type: 'error', message: err.message, });
       });
-    }
+    },
   },
   computed: {
     currentUser() {

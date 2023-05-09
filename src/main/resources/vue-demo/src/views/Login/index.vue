@@ -74,11 +74,11 @@ export default {
   height: 100vh;
   background: #000000;
   .login-form {
-    width: 30vw;
+    width: 27vw;
     padding: 4vh 5vw 5vh 5vw;
     text-align: center;
     background: rgba(255, 255, 255, 0.1);;
-    border-radius: 3px;
+    border-radius: 10px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, -60%);

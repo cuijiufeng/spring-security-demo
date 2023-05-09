@@ -30,13 +30,15 @@ INSERT INTO `sys_role` VALUES ('1', 'ROLE_admin', NULL, 1, 'ROLE_admin', '2023-0
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
-INSERT INTO `sys_permission` VALUES ('1', '', ''help', 'help', 'hello', 'hello', 1);
-INSERT INTO `sys_permission` VALUES ('2', '', ''help', 'help', 'other', 'other', 0);
+INSERT INTO `sys_permission` VALUES ('1', '', 'index', 'index', 'index', 'index', 1);
+INSERT INTO `sys_permission` VALUES ('2', '', 'help', 'help', 'hello', 'hello', 1);
+INSERT INTO `sys_permission` VALUES ('3', '', 'help', 'help', 'other', 'other', 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
 -- ----------------------------
 INSERT INTO `sys_role_permission` VALUES ('1', '1', '1');
 INSERT INTO `sys_role_permission` VALUES ('2', '1', '2');
+INSERT INTO `sys_role_permission` VALUES ('3', '1', '3');
 
 SET FOREIGN_KEY_CHECKS = 1;

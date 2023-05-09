@@ -1,6 +1,5 @@
-import store from '@/store';
 import router from './index';
-import {ROUTER_WHITE_LIST} from '@/utils/config'
+import {LOGIN_INFO, ROUTER_WHITE_LIST} from '@/utils/config'
 
 export default {
   //路由前置守卫
@@ -11,7 +10,7 @@ export default {
       return;
     }
     //当没有登录时显示登录页面
-    if(store.getters.currentUser == undefined) {
+    if(!sessionStorage.getItem(LOGIN_INFO)) {
       router.replace('/login');
       return;
     }

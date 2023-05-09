@@ -19,7 +19,8 @@ export default defineConfig({
       // 设置路径
       '~': path.resolve(__dirname, './'),
       // 设置别名
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
     },
     //import from省略后缀
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
