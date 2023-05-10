@@ -1,22 +1,18 @@
 <template>
   <div class="sidebar-body">
-    <el-menu class="sidebar-menu" router :default-active="$route.path" :collapse="!sidebarExpand" :collapse-transition="false"
-      :key="item" v-for="item in routes">
-      <!-- <el-sub-menu v-if="item.meta.submenu" :index="item.path">
-      </el-sub-menu> -->
-      <el-menu-item v-if="!item.meta.submenu" :index="item.path">
-        <el-icon><icon-menu /></el-icon>
-        <span>{{item.path}}</span>
-      </el-menu-item>
+    <el-menu class="sidebar-menu" router :default-active="$route.path" :collapse="!sidebarExpand" :collapse-transition="false">
+      <sidebar-item :route="item" :key="item" v-for="item in routes"/>
     </el-menu>
   </div>
 </template>
 
 <script>
 import routes from '@/router/routes';
+import SidebarItem from './SidebarItem';
 export default {
   name: 'Sidebar',
   components: {
+    "sidebar-item": SidebarItem
   },
   props: {
     sidebarExpand: Boolean,

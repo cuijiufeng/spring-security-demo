@@ -31,9 +31,17 @@ export default {
           if(r.children) {
             recursionFilterRoute(r, permissions);
             //默认路由
-            r.redirect = r.children[0].path;
+            if(r.children[0]) {
+              r.redirect = r.children[0].path;
+            }
+            return r.children.length != 0;
           }
-          return undefined != permissions.find(p => p.menuCode == r.meta.menu);
+          let permission = permissions.find(p => p.menuCode == r.meta.menu);
+          //给路由写name
+          if(undefined != permission) {
+            r.meta.title = permission.menuName;
+          }
+          return undefined != permission;
         });
       }
     },

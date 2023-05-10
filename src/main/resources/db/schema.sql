@@ -22,7 +22,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 CREATE TABLE `sys_permission`  (
   `id` varchar(32) NOT NULL,
-  `group_name` varchar(255) DEFAULT NULL,
   `menu_code` varchar(255) DEFAULT NULL,
   `menu_name` varchar(255) DEFAULT NULL,
   `permission_code` varchar(255) DEFAULT NULL,

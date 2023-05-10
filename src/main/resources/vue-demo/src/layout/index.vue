@@ -5,7 +5,7 @@
       <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']" 
         :sidebar-expand="sidebarExpand"/>
       <div class="app-main" :class="sidebarExpand ? 'sidebar-expand_main' : 'sidebar-fold_main'">
-        <!-- <router-view/> -->
+        <router-view />
       </div>
     </div>
   </div>
