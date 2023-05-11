@@ -1,12 +1,14 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.inferiority.demo.springsecurity.dao.PermissionMapper;
+import io.inferiority.demo.springsecurity.dao.RolePermissionMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
+import io.inferiority.demo.springsecurity.model.RolePermissionEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
 import io.inferiority.demo.springsecurity.model.vo.AuthVo;
 import io.inferiority.demo.springsecurity.service.IAuthService;
-import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +23,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletResponse;
 import java.security.PrivateKey;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author cuijiufeng
@@ -39,7 +43,9 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private IPermissionService permissionService;
+    private PermissionMapper permissionMapper;
+    @Autowired
+    private RolePermissionMapper rolePermissionMapper;
 
     @Override
     public AuthVo login(UserEntity user) {
@@ -55,7 +61,14 @@ public class AuthServiceImpl implements IAuthService {
         AuthVo auth = userMapper.selectOneAuthVo(Wrappers.<UserEntity>lambdaQuery()
                 .select(UserEntity.class, i -> true)
                 .eq(UserEntity::getUsername, user.getUsername()));
-        List<PermissionEntity> permissions = permissionService.roleHasPermissions(auth.getRoleId());
+        List<String> permissionIds = rolePermissionMapper.selectList(Wrappers.<RolePermissionEntity>lambdaQuery()
+                .eq(RolePermissionEntity::getRId, auth.getRoleId()))
+                .stream()
+                .map(RolePermissionEntity::getPId)
+                .collect(Collectors.toList());
+        List<PermissionEntity> permissions = permissionIds.isEmpty()
+                ? Collections.emptyList()
+                : permissionMapper.selectBatchIds(permissionIds);
         auth.setPermissions(permissions);
         return auth;
     }

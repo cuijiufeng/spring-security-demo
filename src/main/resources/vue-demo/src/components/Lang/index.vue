@@ -29,8 +29,8 @@ function switchLanguage(lang) {
   justify-content: center;
 }
 .lang-icon {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   color: black;
 }
 </style>

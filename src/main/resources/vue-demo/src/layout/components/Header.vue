@@ -4,7 +4,7 @@
       <img class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo.png">
     </div>
     <div class="header-center">
-      <el-icon style="cursor: pointer;" size="20" @click="this.$emit('update:sidebarExpand', !this.sidebarExpand)">
+      <el-icon style="cursor: pointer;" size="20" @click="toggleSidebar">
         <Fold v-if="sidebarExpand"/>
         <Expand v-else/>
       </el-icon>
@@ -13,9 +13,9 @@
       <language/>
       <el-dropdown popper-class="dropdown-user">
         <div class="dropdown-user-link">
-          <svg-icon icon-class="user" class-name="user-icon"/>
-          <div style="width: 6px"/>
-          <div style="color: black;size: 18px;">{{currentUser.username}}</div>
+          <svg-icon icon-class="user" style="color: #7a8495;"/>
+          <div style="width: 5px"/>
+          <div style="color: #7a8495;size: 18px;">{{currentUser.username}}</div>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -31,10 +31,9 @@
 
 <script>
 import { logout } from '@/api/system';
+import { SIDEBAR_EXPAND } from '@/utils/config';
 export default {
   name: 'Header',
-  components: {
-  },
   props: {
     sidebarExpand: Boolean,
   },
@@ -46,6 +45,10 @@ export default {
         this.$message({ type: 'error', message: err.message, });
       });
     },
+    toggleSidebar() {
+      this.$emit('update:sidebar-expand', !this.sidebarExpand);
+      localStorage.setItem(SIDEBAR_EXPAND, this.sidebarExpand ? 1 : 0);
+    }
   },
   computed: {
     currentUser() {
@@ -78,11 +81,6 @@ export default {
     margin-right: 2vw;
     display: flex; 
   }
-}
-.user-icon {
-  width: 18px;
-  height: 18px;
-  color: black;
 }
 //el-dropdown
 :global(.dropdown-user .el-dropdown-menu__item:not(.is-disabled):focus) {

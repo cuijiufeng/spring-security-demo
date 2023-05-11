@@ -34,7 +34,8 @@ export default {
   width: 1em;
   height: 1em;
   position: relative;
-  top: 0.06em;
+  vertical-align: -0.15em;
   fill: currentColor;
+  overflow: hidden;
 }
 </style>

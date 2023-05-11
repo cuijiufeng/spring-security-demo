@@ -22,10 +22,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 CREATE TABLE `sys_permission`  (
   `id` varchar(32) NOT NULL,
-  `menu_code` varchar(255) DEFAULT NULL,
-  `menu_name` varchar(255) DEFAULT NULL,
-  `permission_code` varchar(255) DEFAULT NULL,
-  `permission_name` varchar(255) DEFAULT NULL,
+  `parent_id` varchar(255) DEFAULT NULL,
+  `type` varchar(1) DEFAULT NULL COMMENT 'D:目录 M:菜单 P:权限',
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
   `required` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;

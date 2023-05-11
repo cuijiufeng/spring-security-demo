@@ -1,8 +1,15 @@
 <template>
   <div class="sidebar-body">
-    <el-menu class="sidebar-menu" router :default-active="$route.path" :collapse="!sidebarExpand" :collapse-transition="false">
-      <sidebar-item :route="item" :key="item" v-for="item in routes"/>
-    </el-menu>
+    <el-scrollbar>
+      <el-menu router 
+        :default-active="this.$route.path" 
+        mode="vertical"
+        :collapse="!sidebarExpand" 
+        :collapse-transition="false"
+        text-color="#7a8495">
+        <sidebar-item :route="item" :key="item.path" v-for="item in routes"/>
+      </el-menu>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -17,14 +24,10 @@ export default {
   props: {
     sidebarExpand: Boolean,
   },
-  data() {
-    return {
-    }
-  },
   computed: {
     routes() {
       return routes;
-    }
+    },
   }
 }
 </script>
@@ -32,10 +35,7 @@ export default {
 <style lang="less" scoped>
 .sidebar-body {
   box-shadow: 3px 5px 5px #ccc;
-  .sidebar-menu {
-    margin-top: 3px;
-    height: 100%;
-    width: 100%;
-  }
+  margin-top: 3px;
+  background: #fff;
 }
 </style>

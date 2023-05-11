@@ -10,6 +10,4 @@ import java.util.List;
  */
 public interface IPermissionService {
     List<PermissionEntity> allPermissions();
-
-    List<PermissionEntity> roleHasPermissions(String roleId);
 }

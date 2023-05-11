@@ -34,12 +34,13 @@ export default {
             if(r.children[0]) {
               r.redirect = r.children[0].path;
             }
-            return r.children.length != 0;
+            //权限表中是否包含非子路由
+            // return r.children.length != 0;
           }
-          let permission = permissions.find(p => p.menuCode == r.meta.menu);
-          //给路由写name
+          let permission = permissions.find(p => p.code == r.meta.menu);
+          //路由title
           if(undefined != permission) {
-            r.meta.title = permission.menuName;
+            r.meta.title = permission.name;
           }
           return undefined != permission;
         });
