@@ -4,10 +4,10 @@
       <el-menu router 
         :default-active="this.$route.path" 
         mode="vertical"
-        :collapse="!sidebarExpand" 
+        :collapse="!collapse" 
         :collapse-transition="false"
         text-color="#7a8495">
-        <sidebar-item :route="item" :key="item.path" v-for="item in routes"/>
+        <sidebar-item :route="item" :key="item.path" v-for="item in routes" :collapse="!collapse"/>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -22,7 +22,7 @@ export default {
     "sidebar-item": SidebarItem
   },
   props: {
-    sidebarExpand: Boolean,
+    collapse: Boolean,
   },
   computed: {
     routes() {

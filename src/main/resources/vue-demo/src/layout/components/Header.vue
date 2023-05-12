@@ -8,14 +8,15 @@
         <Fold v-if="sidebarExpand"/>
         <Expand v-else/>
       </el-icon>
+      <breadcrumb style="margin-left: 20px;"/>
     </div>
     <div class="header-right">
       <language/>
-      <el-dropdown popper-class="dropdown-user">
+      <el-dropdown>
         <div class="dropdown-user-link">
-          <svg-icon icon-class="user" style="color: #7a8495;"/>
+          <svg-icon icon-class="user"/>
           <div style="width: 5px"/>
-          <div style="color: #7a8495;size: 18px;">{{currentUser.username}}</div>
+          <span>{{currentUser.username}}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -30,10 +31,14 @@
 </template>
 
 <script>
+import Breadcrumb from '@/components/Breadcrumb';
 import { logout } from '@/api/system';
 import { SIDEBAR_EXPAND } from '@/utils/config';
 export default {
   name: 'Header',
+  components: {
+    'breadcrumb': Breadcrumb,
+  },
   props: {
     sidebarExpand: Boolean,
   },
@@ -46,8 +51,8 @@ export default {
       });
     },
     toggleSidebar() {
+      localStorage.setItem(SIDEBAR_EXPAND, !this.sidebarExpand ? 1 : 0);
       this.$emit('update:sidebar-expand', !this.sidebarExpand);
-      localStorage.setItem(SIDEBAR_EXPAND, this.sidebarExpand ? 1 : 0);
     }
   },
   computed: {
@@ -82,16 +87,11 @@ export default {
     display: flex; 
   }
 }
-//el-dropdown
-:global(.dropdown-user .el-dropdown-menu__item:not(.is-disabled):focus) {
-  color: black;
-  background-color: #f0f3f4;
-}
 .dropdown-user-link {
   cursor: pointer;
-  color: var(--headerBg);
+  font-size: 16px;
+  color: #7a8495;
   display: flex;
   align-items: center;
-  outline: none;
 }
 </style>

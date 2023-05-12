@@ -1,10 +1,15 @@
 <template>
-  <div class="lang">
-    <svg-icon v-if="i18n.locale.value == 'en'" 
-      icon-class="lang-en" class-name="lang-icon" @click="switchLanguage('zh')"/>
-    <svg-icon v-else 
-      icon-class="lang-zh" class-name="lang-icon" @click="switchLanguage('en')"/>
-  </div>
+  <el-dropdown trigger="hover" @command="switchLanguage">
+    <div class="lang">
+      <svg-icon icon-class="lang"/>
+    </div>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item :disabled="i18n.locale.value === 'zh'" command="zh">中文</el-dropdown-item>
+        <el-dropdown-item :disabled="i18n.locale.value === 'en'" command="en">English</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
 </template>
 
 <script setup>
@@ -27,10 +32,6 @@ function switchLanguage(lang) {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.lang-icon {
-  width: 22px;
-  height: 22px;
-  color: black;
+  font-size: 16px;
 }
 </style>

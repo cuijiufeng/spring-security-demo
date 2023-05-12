@@ -3,7 +3,7 @@
     <header-view class="app-header" v-model:sidebar-expand="sidebarExpand"/>
     <div class="app-body">
       <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']"
-        :sidebar-expand="sidebarExpand"/>
+        :collapse="sidebarExpand"/>
       <div class="app-main" :class="sidebarExpand ? 'sidebar-expand_main' : 'sidebar-fold_main'">
         <router-view />
       </div>
