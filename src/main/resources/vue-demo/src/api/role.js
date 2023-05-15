@@ -1,10 +1,10 @@
 import http from "@/utils/axios";
 
 //用户分页
-export const userList = (param) => {
+export const roleList = (param) => {
   return http({
     method: 'GET',
-    url: '/user/list',
+    url: '/role/list',
     data: param
   })
 }

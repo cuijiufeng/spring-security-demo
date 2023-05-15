@@ -25,7 +25,7 @@ INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$HAe6gTZo.uxxFEDrjU74GOk0nPc
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', 'ROLE_admin', NULL, 1, 'ROLE_admin', '2023-01-01 00:00:00');
+INSERT INTO `sys_role` VALUES ('1', '超级管理员', 'ROLE_admin', NULL, 1, 'ROLE_admin', '2023-01-01 00:00:00');
 
 -- ----------------------------
 -- Records of sys_permission

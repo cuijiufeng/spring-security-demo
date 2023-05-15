@@ -7,7 +7,7 @@ import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.RolePermissionEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
-import io.inferiority.demo.springsecurity.model.vo.AuthVo;
+import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements IAuthService {
     private RolePermissionMapper rolePermissionMapper;
 
     @Override
-    public AuthVo login(UserEntity user) {
+    public UserVo login(UserEntity user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -58,7 +58,7 @@ public class AuthServiceImpl implements IAuthService {
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
 
-        AuthVo auth = userMapper.selectOneAuthVo(Wrappers.<UserEntity>lambdaQuery()
+        UserVo auth = userMapper.selectOneUserVo(Wrappers.<UserEntity>lambdaQuery()
                 .select(UserEntity.class, i -> true)
                 .eq(UserEntity::getUsername, user.getUsername()));
         List<String> permissionIds = rolePermissionMapper.selectList(Wrappers.<RolePermissionEntity>lambdaQuery()

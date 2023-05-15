@@ -40,6 +40,9 @@ export default {
   flex-shrink: 0;
   margin-right: 16px;
 }
+.el-menu--collapse .svg-icon {
+  margin-right: 0px;
+}
 // 文字溢出显示...
 .menu-title {
   overflow: hidden !important;
@@ -67,5 +70,15 @@ export default {
       background-color: rgba(0, 0, 0, 0.06) !important;
     }
   }
+}
+
+.el-menu--collapse {
+  .el-menu-item {
+    justify-content: center;
+  }
+}
+// TODO
+.el-menu--collapse.el-sub-menu__title {
+  justify-content: center;
 }
 </style>

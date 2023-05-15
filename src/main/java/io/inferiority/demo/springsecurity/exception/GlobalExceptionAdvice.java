@@ -51,7 +51,7 @@ public class GlobalExceptionAdvice {
         String errMsg = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(","));
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .body(JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", errMsg)));
+                .body(JsonResultUtil.ARGUMENT_ERROR.apply(errMsg));
     }
 
     /**

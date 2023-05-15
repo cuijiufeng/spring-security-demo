@@ -64,6 +64,7 @@ export default {
         background: white;
         flex: 1;
         margin-left: 3px;
+        overflow: hidden;
       }
     }
   }

@@ -35,7 +35,8 @@ CREATE TABLE `sys_permission`  (
 -- ----------------------------
 CREATE TABLE `sys_role`  (
   `id` varchar(32) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `role_name` varchar(255) DEFAULT NULL,
+  `role_key` varchar(255) DEFAULT NULL,
   `parent_id` varchar(32) DEFAULT NULL,
   `level` int DEFAULT NULL,
   `create_user` varchar(255) DEFAULT NULL,

@@ -17,12 +17,15 @@ import i18n from '@/i18n/index'
 import Lang from '@/components/Lang'
 //elementui icons
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+// 分页组件
+import Pagination from '@/components/Pagination'
 
 const app = createApp(App)
 
 // 全局组件挂载
 app.component('svg-icon', SvgIcon)
 app.component('language', Lang)
+app.component('pagination', Pagination)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

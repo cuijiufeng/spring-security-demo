@@ -17,7 +17,8 @@ import java.util.Date;
 public class RoleEntity implements Serializable {
     @TableId
     private String id;
-    private String name;
+    private String roleName;
+    private String roleKey;
     private String parentId;
     private Integer level;
     private String createUser;
