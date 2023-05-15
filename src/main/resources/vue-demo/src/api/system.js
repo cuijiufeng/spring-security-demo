@@ -12,7 +12,7 @@ export const login = (param) => {
   })
 }
 
-//登录接口
+//登出接口
 export const logout = (param) => {
   return http({
     method: 'POST',

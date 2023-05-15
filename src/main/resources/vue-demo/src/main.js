@@ -6,7 +6,6 @@ import store from './store'
 import "@/assets/styles/global.less";
 import "@/assets/styles/reset.css";
 import "@/assets/styles/elementui.less";
-import "@/assets/styles/sidebar.less";
 //svg图标
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon'

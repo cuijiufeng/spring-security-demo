@@ -46,4 +46,26 @@ export default {
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
+
+
+//.el-menu样式
+.el-menu-item {
+  &.is-active {
+    color: rgb(44, 158, 247);
+    background: rgb(233, 245, 255);
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+  }
+}
+.el-sub-menu {
+  &.is-opened.rootNode{
+    border-left: 3px solid rgb(44, 158, 247);
+  }
+  :deep(.el-sub-menu__title) {
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.06) !important;
+    }
+  }
+}
 </style>

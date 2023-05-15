@@ -1,6 +1,8 @@
+import common from './zhs/common';
 import layout from './zhs/layout';
 import login from './zhs/login';
+import user from './zhs/user';
 
 export default {
-  layout,login,
+  common,layout,login,user,
 }

@@ -38,4 +38,10 @@ export default {
   margin-top: 3px;
   background: #fff;
 }
+
+.el-menu {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
 </style>

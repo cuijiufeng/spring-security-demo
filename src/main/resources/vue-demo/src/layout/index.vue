@@ -4,8 +4,11 @@
     <div class="app-body">
       <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']"
         :collapse="sidebarExpand"/>
-      <div class="app-main" :class="sidebarExpand ? 'sidebar-expand_main' : 'sidebar-fold_main'">
-        <router-view />
+      <div class="app-main">
+        <route-tags />
+        <div class="app-container">
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
@@ -14,12 +17,14 @@
 <script>
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import RouteTags from '@/components/RouteTags';
 import { SIDEBAR_EXPAND } from '@/utils/config';
 export default {
   name: 'Home',
   components: {
     'header-view': Header,
     'sidebar-view': Sidebar,
+    'route-tags': RouteTags,
   },
   data() {
     return {
@@ -51,22 +56,23 @@ export default {
     }
     .app-main {
       height: 100%;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .app-container {
+        background: white;
+        flex: 1;
+        margin-left: 3px;
+      }
     }
   }
 }
-//隐藏侧边栏的滚动条
-// .app-sidebar::-webkit-scrollbar {display:none}
 //侧边栏收缩样式
 .sidebar-expand {
   width: var(--sidebarWidth);
 }
 .sidebar-fold {
   width: var(--sidebarFoldWidth);
-}
-.sidebar-expand_main {
-  width: calc(100vw - var(--sidebarWidth));
-}
-.sidebar-fold_main {
-  width: calc(100vw - var(--sidebarFoldWidth));
 }
 </style>
