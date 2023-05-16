@@ -1,7 +1,7 @@
 <template>
   <el-dropdown trigger="hover" @command="switchLanguage">
     <div class="lang">
-      <svg-icon icon-class="lang"/>
+      <svg-icon icon-class="lang" :color="color"/>
     </div>
     <template #dropdown>
       <el-dropdown-menu>
@@ -16,8 +16,13 @@
 import { LANGUAGE } from '@/utils/config';
 import { useI18n } from 'vue-i18n';
 const { locale } = useI18n()
-//初始化
-locale.value = localStorage.getItem(LANGUAGE) || 'zh';
+
+const props = defineProps({
+  color: {
+    type: String,
+    default: ''
+  }
+})
 
 function switchLanguage(lang) {
   locale.value = lang;

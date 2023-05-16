@@ -66,7 +66,7 @@ export default (param) => {
         resolve([result.data, headers]);
       } else {
         reject([result.data, headers]);
-        if(result.code == 500 && result.data.error == '10001') {
+        if(result.code == 500 && result.data.error == '00401') {
           store.commit('logout')
         }
       }

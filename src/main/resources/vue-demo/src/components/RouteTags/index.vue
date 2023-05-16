@@ -9,46 +9,40 @@
   </el-scrollbar>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
 import { ROUTE_TAGS } from '@/utils/config';
-export default {
-  name: 'RouteTags',
-  data() {
-    return {
-      tags: JSON.parse(sessionStorage.getItem(ROUTE_TAGS)) 
-        || [{'title': this.$t('layout.index'), 'path': '/index', 'effect': 'plain'}],
-    }
-  },
-  methods: {
-    closeTag(tag) {
-      this.tags = this.tags.filter(t => tag != t);
-      if(tag.effect == 'dark') {
-        this.$router.replace(this.tags[0].path)
-      }
-      this.cacheRouteTags();
-    },
-    cacheRouteTags() {
-      sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(this.tags));
-    }
-  },
-  watch: {
-    $route: [ 
-      function changedRoute(route) {
-        this.tags.forEach(t => {
-          t.effect = 'plain';
-        });
-        let tag = this.tags.find(t => t.path == route.fullPath);
-        if(undefined == tag) {
-          this.tags.push({'title': route.meta.title, 'path': route.fullPath, 'effect': 'dark'});
-        } else {
-          tag.effect = 'dark';
-        }
-        this.dark = route.fullPath;
-        this.cacheRouteTags();
-      }
-    ]
-  }
+
+let tags = reactive(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)) 
+    || [{'title': useI18n().t('layout.index'), 'path': '/index', 'effect': 'plain'}]);
+
+const cacheRouteTags = () => {
+  sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(tags));
 }
+
+const closeTag = (tag) => {
+  tags = tags.filter(t => tag != t);
+  if(tag.effect == 'dark') {
+    useRouter().replace(tags[0].path)
+  }
+  cacheRouteTags();
+}
+
+watch(useRoute(), (route) => {
+  tags.forEach(t => {
+    t.effect = 'plain';
+  });
+  let tag = tags.find(t => t.path == route.fullPath);
+  if(undefined == tag) {
+    tags.push({'title': route.meta.title, 'path': route.fullPath, 'effect': 'dark'});
+  } else {
+    tag.effect = 'dark';
+  }
+  cacheRouteTags();
+})
 </script>
 
 <style lang="less" scoped>

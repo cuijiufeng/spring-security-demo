@@ -1,6 +1,6 @@
 <template>
   <div class="user-body">
-    <el-form :inline="true" :model="userSearch" ref="userSearch">
+    <el-form :inline="true" :model="userSearch" ref="userSearchRef">
       <el-form-item :label="$t('user.username')" prop="username">
         <el-input v-model="userSearch.username" :placeholder="$t('user.please input username')" />
       </el-form-item>
@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <el-button icon="Search" type="primary" @click="pullUserList()">{{$t('common.query')}}</el-button>
-        <el-button icon="Refresh" @click="$refs['userSearch'].resetFields();">{{$t('common.reset')}}</el-button>
+        <el-button icon="Refresh" @click="$refs['userSearchRef'].resetFields();">{{$t('common.reset')}}</el-button>
       </el-form-item>
     </el-form>
     <div style="margin-bottom: 20px;">
@@ -53,49 +53,47 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
 import {userList} from '@/api/user';
 import {roleList} from '@/api/role';
-export default {
-  name: 'User',
-  data() {
-    return {
-      loading: false,
-      userSearch: {
-        pageNum: undefined,
-        pageSize: undefined,
-        total: undefined,
-        username: '',
-        roleId: '',
-      },
-      userData: [],
-      roleData: [],
-    }
-  },
-  methods: {
-    pullUserList() {
-      this.loading = true;
-      userList(this.userSearch).then(([data, headers]) => {
-        this.userData = data.list;
-        this.userSearch.pageNum = data.pageNum;
-        this.userSearch.pageSize = data.pageSize;
-        this.userSearch.total = data.total;
-      }).catch(([err, headers]) => {
-        this.$message({ type: 'error', message: err.message, });
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.pullUserList();
-    roleList({pageSize: 0, all: true}).then(([data, headers]) => {
-      this.roleData = data.list;
-    }).catch(([err, headers]) => {
-      this.$message({ type: 'error', message: err.message, });
-    });
-  }
+
+const loading = ref(false);
+const userSearch = reactive({
+  pageNum: undefined,
+  pageSize: undefined,
+  total: undefined,
+  username: '',
+  roleId: '',
+});
+let userData = reactive([]);
+let roleData = reactive([]);
+
+const pullUserList = () => {
+  loading.value = true;
+  userList(userSearch).then(([data, headers]) => {
+    userData = data.list;
+    userSearch.pageNum = data.pageNum;
+    userSearch.pageSize = data.pageSize;
+    userSearch.total = data.total;
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  }).finally(() => {
+    loading.value = false;
+  });
 }
+
+onMounted(() => {
+  pullUserList();
+  roleList({pageSize: 0, all: true}).then(([data, headers]) => {
+    debugger
+    roleData = data.list;
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
+});
 </script>
 
 <style lang="less" scoped>

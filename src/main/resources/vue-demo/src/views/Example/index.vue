@@ -3,10 +3,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Example',
-}
+<script setup>
 </script>
 
 <style lang="less" scoped>

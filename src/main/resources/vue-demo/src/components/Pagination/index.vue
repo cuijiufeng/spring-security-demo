@@ -7,14 +7,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Pagination',
-  props: {
-    pageSizes: Array,
-    total: Number,
+<script setup>
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
+
+const props = defineProps({
+  pageSizes: { 
+    type: Array
   },
-}
+  total: {
+    type: Number
+  },
+})
 </script>
 
 <style lang="less" scoped>

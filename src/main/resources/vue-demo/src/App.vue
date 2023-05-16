@@ -4,15 +4,10 @@
   </el-config-provider>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, watch } from 'vue';
 import zh from'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
-export default {
-  name: "App",
-  data() {
-    return {
-      locale: en
-    }
-  }
-}
+
+const locale = reactive(en);
 </script>

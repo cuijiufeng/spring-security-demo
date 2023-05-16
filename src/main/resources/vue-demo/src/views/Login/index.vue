@@ -1,12 +1,8 @@
 <template>
   <div class="login-body">
     <canvas id="login-canvas"/>
-    <language style="position: absolute;top: 10%;right: 7%;"/>
-    <el-form class="login-form" :model="loginForm" ref="loginForm" :rules="{
-        username: [{ required: true, message: this.$t('login.please input username'), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('login.please input password'), trigger: 'blur' }],
-        verifyCode: [{ required: true, message: this.$t('login.please input verify code'), trigger: 'blur' }],
-      }">
+    <language style="position: absolute;top: 10%;right: 7%;" color="white"/>
+    <el-form class="login-form" :model="loginForm" ref="loginFormRef" :rules="loginFormRules">
         <img class="logo-img" style="width: 220px;height: 60px;margin-bottom: 10px;" src="@/assets/logo/logo.png">
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" :placeholder="$t('login.please input username')"
@@ -33,39 +29,46 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
 import { loginBgRender } from "@/assets/js/canvas";
-import { login } from '@/api/system'
-export default {
-  name: 'Login',
-  data() {
-    return {
-      passwordHide: true,
-      loginForm: {
-        username: '',
-        password: '',
-        verifyCode: '',
-      },
+import { login } from '@/api/system';
+
+const store = useStore();
+
+const passwordHide = ref(true);
+const loginForm = reactive({
+  username: '',
+  password: '',
+  verifyCode: '',
+});
+      
+const loginFormRules = reactive({
+  username: [{ required: true, message: useI18n().t('login.please input username'), trigger: 'blur' }],
+  password: [{ required: true, message: useI18n().t('login.please input password'), trigger: 'blur' }],
+  verifyCode: [{ required: true, message: useI18n().t('login.please input verify code'), trigger: 'blur' }],
+});
+
+const loginFormRef = ref();
+const onSubmit = () => {
+  loginFormRef.value.validate((valid) => {
+    if (!valid) {
+      return;
     }
-  },
-  methods: {
-    onSubmit() {
-      this.$refs["loginForm"].validate((valid) => {
-        if (!valid) {
-          return false;
-        }
-        login(this.loginForm).then(([data, headers]) => {
-          this.$store.commit('login', data);
-        }).catch(([err, headers]) => {
-          this.$message({ type: 'error', message: err.message, });
-        });
-      });
-    },
-  },
-  mounted() {
-    loginBgRender();
-  }
+    login(loginForm).then(([data, headers]) => {
+      store.commit('login', data);
+    }).catch(([data, headers]) => {
+      ElMessage({ type: 'error', message: data.message });
+    });
+  });
 }
+
+onMounted(() => {
+  loginBgRender();
+});
 </script>
 
 <style lang="less" scoped>

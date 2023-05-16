@@ -1,11 +1,11 @@
 <template>
   <div class="app-home">
-    <header-view class="app-header" v-model:sidebar-expand="sidebarExpand"/>
+    <Header class="app-header" v-model:sidebar-expand="sidebarExpand"/>
     <div class="app-body">
-      <sidebar-view :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']"
+      <Sidebar :class="['app-sidebar', sidebarExpand ? 'sidebar-expand' : 'sidebar-fold']"
         :collapse="sidebarExpand"/>
       <div class="app-main">
-        <route-tags />
+        <RouteTags />
         <div class="app-container">
           <router-view />
         </div>
@@ -14,26 +14,16 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive } from 'vue';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import RouteTags from '@/components/RouteTags';
 import { SIDEBAR_EXPAND } from '@/utils/config';
-export default {
-  name: 'Home',
-  components: {
-    'header-view': Header,
-    'sidebar-view': Sidebar,
-    'route-tags': RouteTags,
-  },
-  data() {
-    return {
-      sidebarExpand: localStorage.getItem(SIDEBAR_EXPAND) 
-        ? !!+localStorage.getItem(SIDEBAR_EXPAND)
-        : true,
-    }
-  },
-}
+
+const sidebarExpand = ref(localStorage.getItem(SIDEBAR_EXPAND) 
+    ? !!+localStorage.getItem(SIDEBAR_EXPAND)
+    : true);
 </script>
 
 <style lang="less" scoped>

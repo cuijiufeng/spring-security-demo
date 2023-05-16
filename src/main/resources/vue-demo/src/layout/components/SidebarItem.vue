@@ -21,18 +21,18 @@
   </el-sub-menu>
 </template>
 
-<script>
-export default {
-  name: 'SidebarItem',
-  props: {
-    route: Object,
-    rootNode: {
-      type: Boolean,
-      default: true,
-    },
-    collapse: Boolean
-  }
-}
+<script setup>
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
+
+const props = defineProps({
+  route: Object,
+  rootNode: {
+    type: Boolean,
+    default: true,
+  },
+  collapse: Boolean
+});
 </script>
 
 <style lang="less" scoped>

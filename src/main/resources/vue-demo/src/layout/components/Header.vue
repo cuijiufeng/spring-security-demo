@@ -8,7 +8,7 @@
         <Fold v-if="sidebarExpand"/>
         <Expand v-else/>
       </el-icon>
-      <breadcrumb style="margin-left: 20px;"/>
+      <Breadcrumb style="margin-left: 20px;"/>
     </div>
     <div class="header-right">
       <language/>
@@ -22,7 +22,7 @@
           <el-dropdown-menu>
             <el-dropdown-item icon="User">{{$t('layout.personal center')}}</el-dropdown-item>
             <el-dropdown-item icon="Key">{{$t('layout.change password')}}</el-dropdown-item>
-            <el-dropdown-item divided icon="SwitchButton" @click="logout">{{$t('layout.logout')}}</el-dropdown-item>
+            <el-dropdown-item divided icon="SwitchButton" @click="logoutUser">{{$t('layout.logout')}}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -30,37 +30,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
 import Breadcrumb from '@/components/Breadcrumb';
 import { logout } from '@/api/system';
 import { SIDEBAR_EXPAND } from '@/utils/config';
-export default {
-  name: 'Header',
-  components: {
-    'breadcrumb': Breadcrumb,
-  },
-  props: {
-    sidebarExpand: Boolean,
-  },
-  methods: {
-    logout() {
-      logout({username: this.currentUser.username}).then(([data, headers]) => {
-        this.$store.commit('logout');
-      }).catch(([err, headers]) => {
-        this.$message({ type: 'error', message: err.message, });
-      });
-    },
-    toggleSidebar() {
-      localStorage.setItem(SIDEBAR_EXPAND, !this.sidebarExpand ? 1 : 0);
-      this.$emit('update:sidebar-expand', !this.sidebarExpand);
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.getters.currentUser;
-    },
-  },
+
+const emit = defineEmits(['update:sidebar-expand'])
+
+const store = useStore();
+
+const props = defineProps({
+  sidebarExpand: Boolean,
+});
+
+const logoutUser = () => {
+  logout({username: currentUser.username}).then(([data, headers]) => {
+    store.commit('logout');
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
 }
+const toggleSidebar = () => {
+  localStorage.setItem(SIDEBAR_EXPAND, !props.sidebarExpand ? 1 : 0);
+  emit('update:sidebar-expand', !props.sidebarExpand);
+}
+
+const currentUser = computed(() => {
+  return store.getters.currentUser;
+})
 </script>
 
 <style lang="less" scoped>

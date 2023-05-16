@@ -7,29 +7,26 @@
         :collapse="!collapse" 
         :collapse-transition="false"
         text-color="#7a8495">
-        <sidebar-item :route="item" :key="item.path" v-for="item in routes" :collapse="!collapse"/>
+        <SidebarItem :route="item" :key="item.path" v-for="item in routes" :collapse="!collapse"/>
       </el-menu>
     </el-scrollbar>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed } from 'vue';
+import { useI18n } from "vue-i18n";
+import { ElMessage } from 'element-plus';
 import {dynamicRoute} from '@/router';
 import SidebarItem from './SidebarItem';
-export default {
-  name: 'Sidebar',
-  components: {
-    "sidebar-item": SidebarItem
-  },
-  props: {
-    collapse: Boolean,
-  },
-  computed: {
-    routes() {
-      return dynamicRoute.children;
-    },
-  }
-}
+
+const props = defineProps({
+  collapse: Boolean,
+});
+
+const routes = computed(() => {
+  return dynamicRoute.children;
+})
 </script>
 
 <style lang="less" scoped>
