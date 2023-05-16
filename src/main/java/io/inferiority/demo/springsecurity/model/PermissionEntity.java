@@ -24,6 +24,7 @@ public class PermissionEntity implements Serializable {
     private String name;
     private String code;
     private Boolean required;
+    private Boolean menuHidden;
 
     @AllArgsConstructor
     @Getter

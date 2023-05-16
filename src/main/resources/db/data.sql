@@ -30,11 +30,11 @@ INSERT INTO `sys_role` VALUES ('1', '超级管理员', 'ROLE_admin', NULL, 1, 'R
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
-INSERT INTO `sys_permission` VALUES ('1', '0', 'M', '首页', 'index', 0);
-INSERT INTO `sys_permission` VALUES ('2', '1', 'P', '查询', 'index:select', 0);
-INSERT INTO `sys_permission` VALUES ('100', '0', 'D', '系统管理', 'system', 0);
-INSERT INTO `sys_permission` VALUES ('101', '100', 'M', '用户管理', 'system:user', 0);
-INSERT INTO `sys_permission` VALUES ('102', '101', 'P', '查询', 'system:user:select', 0);
+INSERT INTO `sys_permission` VALUES ('1', '0', 'M', '首页', 'index', 0, 0);
+INSERT INTO `sys_permission` VALUES ('2', '1', 'P', '查询', 'index:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('100', '0', 'D', '系统管理', 'system', 0, 0);
+INSERT INTO `sys_permission` VALUES ('101', '100', 'M', '用户管理', 'system:user', 0, 0);
+INSERT INTO `sys_permission` VALUES ('102', '101', 'P', '查询', 'system:user:select', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission

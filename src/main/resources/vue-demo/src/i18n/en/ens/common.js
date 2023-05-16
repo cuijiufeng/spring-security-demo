@@ -6,7 +6,7 @@ export default {
   'edit': 'edit',
   'delete': 'delete',
   'export': 'export',
-  'id': 'id',
+  'id': 'no',
   'operator': 'operator',
   'edit': 'edit',
   'delete': 'delete',

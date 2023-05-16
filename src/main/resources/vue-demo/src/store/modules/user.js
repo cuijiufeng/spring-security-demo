@@ -1,5 +1,5 @@
 import router, {dynamicRoute} from '@/router'
-import {AUTHENTICATION, LOGIN_INFO} from '@/utils/config'
+import {AUTHENTICATION, LOGIN_INFO, ROUTE_TAGS} from '@/utils/config'
 
 export default {
   state: {
@@ -42,7 +42,7 @@ export default {
           if(undefined != permission) {
             r.meta.title = permission.name;
           }
-          return undefined != permission;
+          return undefined != permission && !permission.menuHidden;
         });
       }
     },
@@ -50,6 +50,7 @@ export default {
       router.replace('/login');
       sessionStorage.removeItem(LOGIN_INFO);
       localStorage.removeItem(AUTHENTICATION);
+      sessionStorage.removeItem(ROUTE_TAGS);
       state.currentUser = {
         username: '',
       };

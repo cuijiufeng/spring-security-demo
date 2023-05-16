@@ -1,4 +1,5 @@
-import { createI18n } from 'vue-i18n'; //引入vue-i18n组件
+//引入vue-i18n组件
+import {createI18n} from 'vue-i18n';
 import zh from './zh/zh';
 import en from './en/en';
 

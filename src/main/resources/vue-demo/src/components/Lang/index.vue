@@ -5,8 +5,8 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item :disabled="i18n.locale.value === 'zh'" command="zh">中文</el-dropdown-item>
-        <el-dropdown-item :disabled="i18n.locale.value === 'en'" command="en">English</el-dropdown-item>
+        <el-dropdown-item :disabled="locale === 'zh'" command="zh">中文</el-dropdown-item>
+        <el-dropdown-item :disabled="locale === 'en'" command="en">English</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -15,12 +15,12 @@
 <script setup>
 import { LANGUAGE } from '@/utils/config';
 import { useI18n } from 'vue-i18n';
-const i18n = useI18n();
+const { locale } = useI18n()
 //初始化
-i18n.locale.value = localStorage.getItem(LANGUAGE) || 'zh';
+locale.value = localStorage.getItem(LANGUAGE) || 'zh';
 
 function switchLanguage(lang) {
-  i18n.locale.value = lang;
+  locale.value = lang;
   localStorage.setItem(LANGUAGE, lang);
 }
 </script>

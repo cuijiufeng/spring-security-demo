@@ -27,6 +27,7 @@ CREATE TABLE `sys_permission`  (
   `name` varchar(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
   `required` tinyint DEFAULT NULL,
+  `menu_hidden` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 

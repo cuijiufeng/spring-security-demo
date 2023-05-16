@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import routes from '@/router/routes';
+import {dynamicRoute} from '@/router';
 import SidebarItem from './SidebarItem';
 export default {
   name: 'Sidebar',
@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     routes() {
-      return routes;
+      return dynamicRoute.children;
     },
   }
 }
