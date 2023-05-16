@@ -42,7 +42,7 @@ export default {
           if(undefined != permission) {
             r.meta.title = permission.name;
           }
-          return undefined != permission && !permission.menuHidden;
+          return (undefined != permission) && (!permission.menuHidden);
         });
       }
     },
@@ -54,6 +54,8 @@ export default {
       state.currentUser = {
         username: '',
       };
+      //刷新页面，重置dynamicRoute
+      location.reload();
     }
   },
   actions: {

@@ -68,13 +68,13 @@ const userSearch = reactive({
   username: '',
   roleId: '',
 });
-let userData = reactive([]);
-let roleData = reactive([]);
+let userData = ref([]);
+let roleData = ref([]);
 
 const pullUserList = () => {
   loading.value = true;
   userList(userSearch).then(([data, headers]) => {
-    userData = data.list;
+    userData.value = data.list;
     userSearch.pageNum = data.pageNum;
     userSearch.pageSize = data.pageSize;
     userSearch.total = data.total;
@@ -88,8 +88,7 @@ const pullUserList = () => {
 onMounted(() => {
   pullUserList();
   roleList({pageSize: 0, all: true}).then(([data, headers]) => {
-    debugger
-    roleData = data.list;
+    roleData.value = data.list;
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
   });

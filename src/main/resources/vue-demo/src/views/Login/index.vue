@@ -2,7 +2,11 @@
   <div class="login-body">
     <canvas id="login-canvas"/>
     <language style="position: absolute;top: 10%;right: 7%;" color="white"/>
-    <el-form class="login-form" :model="loginForm" ref="loginFormRef" :rules="loginFormRules">
+    <el-form class="login-form" :model="loginForm" ref="loginFormRef" :rules="{
+        username: [{ required: true, message: $t('login.please input username'), trigger: 'blur' }],
+        password: [{ required: true, message: $t('login.please input password'), trigger: 'blur' }],
+        verifyCode: [{ required: true, message: $t('login.please input verify code'), trigger: 'blur' }],
+      }">
         <img class="logo-img" style="width: 220px;height: 60px;margin-bottom: 10px;" src="@/assets/logo/logo.png">
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" :placeholder="$t('login.please input username')"
@@ -46,12 +50,6 @@ const loginForm = reactive({
   verifyCode: '',
 });
       
-const loginFormRules = reactive({
-  username: [{ required: true, message: useI18n().t('login.please input username'), trigger: 'blur' }],
-  password: [{ required: true, message: useI18n().t('login.please input password'), trigger: 'blur' }],
-  verifyCode: [{ required: true, message: useI18n().t('login.please input verify code'), trigger: 'blur' }],
-});
-
 const loginFormRef = ref();
 const onSubmit = () => {
   loginFormRef.value.validate((valid) => {

@@ -29,7 +29,7 @@ public class UserServiceImpl implements IUserService {
         List<UserVo> users = userMapper.selectListUserVo(Wrappers.<UserEntity>lambdaQuery()
                 .select(UserEntity.class, c -> true)
                 .eq(StringUtils.isNotBlank(searchUser.getRoleId()), UserEntity::getRoleId, searchUser.getRoleId())
-                .likeLeft(StringUtils.isNotBlank(searchUser.getUsername()), UserEntity::getUsername, searchUser.getUsername()));
+                .likeRight(StringUtils.isNotBlank(searchUser.getUsername()), UserEntity::getUsername, searchUser.getUsername()));
         return new PageInfo<>(users);
     }
 }

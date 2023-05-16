@@ -71,14 +71,20 @@ const props = defineProps({
     }
   }
 }
-
+//折叠
 .el-menu--collapse {
   .el-menu-item {
     justify-content: center;
   }
 }
-// TODO
-.el-menu--collapse.el-sub-menu__title {
-  justify-content: center;
+.el-menu--collapse {
+  .el-sub-menu.rootNode {
+    :deep(.el-sub-menu__title) {
+      width: 100%;
+      padding: 0px;
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
 </style>
