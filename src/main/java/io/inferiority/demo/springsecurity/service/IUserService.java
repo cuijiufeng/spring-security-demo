@@ -12,5 +12,5 @@ import io.inferiority.demo.springsecurity.model.vo.UserVo;
 public interface IUserService {
     PageInfo<UserVo> list(PageDto page, UserEntity searchUser);
 
-    void edit(UserEntity user);
+    void edit(UserEntity user, String originalPassword);
 }

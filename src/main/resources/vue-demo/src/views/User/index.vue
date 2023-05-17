@@ -15,7 +15,7 @@
       </el-form-item>
     </el-form>
     <div style="margin-bottom: 20px;">
-      <el-button plain size="small" icon="Plus" type="primary" @click="dialogOpen.edit = true">
+      <el-button plain size="small" icon="Plus" type="primary" @click="dialogOpen.visible = true;dialogOpen.isEdit = false;">
         {{$t('common.add')}}
       </el-button>
       <el-button plain size="small" icon="Delete" type="danger">{{$t('common.delete')}}</el-button>
@@ -28,7 +28,8 @@
       <el-table-column align="center" show-overflow-tooltip prop="role.roleName" :label="$t('user.role name')"/>
       <el-table-column align="center" prop="passwordIntensity" :label="$t('user.password intensity')">
         <template #default="scope">
-          <el-tag :type="scope.row.passwordIntensity == 'HIGH' ? 'success' : scope.row.passwordIntensity == 'LOW' ? 'danger' : ''" disable-transitions>
+          <span v-if="!scope.row.passwordIntensity"/>
+          <el-tag v-else :type="scope.row.passwordIntensity == 'HIGH' ? 'success' : scope.row.passwordIntensity == 'LOW' ? 'danger' : ''" disable-transitions>
             {{ $t('user.' + scope.row.passwordIntensity) }}
           </el-tag>
         </template>
@@ -44,7 +45,9 @@
       <el-table-column align="center" show-overflow-tooltip prop="lastLoginTime" :label="$t('user.last login time')"/>
       <el-table-column align="center" :label="$t('common.operator')">
         <template #default="scope">
-          <el-link style="margin: 0px 3px 0px 3px;" :underline="false" icon="Edit">{{$t('common.edit')}}</el-link>
+          <el-link style="margin: 0px 3px 0px 3px;" :underline="false" icon="Edit" @click="dialogOpen.visible = true;dialogOpen.isEdit = true;editUser = scope.row">
+            {{$t('common.edit')}}
+          </el-link>
           <el-link style="margin: 0px 3px 0px 3px;" :underline="false" icon="Delete">{{$t('common.delete')}}</el-link>
         </template>
       </el-table-column>
@@ -53,18 +56,23 @@
       @current-change="userList()" @size-change="userList()"/>
 
     <!-- 用户添加/编辑 -->
-    <el-dialog v-model="dialogOpen.edit" title="新增用户" draggable :close-on-click-modal="false" 
-        @close="$refs['editUserRef'].resetFields()">
+    <el-dialog v-model="dialogOpen.visible" title="新增用户" draggable :close-on-click-modal="false" 
+        @close="editUser = {}">
       <el-form :model="editUser" ref="editUserRef" label-width="auto" inline-message :rules="{
           username: [{ required: true, message: $t('user.please input username'), trigger: 'blur' }],
-          password: [{ required: true, message: $t('user.please input password'), trigger: 'blur' }],
-          confirmPassword: [{ required: true, message: $t('user.please input confirm password'), trigger: 'blur' },
-                            { validator: confirmValidator, trigger: 'blur' }],}">
+          originalPassword: [{ required: !dialogOpen.isEdit, message: $t('user.please input original password'), trigger: 'blur' }],
+          password: [{ required: !dialogOpen.isEdit, message: $t('user.please input password'), trigger: 'blur' },
+                    { min: 8, message: $t('user.length too short'), trigger: 'blur' }],
+          confirmPassword: [{ validator: confirmValidator, trigger: 'blur' }],}">
         <el-form-item :label="$t('user.username')+':'" prop="username">
           <el-input v-model="editUser.username" maxlength="255"/>
         </el-form-item>
+        <el-form-item v-if="dialogOpen.isEdit" :label="$t('user.original password')+':'" prop="originalPassword">
+          <el-input v-model="editUser.originalPassword" maxlength="255" type="password" show-password/>
+        </el-form-item>
         <el-form-item :label="$t('user.password')+':'" prop="password">
           <el-input v-model="editUser.password" maxlength="255" type="password" show-password/>
+          <PasswordIntensity v-model="editUser.passwordIntensity" :password="editUser.password"/>
         </el-form-item>
         <el-form-item :label="$t('user.confirm password')+':'" prop="confirmPassword">
           <el-input v-model="editUser.confirmPassword" maxlength="255" type="password" show-password/>
@@ -75,7 +83,7 @@
           </el-select>
         </el-form-item>
         <div style="display: flex;justify-content: center;">
-          <el-button type="info" @click="dialogOpen.edit = false">{{$t('common.cancle')}}</el-button>
+          <el-button type="info" @click="dialogOpen.visible = false">{{$t('common.cancle')}}</el-button>
           <el-button type="primary" @click="handleEditUser">{{$t('common.confirm')}}</el-button>
         </div>
       </el-form>
@@ -87,6 +95,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
+import PasswordIntensity from '@/components/PasswordIntensity';
 import {apiUserList, apiEditUser} from '@/api/user';
 import {apiRoleList} from '@/api/role';
 
@@ -94,7 +103,8 @@ const i18n = useI18n();
 
 const loading = ref(false);
 const dialogOpen = reactive({
-  edit: false
+  visible: false,
+  isEdit: false,
 });
 const userSearch = reactive({
   pageNum: undefined,
@@ -106,12 +116,7 @@ const userSearch = reactive({
 let userData = ref([]);
 let roleData = ref([]);
 
-let editUser = ref({
-  confirmPassword: '',
-  password: '',
-  roleId: '',
-  username: '',
-});
+let editUser = ref({});
 
 const userList = () => {
   loading.value = true;
@@ -135,7 +140,7 @@ const handleEditUser = () => {
     }
     apiEditUser(editUser.value).then(([data, headers]) => {
       ElMessage({ type: 'success', message: i18n.t('common.success') });
-      dialogOpen.edit = false;
+      dialogOpen.visible = false;
       userList();
     }).catch(([data, headers]) => {
       ElMessage({ type: 'error', message: data.message });

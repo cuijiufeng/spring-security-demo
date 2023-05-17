@@ -13,7 +13,12 @@ export const apiUserList = (param) => {
 //新增/编辑用户
 export const apiEditUser = (param) => {
   let newObj = JSON.parse(JSON.stringify(param));
-  newObj.password = sha256Hashed(newObj.password, newObj.username);
+  if(newObj.password) {
+    newObj.password = sha256Hashed(newObj.password, newObj.username);
+  }
+  if(newObj.originalPassword) {
+    newObj.originalPassword = sha256Hashed(newObj.originalPassword, newObj.username);
+  }
   return http({
     method: 'POST',
     url: '/user/edit',

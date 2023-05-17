@@ -46,7 +46,7 @@ public class SecurityConfig {
     };
     public static final AccessDeniedHandler ACCESS_DENIED_HANDLER = (request, response, ex) -> {
         log.warn("{} --> {}", request.getServletPath(), ex.toString());
-        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.FORBIDDEN));
+        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.PERMISSION_DENIED));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
     };
 

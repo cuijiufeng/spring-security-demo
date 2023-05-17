@@ -19,7 +19,6 @@ public class RoleEntity implements Serializable {
     private String id;
     private String roleName;
     private String roleKey;
-    private String parentId;
     private Integer level;
     private String createUser;
     private Date createTime;

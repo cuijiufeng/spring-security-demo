@@ -32,6 +32,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
     UserVo selectOneUserVo(@Param(Constants.WRAPPER) Wrapper<UserEntity> wrapper);
 
     @Select("select ${ew.sqlSelect} from sys_user ${ew.customSqlSegment}")
-    @Results(@Result(column = "role_id", property = "role", one = @One(select = "io.inferiority.demo.springsecurity.dao.RoleMapper.selectById")))
+    @Results({@Result(column = "role_id", property = "roleId"),
+            @Result(column = "role_id", property = "role", one = @One(select = "io.inferiority.demo.springsecurity.dao.RoleMapper.selectById"))})
     List<UserVo> selectListUserVo(@Param(Constants.WRAPPER) Wrapper<UserEntity> wrapper);
 }

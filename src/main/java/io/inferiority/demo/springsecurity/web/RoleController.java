@@ -8,6 +8,7 @@ import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.IRoleService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
+    @PreAuthorize("hasAnyAuthority('system:role:select')")
     @Log("role list")
     @GetMapping("list")
     public JsonResult<PageInfo<RoleEntity>> list(@Validated PageDto page) {

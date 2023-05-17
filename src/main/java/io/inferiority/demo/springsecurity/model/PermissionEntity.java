@@ -20,7 +20,7 @@ public class PermissionEntity implements Serializable {
     @TableId
     private String id;
     private String parentId;
-    private String type;
+    private PermissionType type;
     private String name;
     private String code;
     private Boolean required;

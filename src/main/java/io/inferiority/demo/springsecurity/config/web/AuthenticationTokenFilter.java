@@ -60,7 +60,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             // 2、对token进行解析
             Object user = JwtUtil.parseJwt(jwtPubKey, token);
             TokenVo tokenVo = new ObjectMapper().convertValue(user, TokenVo.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, tokenVo.getAuthorities()) ;
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenVo, null, tokenVo.getAuthorities()) ;
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             // 5、放行

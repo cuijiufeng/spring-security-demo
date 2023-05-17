@@ -62,6 +62,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
         RoleEntity role = roleMapper.selectById(user.getRoleId());
         if (Objects.nonNull(role)) {
+            user.setRole(role);
             authorities.add(new SimpleGrantedAuthority(role.getRoleKey()));
         }
         user.setAuthorities(authorities);

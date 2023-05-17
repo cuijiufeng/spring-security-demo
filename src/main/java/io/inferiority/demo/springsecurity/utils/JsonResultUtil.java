@@ -13,8 +13,8 @@ import java.util.function.Function;
 public class JsonResultUtil {
     public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", "unknown"));
     public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.BUILD.apply("00401", "unauthorized"));
-    public static final JsonResult<BaseErrorEnum> FORBIDDEN = JsonResultUtil.errorJson(403, BaseErrorEnum.BUILD.apply("00403", "forbidden"));
-    public static final Function<String, JsonResult<BaseErrorEnum>> ARGUMENT_ERROR = msg -> JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01000", msg));
+    public static final JsonResult<BaseErrorEnum> PERMISSION_DENIED = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01000", "permission denied"));
+    public static final Function<String, JsonResult<BaseErrorEnum>> ARGUMENT_ERROR = msg -> JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01001", msg));
 
     /**
      * 返回成功，无交互数据

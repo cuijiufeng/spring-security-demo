@@ -7,7 +7,7 @@ import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
 import io.inferiority.demo.springsecurity.exception.ServiceException;
 import io.inferiority.demo.springsecurity.model.JsonResult;
 import io.inferiority.demo.springsecurity.model.LogEntity;
-import io.inferiority.demo.springsecurity.utils.RequestContextUtil;
+import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
@@ -18,12 +18,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.Date;
 
 /**
@@ -35,8 +33,6 @@ import java.util.Date;
 @Aspect
 @Component
 public class LogAdvice {
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePublicKey('${jwt.pub.key:classpath:jwt/rsa.pub.der}')}")
-    private PublicKey jwtPubKey;
     @Autowired
     private LogMapper logMapper;
     @Pointcut("@annotation(io.inferiority.demo.springsecurity.aop.log.Log)")
@@ -52,7 +48,7 @@ public class LogAdvice {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Log log = signature.getMethod().getAnnotation(Log.class);
-            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.currentUsername(jwtPubKey),
+            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), AuthContextUtil.currentUsername(),
                     log.value(), null, null, null, new Date(), null, null);
             if (rs instanceof JsonResult) {
                 JsonResult<?> result = (JsonResult<?>) rs;
@@ -80,7 +76,7 @@ public class LogAdvice {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Log log = signature.getMethod().getAnnotation(Log.class);
-            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), RequestContextUtil.currentUsername(jwtPubKey),
+            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), AuthContextUtil.currentUsername(),
                     log.value(), 500, null, null, new Date(), null, null);
             if (e instanceof ServiceException) {
                 BaseErrorEnum error = ((ServiceException) e).getError();

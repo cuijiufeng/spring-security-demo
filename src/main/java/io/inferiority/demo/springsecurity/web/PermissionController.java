@@ -24,7 +24,7 @@ public class PermissionController {
     private IPermissionService permissionService;
 
     @Log("permission list")
-    @PreAuthorize("hasAnyAuthority('permission:select')")
+    @PreAuthorize("hasAnyAuthority('system:permission:select')")
     @GetMapping("/all")
     public JsonResult<List<PermissionEntity>> all() {
         return JsonResultUtil.successJson(permissionService.allPermissions());

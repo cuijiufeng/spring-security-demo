@@ -1,8 +1,12 @@
 package io.inferiority.demo.springsecurity;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author cuijiufeng
@@ -12,8 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Slf4j
 public class PasswordEncoderTest {
     @Test
-    public void testPasswordEncoder() {
+    public void testPasswordEncoder() throws NoSuchAlgorithmException {
+        String username = "admin";
+        String password = "admin";
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        log.info(passwordEncoder.encode("d82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892"));
+        MessageDigest digest = MessageDigest.getInstance("sha-256");
+        digest.update(username.getBytes());
+        String s = Hex.encodeHexString(digest.digest(password.getBytes()));
+        log.info(passwordEncoder.encode(s));
     }
 }
