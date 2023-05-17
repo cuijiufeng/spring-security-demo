@@ -10,7 +10,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ErrorEnum implements BaseErrorEnum {
-    UPLOAD_FILE_ERROR("10000", "upload file error"),
+    UPLOAD_FILE_FAILED("10000", "upload file failed"),
+    EXIST_USER_FAILED("10001", "user already exists"),
+    ADD_EDIT_USER_FAILED("10002", "add/edit user failed"),
     ;
     private final String code;
     private final String message;

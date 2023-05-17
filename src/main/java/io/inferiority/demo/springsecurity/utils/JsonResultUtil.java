@@ -20,7 +20,7 @@ public class JsonResultUtil {
      * 返回成功，无交互数据
      * @return java.lang.String json串
      */
-    public static JsonResult<Object> successJson() {
+    public static JsonResult<Void> successJson() {
         return new JsonResult<>(200, null);
     }
 
@@ -29,7 +29,7 @@ public class JsonResultUtil {
      * @param obj 交互数据
      * @return java.lang.String json串
      */
-    public static JsonResult<Object> successJson(Object obj) {
+    public static <T> JsonResult<T> successJson(T obj) {
         return new JsonResult<>(200, obj);
     }
 

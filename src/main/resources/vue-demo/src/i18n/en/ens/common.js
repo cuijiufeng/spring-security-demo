@@ -10,4 +10,7 @@ export default {
   'operator': 'operator',
   'edit': 'edit',
   'delete': 'delete',
+  'confirm': 'confirm',
+  'cancle': 'cancle',
+  'success': 'success',
 }

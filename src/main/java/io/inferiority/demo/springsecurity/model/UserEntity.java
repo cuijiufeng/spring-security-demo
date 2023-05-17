@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,9 +23,11 @@ import java.util.Date;
 public class UserEntity implements Serializable {
     @TableId
     private String id;
+    @Size(min = 5, max = 255, message = "用户名长度非法")
     @NotEmpty(message = "用户号不能为空")
     private String username;
     @JsonIgnore
+    @Size(min = 1, max = 255, message = "密码长度非法")
     @NotEmpty(message = "密码不能为空")
     private String password;
     private PasswordIntensity passwordIntensity;

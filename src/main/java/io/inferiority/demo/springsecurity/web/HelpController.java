@@ -18,13 +18,13 @@ public class HelpController {
 
     @PreAuthorize("hasAnyRole('admin')")
     @GetMapping("/hello")
-    public JsonResult<Object> help() {
+    public JsonResult<String> help() {
         return JsonResultUtil.successJson("help security");
     }
 
     @PreAuthorize("hasAnyAuthority('help:other')")
     @GetMapping("/other")
-    public JsonResult<Object> other() {
+    public JsonResult<String> other() {
         return JsonResultUtil.successJson("help other");
     }
 }

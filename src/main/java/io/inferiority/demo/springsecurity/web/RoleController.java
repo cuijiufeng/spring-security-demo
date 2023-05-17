@@ -1,7 +1,9 @@
 package io.inferiority.demo.springsecurity.web;
 
+import com.github.pagehelper.PageInfo;
 import io.inferiority.demo.springsecurity.aop.log.Log;
 import io.inferiority.demo.springsecurity.model.JsonResult;
+import io.inferiority.demo.springsecurity.model.RoleEntity;
 import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.IRoleService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
@@ -21,9 +23,9 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
-    @Log("角色列表")
+    @Log("role list")
     @GetMapping("list")
-    public JsonResult<Object> list(@Validated PageDto page) {
+    public JsonResult<PageInfo<RoleEntity>> list(@Validated PageDto page) {
         return JsonResultUtil.successJson(roleService.list(page));
     }
 }

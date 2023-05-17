@@ -2,6 +2,7 @@ package io.inferiority.demo.springsecurity.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
+import io.inferiority.demo.springsecurity.dao.RoleMapper;
 import io.inferiority.demo.springsecurity.dao.RolePermissionMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -43,6 +43,8 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
@@ -53,7 +55,9 @@ public class AuthServiceImpl implements IAuthService {
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         //将用户存入上下文中
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        //TODO 2023/5/17 17:51
+        //TODO 2023/5/17 17:51 为扩展证书登录开放接口
+        //SecurityContextHolder.getContext().setAuthentication(authenticate);
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, authenticate.getPrincipal(), tokenDuration.toMillis()));
@@ -70,13 +74,14 @@ public class AuthServiceImpl implements IAuthService {
                 ? Collections.emptyList()
                 : permissionMapper.selectBatchIds(permissionIds);
         auth.setPermissions(permissions);
+        auth.setRole(roleMapper.selectById(auth.getRoleId()));
         return auth;
     }
 
     @Override
     public void logout(UserEntity user) {
         //清除上下文
-        SecurityContextHolder.clearContext();
+        //SecurityContextHolder.clearContext();
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));

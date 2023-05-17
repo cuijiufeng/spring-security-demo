@@ -2,7 +2,7 @@
   <div class="login-body">
     <canvas id="login-canvas"/>
     <language style="position: absolute;top: 10%;right: 7%;" color="white"/>
-    <el-form class="login-form" :model="loginForm" ref="loginFormRef" :rules="{
+    <el-form class="login-form" :model="loginForm" ref="loginFormRef" inline-message :rules="{
         username: [{ required: true, message: $t('login.please input username'), trigger: 'blur' }],
         password: [{ required: true, message: $t('login.please input password'), trigger: 'blur' }],
         verifyCode: [{ required: true, message: $t('login.please input verify code'), trigger: 'blur' }],
@@ -13,20 +13,12 @@
           prefix-icon="User"/>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" :type="passwordHide ? 'password' : 'text'" 
-          :placeholder="$t('login.please input password')" prefix-icon="Key" @keydown.enter="onSubmit">
-          <template #suffix>
-            <el-icon style="cursor: pointer" @click="passwordHide = !passwordHide">
-              <View v-if="passwordHide"/>
-              <Hide v-else/>
-            </el-icon>
-          </template>
-        </el-input>
+        <el-input v-model="loginForm.password" :type="passwordHide ? 'password' : 'text'" show-password
+          :placeholder="$t('login.please input password')" prefix-icon="Key" @keydown.enter="onSubmit" />
       </el-form-item>
       <el-form-item prop="verifyCode">
-        <img style="height: 32px;width: 100px;margin-right: 40px;" src="@/assets/logo/logo.png"/>
-        <el-input style="width: calc(100% - 140px);" v-model="loginForm.verifyCode" 
-          :placeholder="$t('login.please input verify code')" @keydown.enter="onSubmit"/>
+        <img style="height: 32px;width: 100px;margin-right: 30px;" src="@/assets/logo/logo.png"/>
+        <el-input style="width: calc(100% - 130px);" v-model="loginForm.verifyCode" @keydown.enter="onSubmit"/>
       </el-form-item>
       <el-button style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">{{ $t('login.login') }}</el-button>
     </el-form>
@@ -39,7 +31,7 @@ import { useStore } from 'vuex';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import { loginBgRender } from "@/assets/js/canvas";
-import { login } from '@/api/system';
+import { apiLogin } from '@/api/system';
 
 const store = useStore();
 
@@ -49,14 +41,14 @@ const loginForm = reactive({
   password: '',
   verifyCode: '',
 });
-      
+
 const loginFormRef = ref();
 const onSubmit = () => {
   loginFormRef.value.validate((valid) => {
     if (!valid) {
       return;
     }
-    login(loginForm).then(([data, headers]) => {
+    apiLogin(loginForm).then(([data, headers]) => {
       store.commit('login', data);
     }).catch(([data, headers]) => {
       ElMessage({ type: 'error', message: data.message });

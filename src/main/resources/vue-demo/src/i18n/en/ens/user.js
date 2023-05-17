@@ -1,9 +1,14 @@
 
 export default {
   'username': 'username',
+  'password': 'password',
+  'confirm password': 'confirm password',
   'role name': 'role name',
   'please input username': 'please input username',
-  'please input role name': 'please input role name',
+  'please input password': 'please input password',
+  'please input confirm password': 'please input confirm password',
+  'two inputs do not match': 'two inputs don\'t match',
+  'please select role name': 'please select role name',
   'enabled': 'enabled',
   'create time': 'create time',
   'last login time': 'last login time',

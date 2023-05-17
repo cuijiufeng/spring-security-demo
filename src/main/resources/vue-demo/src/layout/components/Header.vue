@@ -22,7 +22,7 @@
           <el-dropdown-menu>
             <el-dropdown-item icon="User">{{$t('layout.personal center')}}</el-dropdown-item>
             <el-dropdown-item icon="Key">{{$t('layout.change password')}}</el-dropdown-item>
-            <el-dropdown-item divided icon="SwitchButton" @click="logoutUser">{{$t('layout.logout')}}</el-dropdown-item>
+            <el-dropdown-item divided icon="SwitchButton" @click="logout">{{$t('layout.logout')}}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -36,7 +36,7 @@ import { useStore } from 'vuex';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import Breadcrumb from '@/components/Breadcrumb';
-import { logout } from '@/api/system';
+import { apiLogout } from '@/api/system';
 import { SIDEBAR_EXPAND } from '@/utils/config';
 
 const emit = defineEmits(['update:sidebar-expand'])
@@ -47,8 +47,8 @@ const props = defineProps({
   sidebarExpand: Boolean,
 });
 
-const logoutUser = () => {
-  logout({username: currentUser.username}).then(([data, headers]) => {
+const logout = () => {
+  apiLogout({username: currentUser.username}).then(([data, headers]) => {
     store.commit('logout');
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });

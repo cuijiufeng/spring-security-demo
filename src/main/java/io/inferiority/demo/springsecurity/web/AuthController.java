@@ -3,6 +3,7 @@ package io.inferiority.demo.springsecurity.web;
 import io.inferiority.demo.springsecurity.aop.log.Log;
 import io.inferiority.demo.springsecurity.model.JsonResult;
 import io.inferiority.demo.springsecurity.model.UserEntity;
+import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,15 @@ public class AuthController {
     @Autowired
     private IAuthService authService;
 
-    @Log("登录")
+    @Log("login")
     @PostMapping("login")
-    public JsonResult<Object> login(@Validated UserEntity user) {
+    public JsonResult<UserVo> login(@Validated UserEntity user) {
         return JsonResultUtil.successJson(authService.login(user));
     }
 
-    @Log("登出")
+    @Log("logout")
     @PostMapping("logout")
-    public JsonResult<Object> logout(UserEntity user) {
+    public JsonResult<Void> logout(UserEntity user) {
         authService.logout(user);
         return JsonResultUtil.successJson();
     }

@@ -28,7 +28,7 @@ public class BaseController {
         try {
             return file.getBytes();
         } catch (IOException e) {
-            throw new ServiceException(ErrorEnum.UPLOAD_FILE_ERROR, e);
+            throw new ServiceException(ErrorEnum.UPLOAD_FILE_FAILED, e);
         }
     }
 }

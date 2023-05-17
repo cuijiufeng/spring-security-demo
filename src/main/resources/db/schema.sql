@@ -23,12 +23,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `sys_permission`  (
   `id` varchar(32) NOT NULL,
   `parent_id` varchar(255) DEFAULT NULL,
-  `type` varchar(1) DEFAULT NULL COMMENT 'D:目录 M:菜单 P:权限',
+  `type` varchar(1) NOT NULL COMMENT 'D:目录 M:菜单 P:权限',
   `name` varchar(255) DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
   `required` tinyint DEFAULT NULL,
   `menu_hidden` tinyint DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `index_type`(`type`) USING BTREE,
+  UNIQUE INDEX `unique_code`(`code`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 -- ----------------------------
@@ -37,12 +39,13 @@ CREATE TABLE `sys_permission`  (
 CREATE TABLE `sys_role`  (
   `id` varchar(32) NOT NULL,
   `role_name` varchar(255) DEFAULT NULL,
-  `role_key` varchar(255) DEFAULT NULL,
+  `role_key` varchar(255) NOT NULL,
   `parent_id` varchar(32) DEFAULT NULL,
-  `level` int DEFAULT NULL,
+  `level` int NOT NULL,
   `create_user` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_role_key`(`role_key`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 -- ----------------------------
@@ -50,9 +53,10 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 CREATE TABLE `sys_role_permission`  (
   `id` varchar(32) NOT NULL,
-  `r_id` varchar(32) DEFAULT NULL,
-  `p_id` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  `r_id` varchar(32) NOT NULL,
+  `p_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_r_p`(`r_id`, `p_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 -- ----------------------------
@@ -60,8 +64,8 @@ CREATE TABLE `sys_role_permission`  (
 -- ----------------------------
 CREATE TABLE `sys_user`  (
   `id` varchar(32) NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `password_intensity` int DEFAULT NULL,
   `role_id` varchar(32) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
@@ -71,7 +75,9 @@ CREATE TABLE `sys_user`  (
   `credentials_non_expired` tinyint DEFAULT NULL,
   `account_non_locked` tinyint DEFAULT NULL,
   `enabled` tinyint DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_username`(`username`) USING BTREE,
+  INDEX `index_role_id`(`role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 

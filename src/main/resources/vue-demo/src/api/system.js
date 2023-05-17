@@ -2,7 +2,7 @@ import http from "@/utils/axios";
 import {sha256Hashed} from '@/utils/crypto'
 
 //登录接口
-export const login = (param) => {
+export const apiLogin = (param) => {
   let newObj = JSON.parse(JSON.stringify(param));
   newObj.password = sha256Hashed(newObj.password, newObj.username);
   return http({
@@ -13,7 +13,7 @@ export const login = (param) => {
 }
 
 //登出接口
-export const logout = (param) => {
+export const apiLogout = (param) => {
   return http({
     method: 'POST',
     url: '/auth/logout',

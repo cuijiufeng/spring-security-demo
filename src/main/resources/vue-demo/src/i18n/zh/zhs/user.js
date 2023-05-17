@@ -1,9 +1,14 @@
 
 export default {
   'username': '用户名',
+  'password': '密码',
+  'confirm password': '确认密码',
   'role name': '角色名',
   'please input username': '请输入用户名',
-  'please input role name': '请输入角色名',
+  'please input password': '请输入密码',
+  'please input confirm password': '请输入确认密码',
+  'two inputs do not match': '两次输入密码不同',
+  'please select role name': '请选择角色名',
   'enabled': '状态',
   'create time': '创建时间',
   'last login time': '最后登录时间',

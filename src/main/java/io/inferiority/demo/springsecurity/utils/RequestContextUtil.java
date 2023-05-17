@@ -30,9 +30,7 @@ public class RequestContextUtil {
             Objects.requireNonNull(response, "response can't be null");
             tokenHeader = response.getHeader(JwtUtil.TOKEN_HEADER);
         }
-        if (Objects.isNull(tokenHeader)) {
-            return null;
-        }
+        Objects.requireNonNull(tokenHeader, "not Logged In");
         Object user = JwtUtil.parseJwt(jwtPubKey, tokenHeader);
         return new ObjectMapper().convertValue(user, TokenVo.class);
     }
