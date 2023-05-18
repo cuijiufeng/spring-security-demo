@@ -13,6 +13,8 @@ import io.inferiority.demo.springsecurity.model.vo.UserVo;
 import io.inferiority.demo.springsecurity.service.IUserService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
+import io.inferiority.demo.springsecurity.utils.JwtUtil;
+import io.inferiority.demo.springsecurity.utils.PermissionCompareUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,10 +24,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import java.security.PrivateKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author cuijiufeng
@@ -35,6 +42,8 @@ import java.util.Objects;
 public class UserServiceImpl implements IUserService {
     @Value("${super.admin.user.id:1}")
     private String superAdminUserId;
+    @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
+    private PrivateKey jwtPrivKey;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -61,10 +70,8 @@ public class UserServiceImpl implements IUserService {
     public void edit(UserEntity user, String originalPassword) {
         Date currentTime = new Date();
         //判断权限是否足够
-        if (StringUtils.isNotBlank(user.getRoleId())
-                && !AuthContextUtil.currentRole().getId().equals(user.getRoleId())
-                && AuthContextUtil.currentRole().getLevel() > roleMapper.selectById(user.getRoleId()).getLevel()) {
-            throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
+        if (StringUtils.isNotBlank(user.getRoleId())) {
+            PermissionCompareUtil.compare(superAdminUserId, roleMapper.selectById(user.getRoleId()));
         }
         //编辑
         if (StringUtils.isNotBlank(user.getId())) {
@@ -93,12 +100,16 @@ public class UserServiceImpl implements IUserService {
             if (userMapper.updateById(user) != 1) {
                 throw new ServiceException(ErrorEnum.ADD_EDIT_USER_FAILED);
             }
+            //修改了自己的状态退出登录
+            if(!user.getEnabled() && user.getUsername().equals(AuthContextUtil.currentUsername())) {
+                HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+                response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
+            }
             return;
         }
         //新增
-        List<UserEntity> existUser = userMapper.selectList(Wrappers.<UserEntity>lambdaQuery()
-                .eq(UserEntity::getUsername, user.getUsername()));
-        if (!CollectionUtils.isEmpty(existUser)) {
+        if (userMapper.selectCount(Wrappers.<UserEntity>lambdaQuery()
+                .eq(UserEntity::getUsername, user.getUsername())) > 0) {
             throw new ServiceException(ErrorEnum.EXIST_USER_FAILED);
         }
         user.setId(SnowflakeId.generateStrId());
@@ -115,6 +126,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public void delete(List<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return;
@@ -122,6 +134,10 @@ public class UserServiceImpl implements IUserService {
         if (userIds.contains(superAdminUserId)) {
             throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
         }
+        //判断权限是否足够
+        PermissionCompareUtil.compare(superAdminUserId, userMapper.selectBatchIds(userIds).stream()
+                .map(UserEntity::getRoleId)
+                .map(roleMapper::selectById).collect(Collectors.toList()));
         if (userMapper.deleteBatchIds(userIds) < 1) {
             throw new ServiceException(ErrorEnum.DELETE_USER_FAILED);
         }

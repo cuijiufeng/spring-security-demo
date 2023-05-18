@@ -36,7 +36,7 @@ public class UserEntity implements Serializable {
     private PasswordIntensity passwordIntensity;
     private String roleId;
     private Sex sex;
-    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", message = "手机号格式错误", groups = ValidatedUpdate.class)
+    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$|^$", message = "手机号格式错误", groups = ValidatedUpdate.class)
     private String phoneNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

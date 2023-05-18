@@ -16,6 +16,11 @@ public enum ErrorEnum implements BaseErrorEnum {
     ORIGINAL_PASSWORD_NOT_MATCH_FAILED("10004", "original password not match"),
     CANT_MODIFY_USERNAME_FAILED("10005", "can't modify username"),
     DELETE_USER_FAILED("10006", "delete user failed"),
+    ADD_EDIT_ROLE_FAILED("10007", "add/edit role failed"),
+    CANT_MODIFY_ROLE_KEY_FAILED("10008", "can't modify role key"),
+    DELETE_ROLE_FAILED("10009", "delete role failed"),
+    DELETE_THIS_ROLE_USER_FAILED("10010", "delete this role user"),
+    EXIST_ROLE_FAILED("10011", "exist role failed")
     ;
     private final String code;
     private final String message;

@@ -62,14 +62,13 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             TokenVo tokenVo = new ObjectMapper().convertValue(user, TokenVo.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenVo, null, tokenVo.getAuthorities()) ;
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-            // 5、放行
-            filterChain.doFilter(request , response);
-
             //刷新token
             token = JwtUtil.createJwt(jwtPrivKey, user, tokenDuration.toMillis());
             log.debug("refresh token: {}", token);
             response.setHeader(tokenHeader, token);
+
+            // 5、放行
+            filterChain.doFilter(request , response);
         } catch (ExpiredJwtException e) {
             log.warn("--------------------> jwt is expire: {} - {}", request.getServletPath(), e.getMessage());
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));

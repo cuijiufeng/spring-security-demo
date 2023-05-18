@@ -22,10 +22,6 @@ public class AuthContextUtil {
     }
 
     public static TokenVo currentUser() {
-        try {
-            return (TokenVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (Exception e) {
-            return null;
-        }
+        return (TokenVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

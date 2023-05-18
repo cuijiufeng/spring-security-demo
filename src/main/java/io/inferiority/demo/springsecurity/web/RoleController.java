@@ -11,8 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author cuijiufeng
@@ -29,5 +33,21 @@ public class RoleController {
     @GetMapping("list")
     public JsonResult<PageInfo<RoleEntity>> list(@Validated PageDto page, RoleEntity searchRole) {
         return JsonResultUtil.successJson(roleService.list(page, searchRole));
+    }
+
+    @PreAuthorize("hasAnyAuthority('system:role:add/edit')")
+    @Log("add/edit role")
+    @PostMapping("edit")
+    public JsonResult<Void> edit(RoleEntity role) {
+        roleService.edit(role);
+        return JsonResultUtil.successJson();
+    }
+
+    @PreAuthorize("hasAnyAuthority('system:role:delete')")
+    @Log("delete role")
+    @PostMapping("delete")
+    public JsonResult<Void> delete(@RequestParam List<String> ids) {
+        roleService.delete(ids);
+        return JsonResultUtil.successJson();
     }
 }

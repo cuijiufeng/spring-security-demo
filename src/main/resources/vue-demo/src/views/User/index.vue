@@ -125,7 +125,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item :label="$t('user.sex')+':'" prop="sex">
-              <el-select v-model="editUser.sex" style="width: 100%" clearable>
+              <el-select v-model="editUser.sex" style="width: 100%">
                 <el-option :label="$t('user.MALE')" value="MALE"/>
                 <el-option :label="$t('user.FEMALE')" value="FEMALE"/>
                 <el-option :label="$t('user.UNKNOWN')" value="UNKNOWN"/>
@@ -163,7 +163,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item :label="$t('user.role name')+':'" prop="roleId">
-              <el-select v-model="editUser.roleId" style="width: 100%">
+              <el-select v-model="editUser.roleId" style="width: 100%" clearable>
                 <el-option v-for="role in roleListData" :key="role.id" :label="role.roleName" :value="role.id"/>
               </el-select>
             </el-form-item>
