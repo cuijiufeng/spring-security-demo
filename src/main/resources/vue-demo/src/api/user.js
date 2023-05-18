@@ -25,3 +25,12 @@ export const apiEditUser = (param) => {
     data: newObj
   });
 }
+
+//删除用户
+export const apiDeleteUser = (param) => {
+  return http({
+    method: 'POST',
+    url: '/user/delete',
+    data: param
+  });
+}

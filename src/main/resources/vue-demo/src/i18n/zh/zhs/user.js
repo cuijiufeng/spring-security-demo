@@ -1,5 +1,6 @@
 
 export default {
+  'add/edit user': '{type}用户',
   'username': '用户名',
   'password': '密码',
   'confirm password': '确认密码',
@@ -21,4 +22,11 @@ export default {
   'LOW': '低',
   'MEDIUM': '中',
   'HIGH': '高',
+  'sex': '性别',
+  'MALE': '男',
+  'FEMALE': '女',
+  'UNKNOWN': '未知',
+  'phone number': '手机号',
+  'please input number type': '请输入数字类型',
+  'phone number format error': '手机号格式错误',
 }

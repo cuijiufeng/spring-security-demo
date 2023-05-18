@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author cuijiufeng
  * @date 2023/4/16 10:50
@@ -41,6 +43,14 @@ public class UserController {
     public JsonResult<Void> edit(@Validated(ValidatedUpdate.class) UserEntity user,
                                  @RequestParam(name = "originalPassword", required = false) String originalPassword) {
         userService.edit(user, originalPassword);
+        return JsonResultUtil.successJson();
+    }
+
+    @PreAuthorize("hasAnyAuthority('system:user:delete')")
+    @Log("delete user")
+    @PostMapping("delete")
+    public JsonResult<Void> delete(@RequestParam List<String> ids) {
+        userService.delete(ids);
         return JsonResultUtil.successJson();
     }
 }

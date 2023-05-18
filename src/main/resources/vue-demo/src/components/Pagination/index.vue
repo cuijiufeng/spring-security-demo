@@ -1,6 +1,6 @@
 <template>
   <div class="pagination-body">
-    <el-pagination background layout="total, sizes, prev, pager, next, jumper" 
+    <el-pagination background small layout="total, sizes, prev, pager, next, jumper" 
       @update:current-page="(val) => $emit('update:current-page', val)" 
       @update:page-size="(val) => $emit('update:page-size', val)" :page-sizes="pageSizes" :total="total" 
       @current-change="$emit('current-change')" @size-change="$emit('size-change')"/>

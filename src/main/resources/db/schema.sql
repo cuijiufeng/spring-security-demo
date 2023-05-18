@@ -50,23 +50,14 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Table structure for sys_role_permission
 -- ----------------------------
-CREATE TABLE `sys_role_permission`  (
-  `id` varchar(32) NOT NULL,
-  `r_id` varchar(32) NOT NULL,
-  `p_id` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `unique_r_p`(`r_id`, `p_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4;
-
--- ----------------------------
--- Table structure for sys_user
--- ----------------------------
 CREATE TABLE `sys_user`  (
   `id` varchar(32) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `password_intensity` varchar(1) DEFAULT NULL COMMENT 'L:低 M:中 H:高',
   `role_id` varchar(32) DEFAULT NULL,
+  `sex` varchar(1) DEFAULT NULL COMMENT 'M:男 F:女 U:未知',
+  `phone_number` varchar(11) default NULL,
   `create_time` datetime DEFAULT NULL,
   `last_login_time` datetime DEFAULT NULL,
   `last_update_password_time` datetime DEFAULT NULL,
@@ -77,6 +68,17 @@ CREATE TABLE `sys_user`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_username`(`username`) USING BTREE,
   INDEX `index_role_id`(`role_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+
+-- ----------------------------
+-- Table structure for sys_user
+-- ----------------------------
+CREATE TABLE `sys_role_permission`  (
+  `id` varchar(32) NOT NULL,
+  `r_id` varchar(32) NOT NULL,
+  `p_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_r_p`(`r_id`, `p_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 

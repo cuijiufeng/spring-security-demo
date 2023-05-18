@@ -19,6 +19,7 @@ import Lang from '@/components/Lang'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 分页组件
 import Pagination from '@/components/Pagination'
+import ExplicitImplicitColumn from '@/components/ExplicitImplicitColumn';
 
 const app = createApp(App)
 
@@ -26,6 +27,7 @@ const app = createApp(App)
 app.component('svg-icon', SvgIcon)
 app.component('language', Lang)
 app.component('pagination', Pagination)
+app.component('ExplicitImplicitColumn', ExplicitImplicitColumn)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

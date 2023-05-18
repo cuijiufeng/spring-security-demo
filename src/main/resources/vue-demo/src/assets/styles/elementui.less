@@ -1,3 +1,7 @@
+//el-input__wrapper
+.el-input__wrapper {
+  background-color: #f3f5fa !important;
+}
 
 //el-dropdown
 .el-dropdown-menu__item:not(.is-disabled):focus {
@@ -11,12 +15,27 @@
   margin-right: 30px;
 }
 
+//el-transfer
+.el-transfer {
+  display: flex;
+  .el-transfer__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .el-transfer__button {
+      margin: 10px 0px;
+    }
+  }
+}
+
 //el-dialog
 .el-dialog {
+  border: 8px solid #f3f5fa;
+  border-top: 0px;
   .el-dialog__header {
     background-color: #f3f5fa;
     margin: 0;
-    padding: 5px 12px;
+    padding: 5px;
     display: flex;
     justify-content: space-between;
     .el-dialog__title {
@@ -32,8 +51,10 @@
     }
   }
   .el-dialog__body {
-    border: 8px solid #f3f5fa;
-    border-top: 0px;
+    border: 1px solid #dce5eb;
+    border-radius: 4px;
     padding: 30px;
+    display: flex;
+    justify-content: center;
   }
 }

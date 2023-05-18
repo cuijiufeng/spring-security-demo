@@ -14,6 +14,8 @@ public enum ErrorEnum implements BaseErrorEnum {
     EXIST_USER_FAILED("10002", "user already exists"),
     ADD_EDIT_USER_FAILED("10003", "add/edit user failed"),
     ORIGINAL_PASSWORD_NOT_MATCH_FAILED("10004", "original password not match"),
+    CANT_MODIFY_USERNAME_FAILED("10005", "can't modify username"),
+    DELETE_USER_FAILED("10006", "delete user failed"),
     ;
     private final String code;
     private final String message;

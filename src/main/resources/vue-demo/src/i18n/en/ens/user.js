@@ -1,5 +1,6 @@
 
 export default {
+  'add/edit user': '{type} user',
   'username': 'username',
   'password': 'password',
   'confirm password': 'confirm password',
@@ -21,4 +22,11 @@ export default {
   'LOW': 'low',
   'MEDIUM': 'medium',
   'HIGH': 'high',
+  'sex': 'sex',
+  'MALE': 'male',
+  'FEMALE': 'female',
+  'UNKNOWN': 'unknown',
+  'phone number': 'phone number',
+  'please input number type': 'please input number type',
+  'phone number format error': 'phone number format error',
 }

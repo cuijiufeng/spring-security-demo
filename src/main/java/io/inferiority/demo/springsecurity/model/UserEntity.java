@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -34,6 +35,9 @@ public class UserEntity implements Serializable {
     private String password;
     private PasswordIntensity passwordIntensity;
     private String roleId;
+    private Sex sex;
+    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", message = "手机号格式错误", groups = ValidatedUpdate.class)
+    private String phoneNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -50,6 +54,14 @@ public class UserEntity implements Serializable {
     public enum  PasswordIntensity {
         LOW("L"), MEDIUM("M"), HIGH("H");
         //标记数据库存的值是枚举
+        @EnumValue
+        private final String code;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public enum Sex {
+        MALE("M"), FEMALE("F"), UNKNOWN("U");
         @EnumValue
         private final String code;
     }

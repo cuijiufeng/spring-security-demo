@@ -20,9 +20,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$HAe6gTZo.uxxFEDrjU74GOk0nPc9bZoTOxWAgI0HUOH/R49.PiHXa', 'L', '1', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
-INSERT INTO `sys_user` VALUES ('2', 'operator', '$2a$10$.ugWvLvv0DWOkYE6FvAoQuAg/LBEjkIEdGBLwdu9q3gky00hxzLhC', 'L', '2', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
-INSERT INTO `sys_user` VALUES ('3', 'auditor', '$2a$10$MJKrF9eOy7nIXnEIopxCtuf4lTyNKlieLKcIAxJP12XTroiJmHGHa', 'L', '3', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
+INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$HAe6gTZo.uxxFEDrjU74GOk0nPc9bZoTOxWAgI0HUOH/R49.PiHXa', 'L', '1', 'M', '13512341234', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
+INSERT INTO `sys_user` VALUES ('2', 'operator', '$2a$10$.ugWvLvv0DWOkYE6FvAoQuAg/LBEjkIEdGBLwdu9q3gky00hxzLhC', 'L', '2', 'M', '13512341234', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 0);
+INSERT INTO `sys_user` VALUES ('3', 'auditor', '$2a$10$MJKrF9eOy7nIXnEIopxCtuf4lTyNKlieLKcIAxJP12XTroiJmHGHa', 'L', '3', 'F', '13512341234', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
 
 -- ----------------------------
 -- Records of sys_role
@@ -39,9 +39,10 @@ INSERT INTO `sys_permission` VALUES ('2', '1', 'P', '查询', 'index:select', 0,
 INSERT INTO `sys_permission` VALUES ('100', '0', 'D', '系统管理', 'system', 0, 0);
 INSERT INTO `sys_permission` VALUES ('110', '100', 'M', '用户管理', 'system:user', 0, 0);
 INSERT INTO `sys_permission` VALUES ('111', '110', 'P', '查询', 'system:user:select', 0, 0);
-INSERT INTO `sys_permission` VALUES ('112', '110', 'P', '查询', 'system:user:add/edit', 0, 0);
-
-INSERT INTO `sys_permission` VALUES ('121', '0', 'P', '查询', 'system:role:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('112', '110', 'P', '新增/编辑', 'system:user:add/edit', 0, 0);
+INSERT INTO `sys_permission` VALUES ('113', '110', 'P', '删除', 'system:user:delete', 0, 0);
+INSERT INTO `sys_permission` VALUES ('120', '100', 'M', '角色/权限', 'system:role/permission', 0, 0);
+INSERT INTO `sys_permission` VALUES ('121', '120', 'P', '查询', 'system:role:select', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -52,6 +53,8 @@ INSERT INTO `sys_role_permission` VALUES ('100', '1', '100');
 INSERT INTO `sys_role_permission` VALUES ('110', '1', '110');
 INSERT INTO `sys_role_permission` VALUES ('111', '1', '111');
 INSERT INTO `sys_role_permission` VALUES ('112', '1', '112');
+INSERT INTO `sys_role_permission` VALUES ('113', '1', '113');
+INSERT INTO `sys_role_permission` VALUES ('120', '1', '120');
 INSERT INTO `sys_role_permission` VALUES ('121', '1', '121');
 
 SET FOREIGN_KEY_CHECKS = 1;
