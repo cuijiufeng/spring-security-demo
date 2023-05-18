@@ -7,6 +7,7 @@ export default {
   'delete': '删除',
   'import': '导入',
   'export': '导出',
+  'refresh': '刷新',
   'no': '编号',
   'operator': '操作',
   'edit': '编辑',

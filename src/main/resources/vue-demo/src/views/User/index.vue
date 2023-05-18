@@ -42,6 +42,9 @@
         <el-tooltip class="box-item" effect="dark" :content="$t('common.explicit implicit search')" placement="top">
           <el-button circle icon="Search" @click="visibleSearch = !visibleSearch"/>
         </el-tooltip>
+        <el-tooltip class="box-item" effect="dark" :content="$t('common.refresh')" placement="top">
+          <el-button circle icon="Refresh" @click="userList"/>
+        </el-tooltip>
         <el-tooltip class="box-item" effect="dark" :content="$t('common.explicit implicit column')" placement="top">
           <el-button circle icon="Menu" @click="dialogOpen.visibleExplicitImplicitColumn = true"/>
         </el-tooltip>
@@ -88,7 +91,7 @@
         :label="$t('user.create time')"/>
       <el-table-column v-if="explicitImplicitColumn.lastLoginTime.visible" align="center" show-overflow-tooltip 
         prop="lastLoginTime" :label="$t('user.last login time')"/>
-      <el-table-column align="center" :label="$t('common.operator')">
+      <el-table-column v-if="explicitImplicitColumn.operator.visible" align="center" :label="$t('common.operator')">
         <template #default="scope">
           <el-link style="margin: 0px 3px 0px 3px;" :underline="false" icon="Edit" @click="openEditUser(scope.row)">
             {{$t('common.edit')}}
@@ -206,6 +209,7 @@ const explicitImplicitColumn = reactive({
   enabled: { label: i18n.t('user.enabled'), visible: true },
   createTime: { label: i18n.t('user.create time'), visible: true },
   lastLoginTime: { label: i18n.t('user.last login time'), visible: false },
+  operator: { label: i18n.t('common.operator'), visible: true },
 });
 const dialogOpen = reactive({
   visibleExplicitImplicitColumn: false,

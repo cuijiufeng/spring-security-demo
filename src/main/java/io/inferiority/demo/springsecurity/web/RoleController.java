@@ -27,7 +27,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('system:role:select')")
     @Log("role list")
     @GetMapping("list")
-    public JsonResult<PageInfo<RoleEntity>> list(@Validated PageDto page) {
-        return JsonResultUtil.successJson(roleService.list(page));
+    public JsonResult<PageInfo<RoleEntity>> list(@Validated PageDto page, RoleEntity searchRole) {
+        return JsonResultUtil.successJson(roleService.list(page, searchRole));
     }
 }

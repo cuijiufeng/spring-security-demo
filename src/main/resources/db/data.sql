@@ -27,9 +27,9 @@ INSERT INTO `sys_user` VALUES ('3', 'auditor', '$2a$10$MJKrF9eOy7nIXnEIopxCtuf4l
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', '超级管理员', 'ROLE_admin', 1, 'ROLE_admin', '2023-01-01 00:00:00');
-INSERT INTO `sys_role` VALUES ('2', '操作员', 'ROLE_operator', 2, 'ROLE_admin', '2023-01-01 00:00:00');
-INSERT INTO `sys_role` VALUES ('3', '审计员', 'ROLE_auditor', 2, 'ROLE_admin', '2023-01-01 00:00:00');
+INSERT INTO `sys_role` VALUES ('1', '超级管理员', 'ROLE_admin', 1, '1', '2023-01-01 00:00:00');
+INSERT INTO `sys_role` VALUES ('2', '操作员', 'ROLE_operator', 2, '1', '2023-01-01 00:00:00');
+INSERT INTO `sys_role` VALUES ('3', '审计员', 'ROLE_auditor', 2, '1', '2023-01-01 00:00:00');
 
 -- ----------------------------
 -- Records of sys_permission

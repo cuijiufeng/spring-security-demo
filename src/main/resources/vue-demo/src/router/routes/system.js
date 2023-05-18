@@ -16,5 +16,14 @@ export default {
       },
       component: () => import("@/views/User"),
     },
+    {
+      path: "/rolePermission",
+      name: "RolePermission",
+      meta: {
+        menu: 'system:role/permission',
+        icon: 'peoples',
+      },
+      component: () => import("@/views/RolePermission"),
+    },
   ]
 }

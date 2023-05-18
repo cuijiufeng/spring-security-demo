@@ -41,7 +41,7 @@ CREATE TABLE `sys_role`  (
   `role_name` varchar(255) DEFAULT NULL,
   `role_key` varchar(255) NOT NULL,
   `level` int NOT NULL,
-  `create_user` varchar(255) DEFAULT NULL,
+  `create_user` varchar(32) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_role_key`(`role_key`) USING BTREE
