@@ -18,6 +18,11 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Records of sys_initialization
+-- ----------------------------
+INSERT INTO `sys_initialization` VALUES ('1', '1', 1);
+
+-- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$HAe6gTZo.uxxFEDrjU74GOk0nPc9bZoTOxWAgI0HUOH/R49.PiHXa', 'L', '1', 'M', '13512341234', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01 00:00:00', 1, 1, 1, 1);
@@ -45,6 +50,8 @@ INSERT INTO `sys_permission` VALUES ('120', '100', 'M', '角色/权限', 'system
 INSERT INTO `sys_permission` VALUES ('121', '120', 'P', '查询', 'system:role:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('122', '120', 'P', '新增/编辑', 'system:role:add/edit', 0, 0);
 INSERT INTO `sys_permission` VALUES ('123', '120', 'P', '删除', 'system:role:delete', 0, 0);
+INSERT INTO `sys_permission` VALUES ('124', '120', 'P', '权限树', 'system:permission:tree', 0, 0);
+INSERT INTO `sys_permission` VALUES ('125', '120', 'P', '角色拥有权限', 'system:permission:have', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -60,5 +67,7 @@ INSERT INTO `sys_role_permission` VALUES ('120', '1', '120');
 INSERT INTO `sys_role_permission` VALUES ('121', '1', '121');
 INSERT INTO `sys_role_permission` VALUES ('122', '1', '122');
 INSERT INTO `sys_role_permission` VALUES ('123', '1', '123');
+INSERT INTO `sys_role_permission` VALUES ('124', '1', '124');
+INSERT INTO `sys_role_permission` VALUES ('125', '1', '125');
 
 SET FOREIGN_KEY_CHECKS = 1;

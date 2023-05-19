@@ -11,4 +11,5 @@ export default {
   'please input create user': 'please input create user',
   'please input role level': 'please input role level',
   'illegal role level': 'illegal role level',
+  'permissions config': 'permissions config',
 }

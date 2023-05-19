@@ -38,8 +38,9 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('system:role:add/edit')")
     @Log("add/edit role")
     @PostMapping("edit")
-    public JsonResult<Void> edit(RoleEntity role) {
-        roleService.edit(role);
+    public JsonResult<Void> edit(@Validated RoleEntity role,
+                                 @RequestParam(name = "permissions") List<String> pids) {
+        roleService.edit(role, pids);
         return JsonResultUtil.successJson();
     }
 

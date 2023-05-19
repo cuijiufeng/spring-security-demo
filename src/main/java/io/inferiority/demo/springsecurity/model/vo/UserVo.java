@@ -1,12 +1,10 @@
 package io.inferiority.demo.springsecurity.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.RoleEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,8 +13,7 @@ import java.util.List;
  * @Date 2023/5/9 11:21
  */
 @Data
-@TableName("sys_user")
-public class UserVo extends UserEntity implements Serializable {
+public class UserVo extends UserEntity {
     private RoleEntity role;
     private List<PermissionEntity> permissions;
 }

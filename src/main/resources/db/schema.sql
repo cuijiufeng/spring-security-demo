@@ -18,6 +18,16 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for sys_initialization
+CREATE TABLE `sys_initialization` (
+  `id` varchar (32) NOT NULL,
+  `super_user_id` varchar (32) NOT NULL,
+  `initialized` tinyint NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_permission
 -- ----------------------------
 CREATE TABLE `sys_permission`  (

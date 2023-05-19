@@ -1,7 +1,5 @@
 package io.inferiority.demo.springsecurity.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.inferiority.demo.springsecurity.model.RoleEntity;
@@ -18,11 +16,8 @@ import java.util.Collection;
  * @date 2023/4/15 17:39
  */
 @Data
-@TableName("sys_user")
 public class TokenVo extends UserEntity implements UserDetails {
-    @TableField(exist = false)
     private Collection<SimpleGrantedAuthority> authorities;
-    @TableField(exist = false)
     private RoleEntity role;
 
     @JsonSerialize(contentUsing = JwtUtil.UserVoJsonSerialize.class)

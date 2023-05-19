@@ -1,6 +1,6 @@
 <template>
   <el-dialog :model-value="visible" :title="$t('common.explicit/implicit')" draggable
-      :close-on-click-modal="false" @close="$emit('update:visible', false)">
+      :close-on-click-modal="false" @close="$emit('update:visible', false)" width="45%">
     <el-transfer v-model="value" :data="data" :titles="[$t('common.explicit'), $t('common.implicit')]"/>
   </el-dialog>
 </template>

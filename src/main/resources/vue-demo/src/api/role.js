@@ -26,3 +26,21 @@ export const apiDeleteRole = (param) => {
     data: param
   });
 }
+
+//权限树
+export const apiPermissionsTree = (param) => {
+  return http({
+    method: 'GET',
+    url: '/permission/tree',
+    data: param
+  });
+}
+
+//角色拥有的权限
+export const apiHavePermissions = (param) => {
+  return http({
+    method: 'GET',
+    url: '/permission/have',
+    data: param
+  });
+}

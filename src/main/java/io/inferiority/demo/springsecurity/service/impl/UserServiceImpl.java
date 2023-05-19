@@ -3,6 +3,7 @@ package io.inferiority.demo.springsecurity.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.inferiority.demo.springsecurity.dao.InitializationMapper;
 import io.inferiority.demo.springsecurity.dao.RoleMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.exception.ErrorEnum;
@@ -40,12 +41,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-    @Value("${super.admin.user.id:1}")
-    private String superAdminUserId;
     @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private InitializationMapper initializationMapper;
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
@@ -66,12 +67,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void edit(UserEntity user, String originalPassword) {
         Date currentTime = new Date();
         //判断权限是否足够
         if (StringUtils.isNotBlank(user.getRoleId())) {
-            PermissionCompareUtil.compare(superAdminUserId, roleMapper.selectById(user.getRoleId()));
+            PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), roleMapper.selectById(user.getRoleId()));
         }
         //编辑
         if (StringUtils.isNotBlank(user.getId())) {
@@ -82,16 +83,14 @@ public class UserServiceImpl implements IUserService {
                 throw new ServiceException(ErrorEnum.CANT_MODIFY_USERNAME_FAILED);
             }
             //不允许修改超级管理员的某些属性
-            if (originalUser.getId().equals(superAdminUserId) &&
-                    (!originalUser.getRoleId().equals(user.getRoleId())
-                            || !originalUser.getEnabled().equals(user.getEnabled()))) {
+            if (originalUser.getId().equals(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId())
+                    && (!originalUser.getRoleId().equals(user.getRoleId()) || !originalUser.getEnabled().equals(user.getEnabled()))) {
                 throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
             }
 
             //修改密码
             if (StringUtils.isNotBlank(user.getPassword())) {
-                if (StringUtils.isBlank(originalPassword)
-                        || !passwordEncoder.matches(originalPassword, originalUser.getPassword())) {
+                if (StringUtils.isBlank(originalPassword) || !passwordEncoder.matches(originalPassword, originalUser.getPassword())) {
                     throw new ServiceException(ErrorEnum.ORIGINAL_PASSWORD_NOT_MATCH_FAILED);
                 }
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -126,18 +125,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(List<String> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return;
         }
-        if (userIds.contains(superAdminUserId)) {
+        if (userIds.contains(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId())) {
             throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
         }
         //判断权限是否足够
-        PermissionCompareUtil.compare(superAdminUserId, userMapper.selectBatchIds(userIds).stream()
-                .map(UserEntity::getRoleId)
-                .map(roleMapper::selectById).collect(Collectors.toList()));
+        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(),
+                userMapper.selectBatchIds(userIds).stream()
+                    .map(UserEntity::getRoleId)
+                    .map(roleMapper::selectById).collect(Collectors.toList()));
         if (userMapper.deleteBatchIds(userIds) < 1) {
             throw new ServiceException(ErrorEnum.DELETE_USER_FAILED);
         }

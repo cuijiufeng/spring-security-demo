@@ -3,6 +3,7 @@ package io.inferiority.demo.springsecurity.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.inferiority.demo.springsecurity.dao.InitializationMapper;
 import io.inferiority.demo.springsecurity.dao.RoleMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
 import io.inferiority.demo.springsecurity.exception.ErrorEnum;
@@ -10,6 +11,7 @@ import io.inferiority.demo.springsecurity.exception.ServiceException;
 import io.inferiority.demo.springsecurity.model.RoleEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
 import io.inferiority.demo.springsecurity.model.vo.PageDto;
+import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.service.IRoleService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
@@ -38,14 +40,16 @@ import java.util.List;
 public class RoleServiceImpl implements IRoleService {
     @Value("${default.role.prefix:ROLE_}")
     private String defaultRolePrefix;
-    @Value("${super.admin.user.id:1}")
-    private String superAdminUserId;
     @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private InitializationMapper initializationMapper;
+    @Autowired
+    private IPermissionService permissionService;
 
     @Override
     public PageInfo<RoleEntity> list(PageDto page, RoleEntity searchRole) {
@@ -61,11 +65,11 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    @Transactional
-    public void edit(RoleEntity role) {
+    @Transactional(rollbackFor = Exception.class)
+    public void edit(RoleEntity role, List<String> pids) {
         Date currentTime = new Date();
         //判断权限是否足够
-        PermissionCompareUtil.compare(superAdminUserId, role);
+        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), role);
         role.setRoleKey(defaultRolePrefix + role.getRoleKey());
         //编辑
         if (StringUtils.isNotBlank(role.getId())) {
@@ -78,6 +82,7 @@ public class RoleServiceImpl implements IRoleService {
             if (roleMapper.updateById(role) != 1) {
                 throw new ServiceException(ErrorEnum.ADD_EDIT_ROLE_FAILED);
             }
+            permissionService.editPermission(role.getId(), pids);
             return;
         }
         if (roleMapper.selectCount(Wrappers.<RoleEntity>lambdaQuery()
@@ -90,10 +95,11 @@ public class RoleServiceImpl implements IRoleService {
         if (roleMapper.insert(role) != 1) {
             throw new ServiceException(ErrorEnum.ADD_EDIT_ROLE_FAILED);
         }
+        permissionService.editPermission(role.getId(), pids);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return;
@@ -104,7 +110,7 @@ public class RoleServiceImpl implements IRoleService {
             throw new ServiceException(ErrorEnum.DELETE_THIS_ROLE_USER_FAILED);
         }
         //判断权限是否足够
-        PermissionCompareUtil.compare(superAdminUserId, roleMapper.selectBatchIds(ids));
+        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), roleMapper.selectBatchIds(ids));
         if (roleMapper.deleteBatchIds(ids) < 1) {
             throw new ServiceException(ErrorEnum.DELETE_ROLE_FAILED);
         }

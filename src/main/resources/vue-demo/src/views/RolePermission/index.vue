@@ -65,7 +65,7 @@
 
     <!-- 角色/权限添加/编辑 -->
     <el-dialog v-model="dialogOpen.visibleAddEdit" :title="$t('role.add/edit role', {type: dialogOpen.isEdit ? $t('common.edit') : $t('common.add')})" 
-        draggable :close-on-click-modal="false" @close="editRole = {}">
+        draggable :close-on-click-modal="false" @close="editRole = {};" width="45%">
       <el-form :model="editRole" ref="editRoleRef" label-width="auto" inline-message :rules="{
           roleName: [{ required: true, message: $t('role.please input role name'), trigger: 'blur' }],
           roleKey: [{ required: true, message: $t('role.please input role key'), trigger: 'blur' }],
@@ -78,7 +78,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('role.role key')+':'" prop="roleKey">
               <el-input v-model="editRole.roleKey" maxlength="255" :disabled="dialogOpen.isEdit"/>
@@ -87,11 +87,30 @@
           <el-col :span="12">
             <el-form-item :label="$t('role.role level')+':'" prop="level">
               <el-input-number style="width: 100%;" v-model="editRole.level" 
-                  :min="$store.getters.currentUser.role.level + 1" controls-position="right"/>
+                  :min="$store.getters.currentUser.role.level" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
-        <div style="display: flex;justify-content: center;">
+        <el-row>
+          <el-col :span="24" style="display: flex;align-items: center;justify-content: space-between;">
+            <div>{{$t('role.permissions config')}}</div>
+            <div>
+              <el-checkbox v-model="treeExpandedAll" :label="$t('common.expand/fold')" size="large" 
+                  @change="expandTreeAll"/>
+              <el-checkbox v-model="treeCheckedAll" :label="$t('common.all/unall')" size="large" 
+                  @change="checkedTreeAll"/>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-scrollbar max-height="48vh" :wrap-style="{'border': '8px solid #f3f5fa'}">
+              <el-tree ref="permissionsTreeRef" :props="{children: 'children', label: 'name'}" 
+                node-key="id" :data="permissionsTreeData" show-checkbox indent="25"/>
+            </el-scrollbar>
+          </el-col>
+        </el-row>
+        <div style="display: flex;justify-content: center;margin-top: 20px;">
           <el-button type="info" @click="dialogOpen.visibleAddEdit = false">{{$t('common.cancel')}}</el-button>
           <el-button type="primary" @click="handleEditRole">{{$t('common.confirm')}}</el-button>
         </div>
@@ -107,7 +126,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
-import {apiRoleList, apiEditRole, apiDeleteRole} from '@/api/role';
+import {apiRoleList, apiEditRole, apiDeleteRole, apiPermissionsTree, apiHavePermissions} from '@/api/role';
 
 const store = useStore();
 const i18n = useI18n();
@@ -139,16 +158,53 @@ const explicitImplicitColumn = reactive({
 let roleListData = ref([]);
 let editRole = ref({});
 let multiSelectRoles = ref([]);
+let treeExpandedAll = ref(false);
+let treeCheckedAll = ref(false);
+let permissionsTreeData = ref([]);
+
+const permissionsTreeRef = ref();
+const expandTreeAll = () => {
+  let nodes = permissionsTreeRef.value.store.nodesMap;
+  for (const node in nodes) {
+    nodes[node].expanded = treeExpandedAll.value;
+  }
+}
+const checkedTreeAll = () => {
+  let nodes = permissionsTreeRef.value.store.nodesMap;
+  for (const node in nodes) {
+    nodes[node].checked = treeCheckedAll.value;
+  }
+}
 
 const openAddRole = () => {
   dialogOpen.visibleAddEdit = true;
   dialogOpen.isEdit = false;
+  treeExpandedAll.value = false;
+  treeCheckedAll.value = false;
   editRole.value.level = store.getters.currentUser.role.level + 1;
+  apiPermissionsTree().then(([data, headers]) => {
+    permissionsTreeData.value = data;
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
 }
 const openEditRole = (role) => {
   dialogOpen.visibleAddEdit = true;
   dialogOpen.isEdit = true;
+  treeExpandedAll.value = false;
+  treeCheckedAll.value = false;
   editRole.value = JSON.parse(JSON.stringify(role));
+  apiPermissionsTree().then(([data, headers]) => {
+    permissionsTreeData.value = data;
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
+  apiHavePermissions({roleId: role.id}).then(([data, headers]) => {
+    debugger
+    permissionsTreeRef.value.setCheckedKeys(data, true);
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
 }
 
 const editRoleRef = ref();
@@ -157,6 +213,8 @@ const handleEditRole = () => {
     if (!valid) {
       return;
     }
+    editRole.value.permissions = [...permissionsTreeRef.value.getCheckedKeys(), 
+      ...permissionsTreeRef.value.getHalfCheckedKeys()];
     apiEditRole(editRole.value).then(([data, headers]) => {
       ElMessage({ type: 'success', message: i18n.t('common.success') });
       dialogOpen.visibleAddEdit = false;
@@ -217,5 +275,25 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+:deep(.el-tree) {
+  padding: 0px 3px;
+  .el-tree-node {
+    &.is-expanded {
+      .el-tree-node__content:not(.el-tree-node__children .el-tree-node__content) {
+        background-color: #337ecc;
+      }
+    }
+    .el-tree-node__content {
+      height: 35px;
+      border-bottom: 1px dashed #bcc3cb;
+      &:not(.el-tree-node__children .el-tree-node__content) {
+        color: #fff;
+        background: #7a8495;
+        border-bottom: 1px solid #fff;
+      }
+    }
+  }
 }
 </style>

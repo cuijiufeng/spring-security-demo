@@ -20,7 +20,8 @@ public enum ErrorEnum implements BaseErrorEnum {
     CANT_MODIFY_ROLE_KEY_FAILED("10008", "can't modify role key"),
     DELETE_ROLE_FAILED("10009", "delete role failed"),
     DELETE_THIS_ROLE_USER_FAILED("10010", "delete this role user"),
-    EXIST_ROLE_FAILED("10011", "exist role failed")
+    EXIST_ROLE_FAILED("10011", "exist role failed"),
+    EDIT_PERMISSION_FAILED("10012", "edit permission failed")
     ;
     private final String code;
     private final String message;

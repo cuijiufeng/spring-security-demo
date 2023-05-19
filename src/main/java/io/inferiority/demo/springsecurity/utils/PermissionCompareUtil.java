@@ -13,8 +13,8 @@ import java.util.Objects;
  */
 public class PermissionCompareUtil {
 
-    public static void compare(String superAdminUserId, List<RoleEntity> roles) {
-        if (Objects.equals(superAdminUserId, AuthContextUtil.currentUser().getId())) {
+    public static void compare(String superUserId, List<RoleEntity> roles) {
+        if (Objects.equals(superUserId, AuthContextUtil.currentUser().getId())) {
             return;
         }
         if (roles.stream().anyMatch(role -> AuthContextUtil.currentRole().getLevel() >= role.getLevel())) {
@@ -22,7 +22,7 @@ public class PermissionCompareUtil {
         }
     }
 
-    public static void compare(String superAdminUserId, RoleEntity role) {
-        compare(superAdminUserId, Collections.singletonList(role));
+    public static void compare(String superUserId, RoleEntity role) {
+        compare(superUserId, Collections.singletonList(role));
     }
 }

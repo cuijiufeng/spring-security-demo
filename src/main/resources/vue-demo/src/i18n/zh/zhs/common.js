@@ -25,4 +25,6 @@ export default {
   'implicit': '隐藏',
   'unrecoverable after deletion': '删除后不可恢复',
   'no items to delete': '没有可删除项',
+  'expand/fold': '展开/折叠',
+  'all/unall': '全选/全不选',
 }

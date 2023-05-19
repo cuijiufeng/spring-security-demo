@@ -25,4 +25,6 @@ export default {
   'explicit implicit search': 'explicit implicit search',
   'unrecoverable after deletion': 'unrecoverable after deletion',
   'no items to delete': 'no items to delete',
+  'expand/fold': 'expand/fold',
+  'all/unall': 'all/unall',
 }

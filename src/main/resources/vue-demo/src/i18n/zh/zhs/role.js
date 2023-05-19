@@ -11,4 +11,5 @@ export default {
   'please input create user': '请输入创建用户',
   'please input role level': '请输入创建用户',
   'illegal role level': '非法角色等级',
+  'permissions config': '权限设置',
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public interface IRoleService {
     PageInfo<RoleEntity> list(PageDto page, RoleEntity searchRole);
 
-    void edit(RoleEntity role);
+    void edit(RoleEntity role, List<String> pids);
 
     void delete(List<String> ids);
 }
