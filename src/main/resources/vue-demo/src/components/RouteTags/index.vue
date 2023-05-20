@@ -10,39 +10,38 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import { ROUTE_TAGS } from '@/utils/config';
 
-let tags = reactive(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)) 
-    || [{'title': useI18n().t('layout.index'), 'path': '/index', 'effect': 'plain'}]);
+const router = useRouter();
 
-const cacheRouteTags = () => {
-  sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(tags));
-}
+const tags = ref(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)));
 
 const closeTag = (tag) => {
-  tags = tags.filter(t => tag != t);
+  tags.value = tags.value.filter(t => tag != t);
   if(tag.effect == 'dark') {
-    useRouter().replace(tags[0].path)
+    router.replace(tags.value[0].path)
   }
-  cacheRouteTags();
+  sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(tags.value));
 }
 
 watch(useRoute(), (route) => {
-  tags.forEach(t => {
-    t.effect = 'plain';
+  tags.value = tags.value.map(t => {
+    t.effect = t.path == route.fullPath ? 'dark' : 'plain';
+    return t;
   });
-  let tag = tags.find(t => t.path == route.fullPath);
-  if(undefined == tag) {
-    tags.push({'title': route.meta.title, 'path': route.fullPath, 'effect': 'dark'});
-  } else {
-    tag.effect = 'dark';
+  if(undefined == tags.value.find(t => t.path == route.fullPath)) {
+    tags.value.push({'title': route.meta.title, 'path': route.fullPath, 'effect': 'dark'});
   }
-  cacheRouteTags();
+  sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(tags.value));
 })
+
+onMounted(() => {
+  router.replace(tags.value.find(t => t.effect == 'dark').path);
+});
 </script>
 
 <style lang="less" scoped>

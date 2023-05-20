@@ -17,6 +17,11 @@ const useUserStore = defineStore(
         sessionStorage.setItem(LOGIN_INFO, JSON.stringify(loginData));
         //生成用户权限路由
         recursionFilterRoute(dynamicRoute, currentPermission);
+        if(dynamicRoute.children[0]) {
+          let defaultRoute = dynamicRoute.children[0];
+          sessionStorage.setItem(ROUTE_TAGS, sessionStorage.getItem(ROUTE_TAGS) 
+            || JSON.stringify([{'title': defaultRoute.meta.title, 'path': defaultRoute.path, 'effect': 'dark'}]))
+        }
         //添加路由router
         router.addRoute(dynamicRoute);
         router.replace('/');
@@ -29,12 +34,6 @@ const useUserStore = defineStore(
           route.children = route.children.filter(r => {
             if(r.children) {
               recursionFilterRoute(r, permissions);
-              //默认路由
-              if(r.children[0]) {
-                r.redirect = r.children[0].path;
-              }
-              //权限表中是否包含非子路由
-              // return r.children.length != 0;
             }
             let permission = permissions.find(p => p.code == r.meta.menu);
             //路由title
