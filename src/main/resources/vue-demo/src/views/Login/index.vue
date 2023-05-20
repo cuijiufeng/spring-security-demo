@@ -20,7 +20,9 @@
         <img style="height: 32px;width: 100px;margin-right: 30px;" src="@/assets/logo/logo.png"/>
         <el-input style="width: calc(100% - 130px);" v-model="loginForm.verifyCode" @keydown.enter="onSubmit"/>
       </el-form-item>
-      <el-button style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">{{ $t('login.login') }}</el-button>
+      <el-button :loading="loginLoading" style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">
+        {{ loginLoading ? $t('login.login')+'. . .' : $t('login.login')}}
+      </el-button>
     </el-form>
   </div>
 </template>
@@ -35,6 +37,7 @@ import { apiLogin } from '@/api/system';
 
 const store = useStore();
 
+const loginLoading = ref(false);
 const passwordHide = ref(true);
 const loginForm = reactive({
   username: '',
@@ -48,6 +51,7 @@ const onSubmit = () => {
     if (!valid) {
       return;
     }
+    loginLoading.value = true;
     apiLogin(loginForm).then(([data, headers]) => {
       store.commit('login', data);
     }).catch(([data, headers]) => {
