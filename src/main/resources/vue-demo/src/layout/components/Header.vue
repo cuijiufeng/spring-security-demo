@@ -16,7 +16,7 @@
         <div class="dropdown-user-link">
           <svg-icon icon-class="user"/>
           <div style="width: 5px"/>
-          <span>{{currentUser.username}}</span>
+          <span>{{userStore.currentUser.username}}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -31,8 +31,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import { useStore } from 'vuex';
+import { ref, reactive } from 'vue';
+import useUserStore from '@/store/modules/user';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -41,15 +41,15 @@ import { SIDEBAR_EXPAND } from '@/utils/config';
 
 const emit = defineEmits(['update:sidebar-expand'])
 
-const store = useStore();
+const userStore = useUserStore();
 
 const props = defineProps({
   sidebarExpand: Boolean,
 });
 
 const logout = () => {
-  apiLogout({username: currentUser.username}).then(([data, headers]) => {
-    store.commit('logout');
+  apiLogout({username: userStore.currentUser.username}).then(([data, headers]) => {
+    userStore.logout();
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
   });
@@ -58,10 +58,6 @@ const toggleSidebar = () => {
   localStorage.setItem(SIDEBAR_EXPAND, !props.sidebarExpand ? 1 : 0);
   emit('update:sidebar-expand', !props.sidebarExpand);
 }
-
-const currentUser = computed(() => {
-  return store.getters.currentUser;
-})
 </script>
 
 <style lang="less" scoped>

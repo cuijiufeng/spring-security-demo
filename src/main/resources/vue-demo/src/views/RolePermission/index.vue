@@ -87,7 +87,7 @@
           <el-col :span="12">
             <el-form-item :label="$t('role.role level')+':'" prop="level">
               <el-input-number style="width: 100%;" v-model="editRole.level" 
-                  :min="$store.getters.currentUser.role.level" controls-position="right"/>
+                  :min="userStore.currentUser.role.level" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -123,12 +123,12 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import useUserStore from '@/store/modules/user';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
 import {apiRoleList, apiEditRole, apiDeleteRole, apiPermissionsTree, apiHavePermissions} from '@/api/role';
 
-const store = useStore();
+const userStore = useUserStore();
 const i18n = useI18n();
 
 const permissionsTreeRef = ref();
@@ -182,7 +182,7 @@ const openAddRole = () => {
   dialogOpen.isEdit = false;
   treeExpandedAll.value = false;
   treeCheckedAll.value = false;
-  editRole.value.level = store.getters.currentUser.role.level + 1;
+  editRole.value.level = userStore.currentUser.role.level + 1;
   apiPermissionsTree().then(([data, headers]) => {
     permissionsTreeData.value = data;
   }).catch(([data, headers]) => {

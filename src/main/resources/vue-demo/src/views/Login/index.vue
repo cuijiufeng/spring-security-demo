@@ -29,13 +29,13 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import useUserStore from '@/store/modules/user';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import { loginBgRender } from "@/assets/js/canvas";
 import { apiLogin } from '@/api/system';
 
-const store = useStore();
+const userStore = useUserStore();
 
 const loginLoading = ref(false);
 const passwordHide = ref(true);
@@ -53,7 +53,7 @@ const onSubmit = () => {
     }
     loginLoading.value = true;
     apiLogin(loginForm).then(([data, headers]) => {
-      store.commit('login', data);
+      userStore.login(data)
     }).catch(([data, headers]) => {
       ElMessage({ type: 'error', message: data.message });
     });

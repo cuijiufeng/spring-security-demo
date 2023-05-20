@@ -1,4 +1,4 @@
-import store from "@/store";
+import useUserStore from '@/store/modules/user';
 import axios from "axios";
 import qs from 'qs'
 import {AUTHENTICATION, LANGUAGE} from './config';
@@ -66,7 +66,7 @@ export default (param) => {
         resolve([result.data, headers]);
       } else {
         if(result.code == 401) {
-          store.commit('logout')
+          useUserStore().logout();
         }
         reject([result.data, headers]);
       }

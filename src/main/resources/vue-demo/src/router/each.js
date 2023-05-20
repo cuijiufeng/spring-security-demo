@@ -20,7 +20,7 @@ export default {
       return;
     }
     //没有初始化系统时不准进入主页面
-    // if(to.fullPath == "/" && !store.getters.initialized) {
+    // if(to.fullPath == "/" && !userAppStore().initialized) {
     //   router.replace('/init');
     //   return;
     // }
