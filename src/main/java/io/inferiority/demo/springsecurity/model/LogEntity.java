@@ -2,6 +2,7 @@ package io.inferiority.demo.springsecurity.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder({"id", "optUser", "optDesc", "resultCode", "errCode", "errMsg", "optTime", "costTime", "costTime", "mac", "audited"})
 @TableName("sys_log")
 public class LogEntity implements Serializable {
     @TableId
@@ -28,6 +30,7 @@ public class LogEntity implements Serializable {
     private String errCode;
     private String errMsg;
     private Date optTime;
+    private Long costTime;
     private String mac;
     private Boolean audited;
 }

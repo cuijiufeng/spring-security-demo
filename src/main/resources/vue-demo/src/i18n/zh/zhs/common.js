@@ -16,6 +16,7 @@ export default {
   'cancel': '取消',
   'warning': '警告',
   'success': '成功',
+  'failed': '失败',
   'start date': '开始时间',
   'end date': '结束时间',
   'explicit implicit column': '显隐列',
@@ -27,4 +28,5 @@ export default {
   'no items to delete': '没有可删除项',
   'expand/fold': '展开/折叠',
   'all/unall': '全选/全不选',
+  'millisecond': '毫秒',
 }

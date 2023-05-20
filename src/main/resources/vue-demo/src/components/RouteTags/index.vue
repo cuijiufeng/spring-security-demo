@@ -23,7 +23,11 @@ const tags = ref(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)));
 const closeTag = (tag) => {
   tags.value = tags.value.filter(t => tag != t);
   if(tag.effect == 'dark') {
-    router.replace(tags.value[0].path)
+    if(tags.value[0]) {
+      router.replace(tags.value[0].path)
+    } else {
+      router.go(0);
+    }
   }
   sessionStorage.setItem(ROUTE_TAGS, JSON.stringify(tags.value));
 }
@@ -40,13 +44,16 @@ watch(useRoute(), (route) => {
 })
 
 onMounted(() => {
-  router.replace(tags.value.find(t => t.effect == 'dark').path);
+  let tag = tags.value.find(t => t.effect == 'dark');
+  if(tag != undefined) {
+    router.replace(tag.path);
+  }
 });
 </script>
 
 <style lang="less" scoped>
-.tags-scrollbar{
-  height: auto;
+.tags-scrollbar {
+  height: 34px;
   margin: 3px 0px 0px 3px;
   background-color: white;
   box-shadow: 5px 3px 5px #ccc;

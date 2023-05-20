@@ -17,14 +17,21 @@ const useUserStore = defineStore(
         sessionStorage.setItem(LOGIN_INFO, JSON.stringify(loginData));
         //生成用户权限路由
         recursionFilterRoute(dynamicRoute, currentPermission);
-        if(dynamicRoute.children[0]) {
-          let defaultRoute = dynamicRoute.children[0];
-          sessionStorage.setItem(ROUTE_TAGS, sessionStorage.getItem(ROUTE_TAGS) 
-            || JSON.stringify([{'title': defaultRoute.meta.title, 'path': defaultRoute.path, 'effect': 'dark'}]))
-        }
+        defaultRoute(dynamicRoute);
         //添加路由router
         router.addRoute(dynamicRoute);
         router.replace('/');
+
+        function defaultRoute(route) {
+          if(!route.children) {
+            sessionStorage.setItem(ROUTE_TAGS, sessionStorage.getItem(ROUTE_TAGS) 
+              || JSON.stringify([{'title': route.meta.title, 'path': route.path, 'effect': 'dark'}]))
+            return;
+          }
+          if(route.children[0]) {
+            defaultRoute(route.children[0]);
+          }
+        }
 
         //递归过滤路由
         function recursionFilterRoute(route, permissions) {

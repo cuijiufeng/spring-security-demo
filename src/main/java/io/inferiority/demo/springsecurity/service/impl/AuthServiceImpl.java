@@ -81,7 +81,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void logout(UserEntity user) {
         //清除上下文
-        //SecurityContextHolder.clearContext();
+        SecurityContextHolder.clearContext();
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));

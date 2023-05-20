@@ -54,7 +54,7 @@ public class RoleServiceImpl implements IRoleService {
                 .likeRight(StringUtils.isNotBlank(searchRole.getRoleName()), RoleEntity::getRoleName, searchRole.getRoleName())
                 .eq(StringUtils.isNotBlank(searchRole.getRoleKey()), RoleEntity::getRoleKey, defaultRolePrefix + searchRole.getRoleKey())
                 .between(ArrayUtils.isNotEmpty(page.getDateRange()), RoleEntity::getCreateTime, page.getStart(), page.getEnd())
-                .orderByAsc(RoleEntity::getCreateTime));
+                .orderByDesc(RoleEntity::getCreateTime));
         PageInfo<RoleEntity> pageInfo = new PageInfo<>(roles);
         pageInfo.getList().forEach(role -> role.setRoleKey(role.getRoleKey().replace(defaultRolePrefix, "")));
         return pageInfo;

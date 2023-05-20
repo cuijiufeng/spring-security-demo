@@ -52,6 +52,9 @@ INSERT INTO `sys_permission` VALUES ('122', '120', 'P', '新增/编辑', 'system
 INSERT INTO `sys_permission` VALUES ('123', '120', 'P', '删除', 'system:role:delete', 0, 0);
 INSERT INTO `sys_permission` VALUES ('124', '120', 'P', '权限树', 'system:permission:tree', 0, 0);
 INSERT INTO `sys_permission` VALUES ('125', '120', 'P', '角色拥有权限', 'system:permission:have', 0, 0);
+INSERT INTO `sys_permission` VALUES ('200', '0', 'M', '日志管理', 'log', 0, 0);
+INSERT INTO `sys_permission` VALUES ('201', '200', 'P', '查询', 'log:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('202', '200', 'P', '审计', 'log:audit', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -69,5 +72,8 @@ INSERT INTO `sys_role_permission` VALUES ('122', '1', '122');
 INSERT INTO `sys_role_permission` VALUES ('123', '1', '123');
 INSERT INTO `sys_role_permission` VALUES ('124', '1', '124');
 INSERT INTO `sys_role_permission` VALUES ('125', '1', '125');
+INSERT INTO `sys_role_permission` VALUES ('200', '1', '200');
+INSERT INTO `sys_role_permission` VALUES ('201', '1', '201');
+INSERT INTO `sys_role_permission` VALUES ('202', '1', '202');
 
 SET FOREIGN_KEY_CHECKS = 1;

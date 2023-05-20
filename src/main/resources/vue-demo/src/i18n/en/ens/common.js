@@ -16,6 +16,7 @@ export default {
   'cancel': 'cancel',
   'warning': 'warning',
   'success': 'success',
+  'failed': 'failed',
   'start date': 'start date',
   'end date': 'end date',
   'explicit implicit column': 'explicit implicit column',
@@ -27,4 +28,5 @@ export default {
   'no items to delete': 'no items to delete',
   'expand/fold': 'expand/fold',
   'all/unall': 'all/unall',
+  'millisecond': 'millisecond',
 }

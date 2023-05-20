@@ -61,7 +61,7 @@ public class UserServiceImpl implements IUserService {
                 .likeRight(StringUtils.isNotBlank(searchUser.getUsername()), UserEntity::getUsername, searchUser.getUsername())
                 .likeRight(StringUtils.isNotBlank(searchUser.getPhoneNumber()), UserEntity::getPhoneNumber, searchUser.getPhoneNumber())
                 .between(ArrayUtils.isNotEmpty(page.getDateRange()), UserEntity::getCreateTime, page.getStart(), page.getEnd())
-                .orderByAsc(UserEntity::getCreateTime));
+                .orderByDesc(UserEntity::getCreateTime));
         return new PageInfo<>(users);
     }
 

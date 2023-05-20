@@ -11,6 +11,7 @@ import java.util.function.Function;
  * @author: cjf
  */
 public class JsonResultUtil {
+    public static final Integer SUCCESS_CODE = 200;
     public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", "unknown"));
     public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.BUILD.apply("00401", "unauthorized"));
     public static final JsonResult<BaseErrorEnum> PERMISSION_DENIED = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01000", "permission denied"));
@@ -21,7 +22,7 @@ public class JsonResultUtil {
      * @return java.lang.String json串
      */
     public static JsonResult<Void> successJson() {
-        return new JsonResult<>(200, null);
+        return new JsonResult<>(SUCCESS_CODE, null);
     }
 
     /**
@@ -30,7 +31,7 @@ public class JsonResultUtil {
      * @return java.lang.String json串
      */
     public static <T> JsonResult<T> successJson(T obj) {
-        return new JsonResult<>(200, obj);
+        return new JsonResult<>(SUCCESS_CODE, obj);
     }
 
     /**
