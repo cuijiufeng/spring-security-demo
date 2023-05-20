@@ -65,10 +65,10 @@ export default (param) => {
       if (result.code == 200) {
         resolve([result.data, headers]);
       } else {
-        reject([result.data, headers]);
         if(result.code == 401) {
           store.commit('logout')
         }
+        reject([result.data, headers]);
       }
     }).catch(err => {
       // router.replace("/500");

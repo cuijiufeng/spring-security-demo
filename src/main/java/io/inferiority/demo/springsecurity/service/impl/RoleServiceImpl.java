@@ -14,7 +14,6 @@ import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.service.IRoleService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
-import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import io.inferiority.demo.springsecurity.utils.PermissionCompareUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,10 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.PrivateKey;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +65,7 @@ public class RoleServiceImpl implements IRoleService {
     public void edit(RoleEntity role, List<String> pids) {
         Date currentTime = new Date();
         //判断权限是否足够
-        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), role);
+        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), null, role);
         role.setRoleKey(defaultRolePrefix + role.getRoleKey());
         //编辑
         if (StringUtils.isNotBlank(role.getId())) {
@@ -110,14 +106,9 @@ public class RoleServiceImpl implements IRoleService {
             throw new ServiceException(ErrorEnum.DELETE_THIS_ROLE_USER_FAILED);
         }
         //判断权限是否足够
-        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), roleMapper.selectBatchIds(ids));
+        PermissionCompareUtil.compareByRoles(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), roleMapper.selectBatchIds(ids));
         if (roleMapper.deleteBatchIds(ids) < 1) {
             throw new ServiceException(ErrorEnum.DELETE_ROLE_FAILED);
-        }
-        //如果删除了当前角色则退出重新登录
-        if (ids.contains(AuthContextUtil.currentRole().getId())) {
-            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-            response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
         }
     }
 }

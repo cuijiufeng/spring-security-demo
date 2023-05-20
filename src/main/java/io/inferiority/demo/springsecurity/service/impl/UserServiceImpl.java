@@ -33,7 +33,6 @@ import java.security.PrivateKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author cuijiufeng
@@ -72,7 +71,9 @@ public class UserServiceImpl implements IUserService {
         Date currentTime = new Date();
         //判断权限是否足够
         if (StringUtils.isNotBlank(user.getRoleId())) {
-            PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(), roleMapper.selectById(user.getRoleId()));
+            PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(),
+                    user.getId(),
+                    roleMapper.selectById(user.getRoleId()));
         }
         //编辑
         if (StringUtils.isNotBlank(user.getId())) {
@@ -134,12 +135,17 @@ public class UserServiceImpl implements IUserService {
             throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
         }
         //判断权限是否足够
-        PermissionCompareUtil.compare(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(),
-                userMapper.selectBatchIds(userIds).stream()
-                    .map(UserEntity::getRoleId)
-                    .map(roleMapper::selectById).collect(Collectors.toList()));
+        PermissionCompareUtil.compareByUsers(initializationMapper.selectOne(Wrappers.lambdaQuery()).getSuperUserId(),
+                userMapper.selectListUserVo(Wrappers.<UserEntity>lambdaQuery()
+                        .select(UserEntity.class, i -> true)
+                        .in(UserEntity::getId, userIds)));
         if (userMapper.deleteBatchIds(userIds) < 1) {
             throw new ServiceException(ErrorEnum.DELETE_USER_FAILED);
+        }
+        //如果删除了当前角色则退出重新登录
+        if (userIds.contains(AuthContextUtil.currentUser().getId())) {
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+            response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
         }
     }
 }

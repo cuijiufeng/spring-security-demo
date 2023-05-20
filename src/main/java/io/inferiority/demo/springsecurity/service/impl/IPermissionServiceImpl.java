@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
 import io.inferiority.demo.springsecurity.dao.RolePermissionMapper;
+import io.inferiority.demo.springsecurity.exception.ServiceException;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.RolePermissionEntity;
 import io.inferiority.demo.springsecurity.model.vo.PermissionVo;
 import io.inferiority.demo.springsecurity.service.IPermissionService;
+import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
+import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,16 @@ public class IPermissionServiceImpl extends ServiceImpl<RolePermissionMapper, Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void editPermission(String roleId, List<String> pids) {
+        //不可以有多自己多的权限
+        List<String> slefPids = rolePermissionMapper.selectList(Wrappers.<RolePermissionEntity>lambdaQuery()
+                .eq(RolePermissionEntity::getRId, AuthContextUtil.currentRole().getId()))
+                .stream()
+                .map(RolePermissionEntity::getPId)
+                .collect(Collectors.toList());
+        if (!slefPids.containsAll(pids)) {
+            throw new ServiceException(JsonResultUtil.PERMISSION_DENIED.getData());
+        }
+
         //查原有权限
         List<String> originalPids = rolePermissionMapper.selectList(Wrappers.<RolePermissionEntity>lambdaQuery()
                 .eq(RolePermissionEntity::getRId, roleId))

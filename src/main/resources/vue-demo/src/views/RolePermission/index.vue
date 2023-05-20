@@ -105,8 +105,8 @@
         <el-row>
           <el-col :span="24">
             <el-scrollbar max-height="48vh" :wrap-style="{'border': '8px solid #f3f5fa'}">
-              <el-tree ref="permissionsTreeRef" :props="{children: 'children', label: 'name'}" 
-                node-key="id" :data="permissionsTreeData" show-checkbox indent="25"/>
+              <el-tree ref="permissionsTreeRef" :props="{children: 'children', label: 'name'}" :check-strictly="false"
+                node-key="id" :data="permissionsTreeData" show-checkbox :indent="25"/>
             </el-scrollbar>
           </el-col>
         </el-row>
@@ -130,6 +130,8 @@ import {apiRoleList, apiEditRole, apiDeleteRole, apiPermissionsTree, apiHavePerm
 
 const store = useStore();
 const i18n = useI18n();
+
+const permissionsTreeRef = ref();
 
 const loading = ref(false);
 const visibleSearch = ref(true);
@@ -162,7 +164,6 @@ let treeExpandedAll = ref(false);
 let treeCheckedAll = ref(false);
 let permissionsTreeData = ref([]);
 
-const permissionsTreeRef = ref();
 const expandTreeAll = () => {
   let nodes = permissionsTreeRef.value.store.nodesMap;
   for (const node in nodes) {
@@ -186,6 +187,8 @@ const openAddRole = () => {
     permissionsTreeData.value = data;
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
+  }).finally(() => {
+    permissionsTreeRef.value.setCheckedKeys([]);
   });
 }
 const openEditRole = (role) => {
@@ -200,8 +203,10 @@ const openEditRole = (role) => {
     ElMessage({ type: 'error', message: data.message });
   });
   apiHavePermissions({roleId: role.id}).then(([data, headers]) => {
-    debugger
-    permissionsTreeRef.value.setCheckedKeys(data, true);
+    let leafs = Object.values(permissionsTreeRef.value.store.nodesMap)
+      .filter(n => n.isLeaf)
+      .map(n => n.data.id);
+    permissionsTreeRef.value.setCheckedKeys(data.filter(p => leafs.indexOf(p) != -1), true);
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
   });
