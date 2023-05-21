@@ -18,7 +18,7 @@ import { ROUTE_TAGS } from '@/utils/config';
 
 const router = useRouter();
 
-const tags = ref(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)));
+const tags = ref(JSON.parse(sessionStorage.getItem(ROUTE_TAGS)) || []);
 
 const closeTag = (tag) => {
   tags.value = tags.value.filter(t => tag != t);

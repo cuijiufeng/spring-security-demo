@@ -14,6 +14,7 @@ public class JsonResultUtil {
     public static final Integer SUCCESS_CODE = 200;
     public static final JsonResult<BaseErrorEnum> UNKNOWN = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("-1", "unknown"));
     public static final JsonResult<BaseErrorEnum> UNAUTHORIZED = JsonResultUtil.errorJson(401, BaseErrorEnum.BUILD.apply("00401", "unauthorized"));
+    public static final JsonResult<BaseErrorEnum> NOT_FOUND = JsonResultUtil.errorJson(404, BaseErrorEnum.BUILD.apply("00404", "not found"));
     public static final JsonResult<BaseErrorEnum> PERMISSION_DENIED = JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01000", "permission denied"));
     public static final Function<String, JsonResult<BaseErrorEnum>> ARGUMENT_ERROR = msg -> JsonResultUtil.errorJson(500, BaseErrorEnum.BUILD.apply("01001", msg));
 

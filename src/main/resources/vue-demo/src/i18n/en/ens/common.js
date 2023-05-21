@@ -7,6 +7,7 @@ export default {
   'delete': 'delete',
   'import': 'import',
   'export': 'export',
+  'download': 'download',
   'refresh': 'refresh',
   'no': 'no',
   'operator': 'operator',

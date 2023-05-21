@@ -1,4 +1,5 @@
 import system from './system';
+import log from './log';
 
 export default [
   {
@@ -11,13 +12,5 @@ export default [
     component: () => import("@/views/Example"),
   }, 
   system,
-  {
-    path: "/log",
-    name: "Log",
-    meta: {
-      menu: 'log',
-      icon: 'form',
-    },
-    component: () => import("@/views/Log"),
-  }
+  log,
 ]

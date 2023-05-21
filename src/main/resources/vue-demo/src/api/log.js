@@ -17,3 +17,12 @@ export const apiAuditLog = (param) => {
     data: param
   })
 }
+
+//压缩归档
+export const apiCompressArchive = (param) => {
+  return http({
+    method: 'POST',
+    url: '/log/compress-archive',
+    data: param
+  });
+}

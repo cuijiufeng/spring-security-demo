@@ -27,6 +27,7 @@
       </el-form-item>
     </el-form>
     <div style="margin-bottom: 10px;">
+      <el-button plain size="small" icon="Collection" type="primary" @click="logCompressArchive">{{$t('log.compress archive')}}</el-button>
       <el-button plain size="small" icon="Download" type="warning">{{$t('common.export')}}</el-button>
       <div style="float: right;">
         <el-tooltip class="box-item" effect="dark" :content="$t('common.explicit implicit search')" placement="top">
@@ -57,6 +58,10 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column v-if="explicitImplicitColumn.errCode.visible" align="center" show-overflow-tooltip prop="errCode" 
+        :label="$t('log.error code')"/>
+      <el-table-column v-if="explicitImplicitColumn.errMsg.visible" align="center" show-overflow-tooltip prop="errMsg" 
+        :label="$t('log.error message')"/>
       <el-table-column v-if="explicitImplicitColumn.costTime.visible" align="center" show-overflow-tooltip prop="costTime" 
         :label="$t('log.cost time')">
         <template #default="scope">
@@ -95,7 +100,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { apiLogList, apiAuditLog } from '@/api/log';
+import { apiLogList, apiAuditLog, apiCompressArchive } from '@/api/log';
 
 const i18n = useI18n();
 
@@ -109,6 +114,8 @@ const explicitImplicitColumn = reactive({
   optDesc: { label: i18n.t('log.operator description'), visible: true },
   optUser: { label: i18n.t('log.operator user'), visible: true },
   resultCode: { label: i18n.t('log.operator status'), visible: true },
+  errCode: { label: i18n.t('log.error code'), visible: false },
+  errMsg: { label: i18n.t('log.error message'), visible: false },
   costTime: { label: i18n.t('log.cost time'), visible: true },
   optTime: { label: i18n.t('log.operator time'), visible: true },
   audited: { label: i18n.t('log.audit status'), visible: true },
@@ -145,6 +152,15 @@ const logList = () => {
 const auditLog = (id) => {
   apiAuditLog({id: id}).then(([data, headers]) => {
     ElMessage(data ? i18n.t('common.success') : i18n.t('common.failed'));
+    logList();
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  })
+}
+
+const logCompressArchive = () => {
+  apiCompressArchive({ids: multiSelectLogs.value.map(l => l.id)}).then(([data, headers]) => {
+    ElMessage(i18n.t('common.success'));
     logList();
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });

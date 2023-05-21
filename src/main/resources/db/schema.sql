@@ -52,7 +52,7 @@ CREATE TABLE `sys_role`  (
   `role_key` varchar(255) NOT NULL,
   `level` int NOT NULL,
   `create_user` varchar(32) DEFAULT NULL,
-  `create_time` datetime(6) DEFAULT NULL,
+  `create_time` datetime(3) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_role_key`(`role_key`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
@@ -68,9 +68,9 @@ CREATE TABLE `sys_user`  (
   `role_id` varchar(32) DEFAULT NULL,
   `sex` varchar(1) DEFAULT NULL COMMENT 'M:男 F:女 U:未知',
   `phone_number` varchar(11) default NULL,
-  `create_time` datetime(6) DEFAULT NULL,
-  `last_login_time` datetime(6) DEFAULT NULL,
-  `last_update_password_time` datetime(6) DEFAULT NULL,
+  `create_time` datetime(3) DEFAULT NULL,
+  `last_login_time` datetime(3) DEFAULT NULL,
+  `last_update_password_time` datetime(3) DEFAULT NULL,
   `account_non_expired` tinyint DEFAULT NULL,
   `credentials_non_expired` tinyint DEFAULT NULL,
   `account_non_locked` tinyint DEFAULT NULL,
@@ -102,12 +102,27 @@ CREATE TABLE `sys_log`  (
   `result_code` int DEFAULT NULL,
   `err_code` varchar(32) DEFAULT NULL,
   `err_msg` varchar(8092) DEFAULT NULL,
-  `opt_time` datetime(6) DEFAULT NULL,
+  `opt_time` datetime(3) DEFAULT NULL,
   `cost_time` int DEFAULT NULL,
   `mac` varchar(64) DEFAULT NULL,
   `audited` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `index_opt_user_result_code_audited`(`opt_user`, `result_code`, `audited`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+
+
+-- ----------------------------
+-- Table structure for sys_log_archive
+-- ----------------------------
+CREATE TABLE `sys_log_archive` (
+  `id` varchar (32) NOT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `log_file` longblob DEFAULT NULL,
+  `file_size` int DEFAULT NULL,
+  `archive_time` varchar(255) DEFAULT NULL,
+  `archive_cnt` int DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+
 
 SET FOREIGN_KEY_CHECKS = 1;

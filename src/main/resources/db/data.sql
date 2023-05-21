@@ -52,9 +52,14 @@ INSERT INTO `sys_permission` VALUES ('122', '120', 'P', '新增/编辑', 'system
 INSERT INTO `sys_permission` VALUES ('123', '120', 'P', '删除', 'system:role:delete', 0, 0);
 INSERT INTO `sys_permission` VALUES ('124', '120', 'P', '权限树', 'system:permission:tree', 0, 0);
 INSERT INTO `sys_permission` VALUES ('125', '120', 'P', '角色拥有权限', 'system:permission:have', 0, 0);
-INSERT INTO `sys_permission` VALUES ('200', '0', 'M', '日志管理', 'log', 0, 0);
-INSERT INTO `sys_permission` VALUES ('201', '200', 'P', '查询', 'log:select', 0, 0);
-INSERT INTO `sys_permission` VALUES ('202', '200', 'P', '审计', 'log:audit', 0, 0);
+INSERT INTO `sys_permission` VALUES ('200', '0', 'D', '日志管理', 'log', 0, 0);
+INSERT INTO `sys_permission` VALUES ('201', '200', 'M', '操作日志', 'log:operator', 0, 0);
+INSERT INTO `sys_permission` VALUES ('202', '201', 'P', '查询', 'log:operator:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('203', '201', 'P', '审计', 'log:operator:audit', 0, 0);
+INSERT INTO `sys_permission` VALUES ('204', '201', 'P', '归档', 'log:operator:archive', 0, 0);
+INSERT INTO `sys_permission` VALUES ('210', '200', 'M', '日志归档', 'log:archive', 0, 0);
+INSERT INTO `sys_permission` VALUES ('211', '210', 'P', '查询', 'log:archive:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('212', '210', 'P', '下载', 'log:archive:download', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -75,5 +80,10 @@ INSERT INTO `sys_role_permission` VALUES ('125', '1', '125');
 INSERT INTO `sys_role_permission` VALUES ('200', '1', '200');
 INSERT INTO `sys_role_permission` VALUES ('201', '1', '201');
 INSERT INTO `sys_role_permission` VALUES ('202', '1', '202');
+INSERT INTO `sys_role_permission` VALUES ('203', '1', '203');
+INSERT INTO `sys_role_permission` VALUES ('204', '1', '204');
+INSERT INTO `sys_role_permission` VALUES ('210', '1', '210');
+INSERT INTO `sys_role_permission` VALUES ('211', '1', '211');
+INSERT INTO `sys_role_permission` VALUES ('212', '1', '212');
 
 SET FOREIGN_KEY_CHECKS = 1;

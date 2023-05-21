@@ -27,7 +27,7 @@ public class ErrorController extends AbstractErrorController {
     @RequestMapping
     public ResponseEntity<?> error(HttpServletRequest request) {
         log.error("{}", getErrorAttributes(request, ErrorAttributeOptions.defaults().including(ErrorAttributeOptions.Include.MESSAGE)));
-        return ResponseEntity.ok(JsonResultUtil.UNKNOWN);
+        return ResponseEntity.ok(JsonResultUtil.NOT_FOUND);
     }
 }
 

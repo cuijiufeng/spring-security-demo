@@ -27,11 +27,13 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -76,6 +78,9 @@ public class LogAdvice {
             LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), getCurrentUsername(),
                     log.value(), null, null, null, new Date(),
                     System.currentTimeMillis() - startCostTimeThreadLocal.get(), null, null);
+            if (rs instanceof ResponseEntity) {
+                rs = ((ResponseEntity<?>) rs).getBody();
+            }
             if (rs instanceof JsonResult) {
                 JsonResult<?> result = (JsonResult<?>) rs;
                 logEntity.setResultCode(result.getCode());
@@ -84,6 +89,9 @@ public class LogAdvice {
                     logEntity.setErrCode(error.getCode());
                     logEntity.setErrMsg(error.getMessage());
                 }
+            } else {
+                HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+                logEntity.setResultCode(response.getStatus());
             }
             logEntity.setMac(genMac(logEntity));
             logMapper.insert(logEntity);
@@ -155,7 +163,7 @@ public class LogAdvice {
                 .addMixIn(LogEntity.class, ILogService.LogExcludeMacFilter.class)
                 .writer(filterProvider)
                 .writeValueAsBytes(logEntity);
-        log.info("log mac: {}", new String(logBytes));
+        log.debug("log mac: {}", new String(logBytes));
         return Hex.encodeHexString(md5.digest(logBytes));
     }
 }

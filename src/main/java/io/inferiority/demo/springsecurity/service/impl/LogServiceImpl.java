@@ -7,22 +7,40 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.inferiority.demo.springsecurity.dao.LogArchiveMapper;
 import io.inferiority.demo.springsecurity.dao.LogMapper;
+import io.inferiority.demo.springsecurity.exception.ErrorEnum;
+import io.inferiority.demo.springsecurity.exception.ServiceException;
+import io.inferiority.demo.springsecurity.model.LogArchiveEntity;
 import io.inferiority.demo.springsecurity.model.LogEntity;
 import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.ILogService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
+import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 /**
  * @author cuijiufeng
@@ -31,9 +49,14 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class LogServiceImpl implements ILogService {
-    private final MessageDigest md5 = MessageDigest.getInstance("MD5");
+    private final Calendar CALENDAR = Calendar.getInstance();
+    private final SimpleDateFormat Y_M_D_H_M_S_S = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+    private final SimpleDateFormat Y_M_D = new SimpleDateFormat("yyyy-MM-dd");
+    private final MessageDigest MD5 = MessageDigest.getInstance("MD5");
     @Autowired
     private LogMapper logMapper;
+    @Autowired
+    private LogArchiveMapper logArchiveMapper;
 
     public LogServiceImpl() throws NoSuchAlgorithmException {
     }
@@ -65,8 +88,8 @@ public class LogServiceImpl implements ILogService {
                     .addMixIn(LogEntity.class, LogExcludeMacFilter.class)
                     .writer(filterProvider)
                     .writeValueAsBytes(logEntity);
-            flag = logEntity.getMac().equals(Hex.encodeHexString(md5.digest(logBytes)));
-            log.info("log mac: {}", new String(logBytes));
+            flag = logEntity.getMac().equals(Hex.encodeHexString(MD5.digest(logBytes)));
+            log.debug("log mac: {}", new String(logBytes));
         } catch (JsonProcessingException e) {
             log.warn(e.getMessage(), e);
             flag = false;
@@ -75,5 +98,61 @@ public class LogServiceImpl implements ILogService {
             logMapper.updateById(logEntity);
         }
         return flag;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void archive(List<String> ids) throws IOException {
+        try (ByteArrayOutputStream zipBaos = new ByteArrayOutputStream();
+             ZipArchiveOutputStream zipOutputStream = new ZipArchiveOutputStream(zipBaos)) {
+
+            Map<Date, List<LogEntity>> logs = logMapper.selectList(Wrappers.<LogEntity>lambdaQuery()
+                    .in(!CollectionUtils.isEmpty(ids), LogEntity::getId, ids))
+                    .stream()
+                    .collect(Collectors.groupingBy(log -> {
+                        CALENDAR.setTime(log.getOptTime());
+                        CALENDAR.set(Calendar.HOUR_OF_DAY, 0);
+                        CALENDAR.set(Calendar.MINUTE, 0);
+                        CALENDAR.set(Calendar.SECOND, 0);
+                        CALENDAR.set(Calendar.MILLISECOND, 0);
+                        return CALENDAR.getTime();
+                    }));
+            for (Map.Entry<Date, List<LogEntity>> entry : logs.entrySet()) {
+                if (CollectionUtils.isEmpty(entry.getValue())) {
+                    continue;
+                }
+                ZipArchiveEntry zipEntry = new ZipArchiveEntry(String.format("log-%s.log", Y_M_D.format(entry.getKey())));
+                zipEntry.setMethod(ZipEntry.DEFLATED);
+                zipOutputStream.putArchiveEntry(zipEntry);
+                zipOutputStream.write(entry.getValue()
+                        .stream()
+                        .map(this::generateLogSql)
+                        .collect(Collectors.joining("\n"))
+                        .getBytes(StandardCharsets.UTF_8));
+                zipOutputStream.closeArchiveEntry();
+            }
+            zipOutputStream.flush();
+            zipOutputStream.finish();
+
+            byte[] zipFile = zipBaos.toByteArray();
+            if (logArchiveMapper.insert(new LogArchiveEntity(SnowflakeId.generateStrId(), "log.zip", zipFile, zipFile.length, new Date(), ids.size())) < 1) {
+                throw new ServiceException(ErrorEnum.LOG_ARCHIVE_FALIED);
+            }
+        }
+        logMapper.deleteBatchIds(ids);
+    }
+
+    private String generateLogSql(LogEntity logEntity) {
+        return String.format("INSERT INTO `sys_log` VALUES ('%s', %s, '%s', %s, %s, %s, '%s', %s, '%s', %s);",
+                logEntity.getId(),
+                StringUtils.isBlank(logEntity.getOptUser()) ? logEntity.getOptUser() : "'" + logEntity.getOptUser() + "'",
+                logEntity.getOptDesc(),
+                logEntity.getResultCode(),
+                StringUtils.isBlank(logEntity.getErrCode()) ? logEntity.getErrCode() : "'" + logEntity.getErrCode() + "'",
+                StringUtils.isBlank(logEntity.getErrMsg()) ? logEntity.getErrMsg() : "'" + logEntity.getErrMsg() + "'",
+                Y_M_D_H_M_S_S.format(logEntity.getOptTime()),
+                logEntity.getCostTime(),
+                logEntity.getMac(),
+                logEntity.getAudited());
     }
 }

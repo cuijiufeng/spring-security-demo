@@ -8,6 +8,7 @@ export default {
   'import': '导入',
   'export': '导出',
   'refresh': '刷新',
+  'download': '下载',
   'no': '编号',
   'operator': '操作',
   'edit': '编辑',

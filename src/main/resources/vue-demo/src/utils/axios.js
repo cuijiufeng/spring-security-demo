@@ -17,9 +17,8 @@ param: {
   method  //请求方法
   url     //请求路径 
   headers //请求头
-  responseType //返回类型
-  root    //是否返回全部的响应数据
-  data    //请求数据
+  data    //请求数据[GET,POST]
+  binary, //返回二进制数据流，全部的body
 }
 */
 export default (param) => {
@@ -50,7 +49,7 @@ export default (param) => {
       url: `${param.url}${getParam}`,
       method: param.method,
       headers: headers,
-      responseType: param.responseType ? param.responseType : '',
+      responseType: param.binary ? 'arraybuffer' : '',
       data: postParam,
       withCredentials: true
     }).then(resp => {
@@ -59,7 +58,7 @@ export default (param) => {
       if(headers[AUTHENTICATION]) {
         localStorage.setItem(AUTHENTICATION, headers[AUTHENTICATION]);
       }
-      if(param.root) {
+      if(param.binary) {
         resolve([result, headers]);
       }
       if (result.code == 200) {

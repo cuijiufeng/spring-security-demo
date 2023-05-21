@@ -33,7 +33,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // 全局方法挂载
-// app.config.globalProperties.useDict = useDict
+// app.config.globalProperties.downloadFile = saveAs;
 
 app.use(store)
   .use(router)
