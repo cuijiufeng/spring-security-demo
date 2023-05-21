@@ -11,6 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringSecurityDemoApplication {
 
+    // TODO: 2023/5/21 国际化
+    // TODO: 2023/5/21 quartz任务管理
+    // TODO: 2023/5/21 execl导入导出
+    // TODO: 2023/5/21 首页 --> low
     public static void main(String[] args) {
         SpringApplication.run(SpringSecurityDemoApplication.class, args);
     }
