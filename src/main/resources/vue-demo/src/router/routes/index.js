@@ -1,5 +1,6 @@
 import system from './system';
 import log from './log';
+import job from './job';
 
 export default [
   {
@@ -11,6 +12,7 @@ export default [
     },
     component: () => import("@/views/Example"),
   }, 
+  job,
   system,
   log,
 ]

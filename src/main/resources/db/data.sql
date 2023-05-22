@@ -60,6 +60,9 @@ INSERT INTO `sys_permission` VALUES ('204', '201', 'P', '归档', 'log:operator:
 INSERT INTO `sys_permission` VALUES ('210', '200', 'M', '日志归档', 'log:archive', 0, 0);
 INSERT INTO `sys_permission` VALUES ('211', '210', 'P', '查询', 'log:archive:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('212', '210', 'P', '下载', 'log:archive:download', 0, 0);
+INSERT INTO `sys_permission` VALUES ('300', '0', 'M', '任务管理', 'job', 0, 0);
+INSERT INTO `sys_permission` VALUES ('301', '300', 'P', '查询', 'job:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('302', '300', 'P', '编辑', 'job:edit', 0, 0);
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -85,5 +88,8 @@ INSERT INTO `sys_role_permission` VALUES ('204', '1', '204');
 INSERT INTO `sys_role_permission` VALUES ('210', '1', '210');
 INSERT INTO `sys_role_permission` VALUES ('211', '1', '211');
 INSERT INTO `sys_role_permission` VALUES ('212', '1', '212');
+INSERT INTO `sys_role_permission` VALUES ('300', '1', '300');
+INSERT INTO `sys_role_permission` VALUES ('301', '1', '301');
+INSERT INTO `sys_role_permission` VALUES ('302', '1', '302');
 
 SET FOREIGN_KEY_CHECKS = 1;

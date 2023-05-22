@@ -22,7 +22,8 @@ public enum ErrorEnum implements BaseErrorEnum {
     DELETE_THIS_ROLE_USER_FAILED("10010", "delete this role user"),
     EXIST_ROLE_FAILED("10011", "exist role failed"),
     EDIT_PERMISSION_FAILED("10012", "edit permission failed"),
-    LOG_ARCHIVE_FALIED("10013", "log archive failed")
+    LOG_ARCHIVE_FALIED("10013", "log archive failed"),
+    EDIT_JOB_FAILED("10014", "edit job failed")
     ;
     private final String code;
     private final String message;

@@ -125,4 +125,24 @@ CREATE TABLE `sys_log_archive` (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 
+-- ----------------------------
+-- Table structure for sys_job
+-- ----------------------------
+CREATE TABLE `sys_job` (
+  `id` varchar (32) NOT NULL,
+  `job_name` varchar (255) DEFAULT NULL,
+  `job_class` varchar (255) DEFAULT NULL,
+  `job_group_key` varchar (255) DEFAULT NULL,
+  `job_key` varchar (255) DEFAULT NULL,
+  `tk_group_key` varchar (255) DEFAULT NULL,
+  `tk_key` varchar (255) DEFAULT NULL,
+  `cron` varchar (255) DEFAULT NULL,
+  `started` tinyint DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_job`(`job_class`) USING BTREE,
+  UNIQUE INDEX `unique_job_key`(`job_group_key`, `job_key`) USING BTREE,
+  UNIQUE INDEX `unique_tk_key`(`tk_group_key`, `tk_key`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+
+
 SET FOREIGN_KEY_CHECKS = 1;

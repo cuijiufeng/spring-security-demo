@@ -1,12 +1,15 @@
 <template>
-  <div class="example-body">
+  <div class="cron-expression-body">
+    <CronExpression />
   </div>
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue';
+import CronExpression from '@/components/CronExpression';
 </script>
 
 <style lang="less" scoped>
-.example-body {
+.cron-expression-body {
 }
 </style>

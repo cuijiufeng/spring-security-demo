@@ -117,6 +117,9 @@ public class LogServiceImpl implements ILogService {
                         CALENDAR.set(Calendar.MILLISECOND, 0);
                         return CALENDAR.getTime();
                     }));
+            if (CollectionUtils.isEmpty(logs)) {
+                return;
+            }
             for (Map.Entry<Date, List<LogEntity>> entry : logs.entrySet()) {
                 if (CollectionUtils.isEmpty(entry.getValue())) {
                     continue;
@@ -139,7 +142,8 @@ public class LogServiceImpl implements ILogService {
                 throw new ServiceException(ErrorEnum.LOG_ARCHIVE_FALIED);
             }
         }
-        logMapper.deleteBatchIds(ids);
+        logMapper.delete(Wrappers.<LogEntity>lambdaQuery()
+                .in(!CollectionUtils.isEmpty(ids), LogEntity::getId, ids));
     }
 
     private String generateLogSql(LogEntity logEntity) {
