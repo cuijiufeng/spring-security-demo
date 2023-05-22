@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @Class ApplicationPostRunner
  * @Date 2023/5/22 10:11
  */
+@Order(1)
 @Component
 public class InitJobApplicationRunner implements ApplicationRunner {
     @Autowired

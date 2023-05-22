@@ -1,6 +1,11 @@
 
 export default {
-  'every second': 'every second',
+  'every': 'every',
   'cycle': 'cycle',
   'from': 'from',
+  'second': 'second',
+  'start': 'start',
+  'execute': 'execute',
+  'once': 'once',
+  'appoint': 'appoint',
 }

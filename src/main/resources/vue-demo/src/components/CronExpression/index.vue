@@ -1,8 +1,8 @@
 <template>
   <div class="example-body">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" style="width: 35vw;">
       <el-tab-pane label="秒" name="second">
-        <Second />
+        <Second v-model="second"/>
       </el-tab-pane>
       <el-tab-pane label="分钟" name="minute">
         <Minute />
@@ -35,13 +35,11 @@ import Day from './Day';
 import Month from './Month';
 import Week from './Week';
 import Year from './Year';
+
+const second = ref('*');
 </script>
 
 <style lang="less" scoped>
 .example-body {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>
