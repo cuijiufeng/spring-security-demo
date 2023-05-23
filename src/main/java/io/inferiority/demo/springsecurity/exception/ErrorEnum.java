@@ -24,7 +24,8 @@ public enum ErrorEnum implements BaseErrorEnum {
     EDIT_PERMISSION_FAILED("10012", "edit permission failed"),
     LOG_ARCHIVE_FALIED("10013", "log archive failed"),
     EDIT_JOB_FAILED("10014", "edit job failed"),
-    CRON_EXPRESSION_INVALID_FAILED("10015", "cron expression invalid")
+    CRON_EXPRESSION_INVALID_FAILED("10015", "cron expression invalid"),
+    VERIFY_CODE_NO_MATCH_FAILED("10016", "verify code no match")
     ;
     private final String code;
     private final String message;

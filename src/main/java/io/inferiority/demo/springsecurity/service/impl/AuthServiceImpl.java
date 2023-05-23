@@ -3,10 +3,13 @@ package io.inferiority.demo.springsecurity.service.impl;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.inferiority.demo.springsecurity.config.Constants;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
 import io.inferiority.demo.springsecurity.dao.RoleMapper;
 import io.inferiority.demo.springsecurity.dao.RolePermissionMapper;
 import io.inferiority.demo.springsecurity.dao.UserMapper;
+import io.inferiority.demo.springsecurity.exception.ErrorEnum;
+import io.inferiority.demo.springsecurity.exception.ServiceException;
 import io.inferiority.demo.springsecurity.model.PermissionEntity;
 import io.inferiority.demo.springsecurity.model.RolePermissionEntity;
 import io.inferiority.demo.springsecurity.model.UserEntity;
@@ -15,6 +18,7 @@ import io.inferiority.demo.springsecurity.service.IAuthService;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +32,7 @@ import java.security.PrivateKey;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -51,9 +56,19 @@ public class AuthServiceImpl implements IAuthService {
     private PermissionMapper permissionMapper;
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
+    @Autowired
+    private CacheManager cacheManager;
 
     @Override
-    public UserVo login(UserEntity user) {
+    public UserVo login(UserEntity user, String figerprint, String verifyCode) {
+        String cacheVerifyCode = cacheManager.getCache(Constants.CACHE_KEY)
+                .get(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint, String.class);
+        if (Objects.isNull(cacheVerifyCode) || !cacheVerifyCode.equalsIgnoreCase(verifyCode)) {
+            throw new ServiceException(ErrorEnum.VERIFY_CODE_NO_MATCH_FAILED);
+        }
+        cacheManager.getCache(Constants.CACHE_KEY)
+                .evict(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint);
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -90,8 +105,10 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public String verifyCode() {
+    public String verifyCode(String figerprint) {
         LineCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 32);
+        cacheManager.getCache(Constants.CACHE_KEY)
+                .put(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint, captcha.getCode());
         return captcha.getImageBase64();
     }
 }

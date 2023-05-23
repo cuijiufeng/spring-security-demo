@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -26,8 +27,10 @@ public class AuthController {
 
     @Log("login")
     @PostMapping("login")
-    public JsonResult<UserVo> login(@Validated UserEntity user) {
-        return JsonResultUtil.successJson(authService.login(user));
+    public JsonResult<UserVo> login(@Validated UserEntity user,
+                                    @RequestParam String figerprint,
+                                    @RequestParam String verifyCode) {
+        return JsonResultUtil.successJson(authService.login(user, figerprint, verifyCode));
     }
 
     @Log("logout")
@@ -38,7 +41,7 @@ public class AuthController {
     }
 
     @GetMapping("verify-code")
-    public JsonResult<String> verifyCode() {
-        return JsonResultUtil.successJson(authService.verifyCode());
+    public JsonResult<String> verifyCode(@RequestParam String figerprint) {
+        return JsonResultUtil.successJson(authService.verifyCode(figerprint));
     }
 }

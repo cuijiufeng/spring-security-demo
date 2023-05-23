@@ -10,9 +10,9 @@ import io.inferiority.demo.springsecurity.model.vo.UserVo;
  */
 public interface IAuthService {
 
-    UserVo login(UserEntity user);
+    UserVo login(UserEntity user, String figerprint, String verifyCode);
 
     void logout(UserEntity user);
 
-    String verifyCode();
+    String verifyCode(String figerprint);
 }

@@ -30,6 +30,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import Fingerprint2 from 'fingerprintjs2';
 import useUserStore from '@/store/modules/user';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
@@ -38,6 +39,7 @@ import { apiLogin, apiVerifyCodeImg } from '@/api/system';
 
 const userStore = useUserStore();
 
+const figerprint = ref('');
 const loginLoading = ref(false);
 const passwordHide = ref(true);
 const loginForm = reactive({
@@ -55,16 +57,18 @@ const onSubmit = () => {
       return;
     }
     loginLoading.value = true;
-    apiLogin(loginForm).then(([data, headers]) => {
+    apiLogin({...loginForm, figerprint: figerprint.value}).then(([data, headers]) => {
       userStore.login(data)
     }).catch(([data, headers]) => {
       ElMessage({ type: 'error', message: data.message });
+    }).finally(() => {
+      loginLoading.value = false;
     });
   });
 }
 
 const verifyCode = () => {
-  apiVerifyCodeImg().then(([data, headers]) => {
+  apiVerifyCodeImg({figerprint: figerprint.value}).then(([data, headers]) => {
     verifyCodeImg.value = data;
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
@@ -73,7 +77,15 @@ const verifyCode = () => {
 
 onMounted(() => {
   loginBgRender();
-  verifyCode();
+  
+  Fingerprint2.get((components) => {
+    const values = components.map((component, index) => {
+      return component.value
+    });
+    // 生成最终id murmur   
+    figerprint.value = Fingerprint2.x64hash128(values.join(''), 31);
+    verifyCode();
+  });
 });
 </script>
 

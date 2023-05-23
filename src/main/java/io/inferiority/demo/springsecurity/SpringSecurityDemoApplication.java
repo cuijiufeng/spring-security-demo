@@ -2,12 +2,14 @@ package io.inferiority.demo.springsecurity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * @Class: SpringSecurityDemoApplication
  * @Date: 2023/4/28 10:21
  * @author: cuijiufeng
  */
+@EnableCaching
 @SpringBootApplication
 public class SpringSecurityDemoApplication {
 
