@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,17 +54,24 @@ public class JobServiceImpl implements IJobService {
             throw new ServiceException(ErrorEnum.EDIT_JOB_FAILED);
         }
         JobEntity oldJob = jobMapper.selectById(job.getId());
-        quartzManager.modifyJob(oldJob.getTkGroupKey(), oldJob.getTkKey(), job.getCron());
-        if (oldJob.getStarted() != quartzManager.isJobRunning(oldJob.getTkGroupKey(), oldJob.getTkKey())) {
-            if (oldJob.getStarted()) {
-                //noinspection unchecked
-                quartzManager.scheduleJob((Class<? extends Job>) Class.forName(oldJob.getJobClass()),
-                        oldJob.getJobGroupKey(), oldJob.getJobKey(),
-                        oldJob.getTkGroupKey(), oldJob.getTkKey(), oldJob.getCron());
-            } else {
-                quartzManager.unscheduleJob(
-                        oldJob.getTkGroupKey(), oldJob.getTkKey());
+        try {
+            quartzManager.modifyJob(oldJob.getTkGroupKey(), oldJob.getTkKey(), job.getCron());
+            if (oldJob.getStarted() != quartzManager.isJobRunning(oldJob.getTkGroupKey(), oldJob.getTkKey())) {
+                if (oldJob.getStarted()) {
+                    //noinspection unchecked
+                    quartzManager.scheduleJob((Class<? extends Job>) Class.forName(oldJob.getJobClass()),
+                            oldJob.getJobGroupKey(), oldJob.getJobKey(),
+                            oldJob.getTkGroupKey(), oldJob.getTkKey(), oldJob.getCron());
+                } else {
+                    quartzManager.unscheduleJob(
+                            oldJob.getTkGroupKey(), oldJob.getTkKey());
+                }
             }
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof ParseException) {
+                throw new ServiceException(ErrorEnum.CRON_EXPRESSION_INVALID_FAILED);
+            }
+            throw e;
         }
     }
 }

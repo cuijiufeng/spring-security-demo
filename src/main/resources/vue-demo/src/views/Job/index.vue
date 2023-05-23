@@ -80,7 +80,12 @@
         <el-row>
           <el-col :span="24">
             <el-form-item :label="$t('job.cron expression')+':'" prop="cron">
-              <el-input v-model="editJob.cron" maxlength="255" :disabled="true"/>
+              <el-popover placement="bottom" trigger="click" width="auto">
+                <template #reference>
+                  <el-input v-model="editJob.cron" maxlength="255" :disabled="true"/>
+                </template>
+                <CronExpression v-model="editJob.cron"/>
+              </el-popover>
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,6 +112,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
+import CronExpression from '@/components/CronExpression';
 import { apiJobList, apiEditJob } from '@/api/job';
 
 const i18n = useI18n();
