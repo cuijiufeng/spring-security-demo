@@ -13,4 +13,6 @@ public interface IAuthService {
     UserVo login(UserEntity user);
 
     void logout(UserEntity user);
+
+    String verifyCode();
 }

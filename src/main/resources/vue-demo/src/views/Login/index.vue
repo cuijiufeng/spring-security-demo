@@ -17,8 +17,9 @@
           :placeholder="$t('login.please input password')" prefix-icon="Key" @keydown.enter="onSubmit" />
       </el-form-item>
       <el-form-item prop="verifyCode">
-        <img style="height: 32px;width: 100px;margin-right: 30px;" src="@/assets/logo/logo.png"/>
-        <el-input style="width: calc(100% - 130px);" v-model="loginForm.verifyCode" @keydown.enter="onSubmit"/>
+        <img style="height: 32px;width: 100px;margin-right: 20px;" :src="'data:image/jpg;base64,' + verifyCodeImg"
+            @click="verifyCode"/>
+        <el-input style="width: calc(100% - 120px);" v-model="loginForm.verifyCode" @keydown.enter="onSubmit"/>
       </el-form-item>
       <el-button :loading="loginLoading" style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">
         {{ loginLoading ? $t('login.login')+'. . .' : $t('login.login')}}
@@ -33,7 +34,7 @@ import useUserStore from '@/store/modules/user';
 import { useI18n } from "vue-i18n";
 import { ElMessage } from 'element-plus';
 import { loginBgRender } from "@/assets/js/canvas";
-import { apiLogin } from '@/api/system';
+import { apiLogin, apiVerifyCodeImg } from '@/api/system';
 
 const userStore = useUserStore();
 
@@ -44,6 +45,8 @@ const loginForm = reactive({
   password: '',
   verifyCode: '',
 });
+
+const verifyCodeImg = ref('');
 
 const loginFormRef = ref();
 const onSubmit = () => {
@@ -60,8 +63,17 @@ const onSubmit = () => {
   });
 }
 
+const verifyCode = () => {
+  apiVerifyCodeImg().then(([data, headers]) => {
+    verifyCodeImg.value = data;
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  });
+}
+
 onMounted(() => {
   loginBgRender();
+  verifyCode();
 });
 </script>
 

@@ -22,3 +22,12 @@ export const apiLogout = (param) => {
     data: param
   })
 }
+
+//验证码接口
+export const apiVerifyCodeImg = (param) => {
+  return http({
+    method: 'GET',
+    url: '/auth/verify-code',
+    data: param
+  });
+}

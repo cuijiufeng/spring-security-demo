@@ -1,5 +1,7 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
 import io.inferiority.demo.springsecurity.dao.RoleMapper;
@@ -85,5 +87,11 @@ public class AuthServiceImpl implements IAuthService {
         //token
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
         response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
+    }
+
+    @Override
+    public String verifyCode() {
+        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 32);
+        return captcha.getImageBase64();
     }
 }

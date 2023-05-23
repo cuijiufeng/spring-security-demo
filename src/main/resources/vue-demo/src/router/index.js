@@ -14,11 +14,6 @@ export const defaultRoutes = [
     name: "Login",
     component: () => import("@/views/Login"),
   },
-  {
-    path: "/example",
-    name: "Example",
-    component: () => import("@/views/Example"),
-  },
 ]
 
 // 动态路由
