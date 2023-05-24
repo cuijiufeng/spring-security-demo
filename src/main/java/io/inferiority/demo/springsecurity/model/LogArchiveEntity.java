@@ -24,5 +24,5 @@ public class LogArchiveEntity implements Serializable {
     private byte[] logFile;
     private Integer fileSize;
     private Date archiveTime;
-    private Integer archiveCnt;
+    private Long archiveCnt;
 }

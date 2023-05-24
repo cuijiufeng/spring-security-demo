@@ -1,7 +1,8 @@
 <template>
   <div class="header-body">
     <div :class="['header-logo', sidebarExpand ? 'header-logo-expand' : 'header-logo-fold']">
-      <img class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo.png">
+      <img v-if="sidebarExpand" class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo.png">
+      <img v-else class="logo-img" style="width: 80%;height: 100%;" src="@/assets/logo/logo-mini.png">
     </div>
     <div class="header-center">
       <el-icon style="cursor: pointer;" size="20" @click="toggleSidebar">

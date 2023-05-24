@@ -35,6 +35,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,8 @@ public class LogServiceImpl implements ILogService {
             zipOutputStream.finish();
 
             byte[] zipFile = zipBaos.toByteArray();
-            if (logArchiveMapper.insert(new LogArchiveEntity(SnowflakeId.generateStrId(), "log.zip", zipFile, zipFile.length, new Date(), ids.size())) < 1) {
+            if (logArchiveMapper.insert(new LogArchiveEntity(SnowflakeId.generateStrId(), "log.zip", zipFile, zipFile.length, new Date(),
+                    logs.values().stream().mapToLong(Collection::size).sum())) < 1) {
                 throw new ServiceException(ErrorEnum.LOG_ARCHIVE_FALIED);
             }
         }
