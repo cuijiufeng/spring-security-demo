@@ -1,4 +1,4 @@
-package io.inferiority.demo.springsecurity.config.mp;
+package io.inferiority.demo.springsecurity.config.mybatis;
 
 import com.baomidou.mybatisplus.extension.ddl.SimpleDdl;
 import org.springframework.beans.factory.annotation.Value;

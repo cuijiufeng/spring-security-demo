@@ -61,13 +61,13 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public UserVo login(UserEntity user, String figerprint, String verifyCode) {
-        String cacheVerifyCode = cacheManager.getCache(Constants.CACHE_KEY)
-                .get(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint, String.class);
+        String cacheVerifyCode = cacheManager.getCache(Constants.CACHE_NAME_VERIFY_CODE)
+                .get(figerprint, String.class);
         if (Objects.isNull(cacheVerifyCode) || !cacheVerifyCode.equalsIgnoreCase(verifyCode)) {
             throw new ServiceException(ErrorEnum.VERIFY_CODE_NO_MATCH_FAILED);
         }
-        cacheManager.getCache(Constants.CACHE_KEY)
-                .evict(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint);
+        cacheManager.getCache(Constants.CACHE_NAME_VERIFY_CODE)
+                .evict(figerprint);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
@@ -107,8 +107,8 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public String verifyCode(String figerprint) {
         LineCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 32);
-        cacheManager.getCache(Constants.CACHE_KEY)
-                .put(Constants.CACHE_KEY_PREFIX_VERIFY_CODE + ":" + figerprint, captcha.getCode());
+        cacheManager.getCache(Constants.CACHE_NAME_VERIFY_CODE)
+                .put(figerprint, captcha.getCode());
         return captcha.getImageBase64();
     }
 }

@@ -26,7 +26,52 @@
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LFU"/>
 
-    <cache name="CACHE_KEY"
+    <cache name="CACHE_NAME_VERIFY_CODE"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.InitializationMapper"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.PermissionMapper"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.RoleMapper"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.UserMapper"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.RolePermissionMapper"
            eternal="false"
            maxElementsInMemory="1000"
            overflowToDisk="true"

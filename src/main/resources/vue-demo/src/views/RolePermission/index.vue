@@ -199,14 +199,14 @@ const openEditRole = (role) => {
   editRole.value = JSON.parse(JSON.stringify(role));
   apiPermissionsTree().then(([data, headers]) => {
     permissionsTreeData.value = data;
-  }).catch(([data, headers]) => {
-    ElMessage({ type: 'error', message: data.message });
-  });
-  apiHavePermissions({roleId: role.id}).then(([data, headers]) => {
-    let leafs = Object.values(permissionsTreeRef.value.store.nodesMap)
-      .filter(n => n.isLeaf)
-      .map(n => n.data.id);
-    permissionsTreeRef.value.setCheckedKeys(data.filter(p => leafs.indexOf(p) != -1), true);
+    apiHavePermissions({roleId: role.id}).then(([data, headers]) => {
+      let leafs = Object.values(permissionsTreeRef.value.store.nodesMap)
+        .filter(n => n.isLeaf)
+        .map(n => n.data.id);
+      permissionsTreeRef.value.setCheckedKeys(data.filter(p => leafs.indexOf(p) != -1), true);
+    }).catch(([data, headers]) => {
+      ElMessage({ type: 'error', message: data.message });
+    });
   }).catch(([data, headers]) => {
     ElMessage({ type: 'error', message: data.message });
   });

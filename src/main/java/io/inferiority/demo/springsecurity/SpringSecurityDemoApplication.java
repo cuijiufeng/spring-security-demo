@@ -15,7 +15,6 @@ public class SpringSecurityDemoApplication {
 
     // TODO: 2023/5/21 国际化
     // TODO: 2023/5/21 缓存
-    //TODO 2023/5/22 验证码
     // TODO: 2023/5/21 execl导入导出
     // TODO: 2023/5/21 首页 --> low
     public static void main(String[] args) {
