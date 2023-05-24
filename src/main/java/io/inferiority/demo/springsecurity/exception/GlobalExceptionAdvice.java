@@ -3,6 +3,9 @@ package io.inferiority.demo.springsecurity.exception;
 import io.inferiority.demo.springsecurity.model.JsonResult;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * 业务异常
@@ -48,10 +54,11 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<JsonResult<?>> bindException(BindException e) {
         log.warn(e.getMessage());
+        Locale locale = LocaleContextHolder.getLocale();
         String errMsg = e.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(","));
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .body(JsonResultUtil.ARGUMENT_ERROR.apply(errMsg));
+                .body(JsonResultUtil.ARGUMENT_ERROR.apply(messageSource.getMessage(errMsg, null, locale)));
     }
 
     /**

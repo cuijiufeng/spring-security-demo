@@ -26,17 +26,18 @@ import java.util.Date;
 public class UserEntity implements Serializable {
     @TableId
     private String id;
-    @Size(min = 5, max = 255, message = "用户名长度非法", groups = ValidatedUpdate.class)
-    @NotEmpty(message = "用户号不能为空", groups = ValidatedUpdate.class)
+    @Size(min = 5, max = 255, message = "username length illegal", groups = ValidatedUpdate.class)
+    @NotEmpty(message = "username can't be empty", groups = ValidatedUpdate.class)
     private String username;
     @JsonIgnore
-    @Size(min = 1, max = 255, message = "密码长度非法")
-    @NotEmpty(message = "密码不能为空")
+    @Size(min = 1, max = 255, message = "password length illegal")
+    @NotEmpty(message = "password can't be empty")
     private String password;
     private PasswordIntensity passwordIntensity;
     private String roleId;
     private Sex sex;
-    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$|^$", message = "手机号格式错误", groups = ValidatedUpdate.class)
+    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$|^$",
+            message = "phone number format illegal", groups = ValidatedUpdate.class)
     private String phoneNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

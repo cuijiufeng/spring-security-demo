@@ -13,9 +13,9 @@ import java.util.Date;
  */
 @Data
 public class PageDto {
-    @Range(min = 1, max = Integer.MAX_VALUE, message = "页数范围错误")
+    @Range(min = 1, max = Integer.MAX_VALUE, message = "page num range illegal")
     private int pageNum = 1;
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "分页大小错误")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "page size illegal")
     private int pageSize = 10;
     private boolean all = false;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

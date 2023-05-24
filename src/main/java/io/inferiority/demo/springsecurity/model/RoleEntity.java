@@ -22,14 +22,14 @@ import java.util.Date;
 public class RoleEntity implements Serializable {
     @TableId
     private String id;
-    @NotEmpty(message = "角色名称不能为空")
-    @Size(min = 1, max = 255, message = "角色名称长度非法")
+    @NotEmpty(message = "role name can't be empty")
+    @Size(min = 1, max = 255, message = "role name length illegal")
     private String roleName;
-    @NotEmpty(message = "角色标识不能为空")
-    @Size(min = 1, max = 255, message = "角色标识长度非法")
+    @NotEmpty(message = "role key can't be empty")
+    @Size(min = 1, max = 255, message = "role key length illegal")
     private String roleKey;
-    @NotNull(message = "角色等级不能为空")
-    @Min(value = 1, message = "角色等级非法")
+    @NotNull(message = "role level can't be null")
+    @Min(value = 1, message = "role level illegal")
     private Integer level;
     private String createUser;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

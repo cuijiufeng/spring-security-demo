@@ -1,7 +1,7 @@
 
 export const ROUTER_WHITE_LIST = ['Login', '404', 'Example'];
 
-export const LANGUAGE = 'language';
+export const LANGUAGE = 'accept-language';
 export const LOGIN_INFO = 'login-info';
 export const AUTHENTICATION = 'authorization';
 

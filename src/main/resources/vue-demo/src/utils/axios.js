@@ -24,7 +24,7 @@ param: {
 export default (param) => {
   //header
   let headers = {};
-  headers[LANGUAGE] = localStorage.getItem(LANGUAGE);
+  headers[LANGUAGE] = localStorage.getItem(LANGUAGE) || 'zh';
   headers[AUTHENTICATION] = localStorage.getItem(AUTHENTICATION);
   for(let key in param.headers) {
     headers[key] = param.headers[key];

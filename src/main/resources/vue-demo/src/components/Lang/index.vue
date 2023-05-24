@@ -27,6 +27,7 @@ const props = defineProps({
 function switchLanguage(lang) {
   locale.value = lang;
   localStorage.setItem(LANGUAGE, lang);
+  location.reload();
 }
 </script>
 
