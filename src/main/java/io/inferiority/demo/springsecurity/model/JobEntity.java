@@ -3,8 +3,6 @@ package io.inferiority.demo.springsecurity.model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +24,6 @@ public class JobEntity implements Serializable {
     @TableId
     private String id;
     @NotEmpty(message = "job name can't be empty")
-    @JsonSerialize(using = BaseErrorEnum.MessageStringJsonSerialize.class)
     private String jobName;
     @JsonIgnore
     private String jobClass;

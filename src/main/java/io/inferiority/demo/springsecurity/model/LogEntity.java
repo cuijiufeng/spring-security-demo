@@ -3,6 +3,8 @@ package io.inferiority.demo.springsecurity.model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,7 @@ public class LogEntity implements Serializable {
     private String id;
     //private String params;
     private String optUser;
+    @JsonSerialize(using = BaseErrorEnum.MessageStringJsonSerialize.class)
     private String optDesc;
     private Integer resultCode;
     private String errCode;
