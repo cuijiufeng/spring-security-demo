@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
+import io.inferiority.demo.springsecurity.utils.poi.Excel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class LogEntity implements Serializable {
     @TableId
     private String id;
     //private String params;
+    @Excel(title = "fsfas", order = 1, dateFormat="", type=Excel.Type.ALL)//, convert=1, nullOut=1, ,
     private String optUser;
     @JsonSerialize(using = BaseErrorEnum.MessageStringJsonSerialize.class)
     private String optDesc;
