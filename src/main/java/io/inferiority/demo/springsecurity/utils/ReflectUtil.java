@@ -22,25 +22,37 @@ public class ReflectUtil {
                 .filter(f -> f.isAnnotationPresent(annoClazz));
     }
 
-    public Method getGetter(Class<?> clazz, Field field) throws IntrospectionException, NoSuchMethodException {
-        BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-            if (propertyDescriptor.getName().equals(field.getName())) {
-                return propertyDescriptor.getReadMethod();
-            }
-        }
-        throw new NoSuchMethodException("no getter method found for " + field.getName());
+    public static Object invokeMethod(Method method, Object object, Object ... args) throws ReflectiveOperationException {
+        return method.invoke(object, args);
     }
 
-    public Method getSetter(Class<?> clazz, Field field) throws IntrospectionException, NoSuchMethodException {
-        BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-            if (propertyDescriptor.getName().equals(field.getName())) {
-                return propertyDescriptor.getWriteMethod();
+    public static Method getGetter(Class<?> clazz, Field field) {
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                if (propertyDescriptor.getName().equals(field.getName())) {
+                    return propertyDescriptor.getReadMethod();
+                }
             }
+            throw new IllegalArgumentException("no getter method found for " + field.getName());
+        } catch (IntrospectionException e) {
+            throw new IllegalArgumentException(e);
         }
-        throw new NoSuchMethodException("no setter method found for " + field.getName());
+    }
+
+    public static Method getSetter(Class<?> clazz, Field field) {
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                if (propertyDescriptor.getName().equals(field.getName())) {
+                    return propertyDescriptor.getWriteMethod();
+                }
+            }
+            throw new IllegalArgumentException("no setter method found for " + field.getName());
+        } catch (IntrospectionException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

@@ -27,15 +27,23 @@ public class LogEntity implements Serializable {
     @TableId
     private String id;
     //private String params;
-    @Excel(title = "fsfas", order = 1, dateFormat="", type=Excel.Type.ALL)//, convert=1, nullOut=1, ,
+    @Excel(title = "operator user")
     private String optUser;
+    @Excel(title = "operator description")
     @JsonSerialize(using = BaseErrorEnum.MessageStringJsonSerialize.class)
     private String optDesc;
+    @Excel(title = "result code")
     private Integer resultCode;
+    @Excel(title = "error code")
     private String errCode;
+    @Excel(title = "error message")
     private String errMsg;
+    @Excel(title = "operator time")
     private Date optTime;
+    @Excel(title = "cost time")
     private Long costTime;
+    @Excel(title = "mac")
     private String mac;
+    @Excel(title = "audited status")
     private Boolean audited;
 }

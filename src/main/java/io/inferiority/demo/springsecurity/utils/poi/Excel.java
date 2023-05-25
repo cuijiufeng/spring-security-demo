@@ -15,13 +15,21 @@ import java.lang.annotation.Target;
 public @interface Excel {
     String title();
 
-    int order();
+    int order() default 0;
 
-    String dateFormat();
+    String nullOut() default "";
 
-    Type type();
+    String dateFormat() default "yyyy-MM-dd HH:mm:ss";
+
+    Type[] type() default { Type.EXPORT, Type.IMPORT };
+
+    Class<ConvertAdapter> convert() default ConvertAdapter.class;
 
     enum Type {
-        ALL, EXPORT, IMPORT
+        EXPORT, IMPORT
+    }
+
+    interface ConvertAdapter {
+        String convert(Object value);
     }
 }

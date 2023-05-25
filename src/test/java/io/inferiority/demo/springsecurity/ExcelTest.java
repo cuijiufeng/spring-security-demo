@@ -20,7 +20,7 @@ import java.util.List;
 public class ExcelTest {
 
     @Test
-    public void testExcel() throws IOException, IllegalAccessException {
+    public void testExcel() throws IOException, ReflectiveOperationException {
         List<LogEntity> logs = Collections.singletonList(new LogEntity(SnowflakeId.generateStrId(), "admin", "list",
                 200, null, null, new Date(), 20L, "fjdslf", null));
         ExcelUtil<LogEntity> excelUtil = new ExcelUtil<>();
