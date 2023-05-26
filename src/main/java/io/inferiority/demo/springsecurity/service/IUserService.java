@@ -17,4 +17,6 @@ public interface IUserService {
     void edit(UserEntity user, String originalPassword);
 
     void delete(List<String> userIds);
+
+    byte[] export(List<String> ids);
 }

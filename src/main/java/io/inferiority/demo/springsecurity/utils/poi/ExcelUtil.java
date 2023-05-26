@@ -1,12 +1,15 @@
 package io.inferiority.demo.springsecurity.utils.poi;
 
+import cn.hutool.core.convert.Convert;
 import io.inferiority.demo.springsecurity.config.ApplicationContextHolder;
 import io.inferiority.demo.springsecurity.utils.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -25,10 +28,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,11 +57,64 @@ public class ExcelUtil<T> {
     }
 
     public ExcelUtil(InputStream is) throws IOException {
+        ZipSecureFile.setMinInflateRatio(-1.0d);
         this.workbook = WorkbookFactory.create(is);
     }
 
     public void createSheet(String sheetName) {
         this.sheet = this.workbook.createSheet(sheetName);
+    }
+
+    public List<T> readData(Class<T> beanClazz, int sheetNo) throws ReflectiveOperationException, ParseException {
+        List<Map.Entry<Excel, Method>> entryList = getBeanExcelProperty(beanClazz, Excel.Type.IMPORT);
+        Sheet sheetAt = this.workbook.getSheetAt(sheetNo);
+        Iterator<Row> rowIterator = sheetAt.rowIterator();
+        //过滤head行
+        if (rowIterator.hasNext()) {
+            rowIterator.next();
+        }
+        List<T> list = new ArrayList<>();
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            T beanEntity = beanClazz.newInstance();
+            for (int i = 0; i < entryList.size(); i++) {
+                Map.Entry<Excel, Method> entry = entryList.get(i);
+                Object value = getCellValue(row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL), entry);
+                entry.getValue().invoke(beanEntity, value);
+            }
+            list.add(beanEntity);
+        }
+        return list;
+    }
+
+    private Object getCellValue(Cell cell, Map.Entry<Excel, Method> entry) throws ParseException {
+        if (Objects.isNull(cell)) {
+            return null;
+        }
+        Method setter = entry.getValue();
+        Class<?> setterArgType = setter.getParameterTypes()[0];
+
+        if (!entry.getKey().convertAdapter().equals(Excel.ConvertAdapter.class)) {
+        }
+        //number
+        if (Number.class.isAssignableFrom(setterArgType)) {
+            if (Byte.class.isAssignableFrom(setterArgType)) {
+                return Convert.toByte(cell.getNumericCellValue());
+            } else if (Float.class.isAssignableFrom(setterArgType)) {
+                return Convert.toFloat(cell.getNumericCellValue());
+            } else if (Double.class.isAssignableFrom(setterArgType)) {
+                return Convert.toDouble(cell.getNumericCellValue());
+            } else if (Integer.class.isAssignableFrom(setterArgType)) {
+                return Convert.toInt(cell.getNumericCellValue());
+            } else if (Long.class.isAssignableFrom(setterArgType)) {
+                return Convert.toLong(cell.getNumericCellValue());
+            }
+            return null;
+        } else if (Date.class.isAssignableFrom(setterArgType)) {
+            return new SimpleDateFormat(entry.getKey().dateFormat()).parse(cell.getStringCellValue());
+        } else {
+            return cell.getStringCellValue();
+        }
     }
 
     public void writeData(List<T> list) throws ReflectiveOperationException {
@@ -67,7 +126,7 @@ public class ExcelUtil<T> {
         for (T t : list) {
             Row row = this.sheet.createRow(currentRow++);
             for (int i = 0; i < entryList.size(); i++) {
-                Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                Cell cell = row.createCell(i);
                 Map.Entry<Excel, Method> entry = entryList.get(i);
                 //cell样式
                 cell.setCellStyle(createCellStyle(this.workbook, entry.getKey(), false));
@@ -82,7 +141,7 @@ public class ExcelUtil<T> {
         Row headRow = this.sheet.createRow(currentRow++);
         headRow.setHeightInPoints(25);
         for (int i = 0; i < excels.size(); i++) {
-            Cell cell = headRow.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+            Cell cell = headRow.createCell(i, CellType.STRING);
             //cell样式
             cell.setCellStyle(createCellStyle(this.workbook, excels.get(i), true));
             //+2两边留白，*14/10相对默认字体大小的放大倍率
@@ -117,9 +176,6 @@ public class ExcelUtil<T> {
 
     private void setCellValue(Cell cell, Map.Entry<Excel, Method> entry, Object value) {
         if (Objects.isNull(value)) {
-            if (entry.getKey().nullOut() == Excel.NullOut.EMPTY_STR) {
-                cell.setCellValue("");
-            }
             return;
         }
         if (!entry.getKey().convertAdapter().equals(Excel.ConvertAdapter.class)) {

@@ -17,8 +17,6 @@ public @interface Excel {
 
     int order() default 0;
 
-    NullOut nullOut() default NullOut.SKIP;
-
     String dateFormat() default "yyyy-MM-dd HH:mm:ss";
 
     Class<? extends ConvertAdapter> convertAdapter() default ConvertAdapter.class;
@@ -29,10 +27,6 @@ public @interface Excel {
 
     enum Type {
         EXPORT, IMPORT
-    }
-
-    enum NullOut {
-        SKIP, EMPTY_STR
     }
 
     interface ConvertAdapter {

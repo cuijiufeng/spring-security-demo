@@ -36,8 +36,8 @@
       <el-button plain size="small" icon="Delete" type="danger" @click="deleteUser(multiSelectUsers.map(u => u.id))">
         {{$t('common.delete')}}
       </el-button>
-      <el-button plain size="small" icon="Upload" type="info">{{$t('common.import')}}</el-button>
-      <el-button plain size="small" icon="Download" type="warning">{{$t('common.export')}}</el-button>
+      <!-- <el-button plain size="small" icon="Upload" type="info">{{$t('common.import')}}</el-button> -->
+      <el-button plain size="small" icon="Download" type="warning" @click="userExport">{{$t('common.export')}}</el-button>
       <div style="float: right;">
         <el-tooltip class="box-item" effect="dark" :content="$t('common.explicit implicit search')" placement="top">
           <el-button circle icon="Search" @click="visibleSearch = !visibleSearch"/>
@@ -191,8 +191,9 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { saveAs } from 'file-saver';
 import PasswordIntensity from '@/components/PasswordIntensity';
-import {apiUserList, apiEditUser, apiDeleteUser} from '@/api/user';
+import {apiUserList, apiEditUser, apiDeleteUser, apiUserExport} from '@/api/user';
 import {apiRoleList} from '@/api/role';
 
 const i18n = useI18n();
@@ -312,6 +313,14 @@ const phoneNumberValidator = (rule, value, callback) => {
   } else {
     callback()
   }
+}
+
+const userExport = () => {
+  apiUserExport({ids: multiSelectUsers.value.map(l => l.id)}).then(([data, headers]) => {
+    saveAs(new Blob([data]), headers['content-disposition'])
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  })
 }
 
 onMounted(() => {

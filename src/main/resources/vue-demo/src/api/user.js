@@ -34,3 +34,13 @@ export const apiDeleteUser = (param) => {
     data: param
   });
 }
+
+//日志文件导出
+export const apiUserExport = (param) => {
+  return http({
+    method: 'POST',
+    url: '/user/export',
+    data: param,
+    binary: true
+  });
+}

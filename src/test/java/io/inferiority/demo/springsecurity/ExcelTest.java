@@ -6,8 +6,10 @@ import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,5 +29,11 @@ public class ExcelTest {
         excelUtil.createSheet("log");
         excelUtil.writeData(logs);
         IOUtils.write(excelUtil.export(), new FileOutputStream("E:\\Desktop\\logs.xls"));
+    }
+
+    @Test
+    public void testReadExcel() throws IOException, ParseException, ReflectiveOperationException {
+        ExcelUtil<LogEntity> excelUtil = new ExcelUtil<>(new FileInputStream("E:\\Desktop\\log.xls"));
+        System.out.println(excelUtil.readData(LogEntity.class, 0));
     }
 }

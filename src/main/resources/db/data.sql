@@ -46,6 +46,7 @@ INSERT INTO `sys_permission` VALUES ('110', '100', 'M', '用户管理', 'system:
 INSERT INTO `sys_permission` VALUES ('111', '110', 'P', '查询', 'system:user:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('112', '110', 'P', '新增/编辑', 'system:user:add/edit', 0, 0);
 INSERT INTO `sys_permission` VALUES ('113', '110', 'P', '删除', 'system:user:delete', 0, 0);
+INSERT INTO `sys_permission` VALUES ('114', '110', 'P', '导出', 'system:user:export', 0, 0);
 INSERT INTO `sys_permission` VALUES ('120', '100', 'M', '角色/权限', 'system:role/permission', 0, 0);
 INSERT INTO `sys_permission` VALUES ('121', '120', 'P', '查询', 'system:role:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('122', '120', 'P', '新增/编辑', 'system:role:add/edit', 0, 0);
@@ -75,6 +76,7 @@ INSERT INTO `sys_role_permission` VALUES ('110', '1', '110');
 INSERT INTO `sys_role_permission` VALUES ('111', '1', '111');
 INSERT INTO `sys_role_permission` VALUES ('112', '1', '112');
 INSERT INTO `sys_role_permission` VALUES ('113', '1', '113');
+INSERT INTO `sys_role_permission` VALUES ('114', '1', '114');
 INSERT INTO `sys_role_permission` VALUES ('120', '1', '120');
 INSERT INTO `sys_role_permission` VALUES ('121', '1', '121');
 INSERT INTO `sys_role_permission` VALUES ('122', '1', '122');

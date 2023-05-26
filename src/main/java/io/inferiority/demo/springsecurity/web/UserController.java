@@ -10,6 +10,9 @@ import io.inferiority.demo.springsecurity.service.IUserService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.ValidatedUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,5 +55,15 @@ public class UserController {
     public JsonResult<Void> delete(@RequestParam List<String> ids) {
         userService.delete(ids);
         return JsonResultUtil.successJson();
+    }
+
+    @Log("user export")
+    @PreAuthorize("hasAnyAuthority('system:user:export')")
+    @PostMapping("export")
+    public ResponseEntity<byte[]> export(@RequestParam(value = "ids", required = false) List<String> ids) {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "user.xls")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .body(userService.export(ids));
     }
 }

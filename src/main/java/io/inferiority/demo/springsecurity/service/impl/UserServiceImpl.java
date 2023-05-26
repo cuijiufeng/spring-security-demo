@@ -17,6 +17,7 @@ import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import io.inferiority.demo.springsecurity.utils.PermissionCompareUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
+import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +147,20 @@ public class UserServiceImpl implements IUserService {
         if (userIds.contains(AuthContextUtil.currentUser().getId())) {
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
             response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
+        }
+    }
+
+    @Override
+    public byte[] export(List<String> ids) {
+        List<UserEntity> userList = userMapper.selectList(Wrappers.<UserEntity>lambdaQuery()
+                .in(!CollectionUtils.isEmpty(ids), UserEntity::getId, ids));
+        try {
+            ExcelUtil<UserEntity> excelUtil = new ExcelUtil<>();
+            excelUtil.createSheet("user");
+            excelUtil.writeData(userList);
+            return excelUtil.export();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorEnum.FILE_EXPORT_FAILED, e);
         }
     }
 }
