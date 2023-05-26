@@ -31,7 +31,7 @@ public class UserEntity implements Serializable {
     @Size(min = 5, max = 255, message = "username length illegal", groups = ValidatedUpdate.class)
     @NotEmpty(message = "username can't be empty", groups = ValidatedUpdate.class)
     private String username;
-    @Excel(title = "username", type = Excel.Type.IMPORT)
+    @Excel(title = "password", type = Excel.Type.IMPORT)
     @JsonIgnore
     @Size(min = 1, max = 255, message = "password length illegal")
     @NotEmpty(message = "password can't be empty")
