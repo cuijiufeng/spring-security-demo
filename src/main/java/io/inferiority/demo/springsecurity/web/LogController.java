@@ -8,6 +8,9 @@ import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.ILogService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +48,18 @@ public class LogController {
     @Log("log archive")
     @PreAuthorize("hasAnyAuthority('log:operator:archive')")
     @PostMapping("compress-archive")
-    JsonResult<Void> archive(@RequestParam(value = "ids", required = false) List<String> ids) throws IOException {
+    public JsonResult<Void> archive(@RequestParam(value = "ids", required = false) List<String> ids) throws IOException {
         logService.archive(ids);
         return JsonResultUtil.successJson();
+    }
+
+    @Log("log export")
+    @PreAuthorize("hasAnyAuthority('log:operator:export')")
+    @PostMapping("export")
+    public ResponseEntity<byte[]> export(@RequestParam(value = "ids", required = false) List<String> ids) {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "log.xls")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .body(logService.export(ids));
     }
 }

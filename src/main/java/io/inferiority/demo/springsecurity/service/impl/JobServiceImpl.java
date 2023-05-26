@@ -69,7 +69,7 @@ public class JobServiceImpl implements IJobService {
             }
         } catch (RuntimeException e) {
             if (e.getCause() instanceof ParseException) {
-                throw new ServiceException(ErrorEnum.CRON_EXPRESSION_INVALID_FAILED);
+                throw new ServiceException(ErrorEnum.CRON_EXPRESSION_INVALID_FAILED, e);
             }
             throw e;
         }

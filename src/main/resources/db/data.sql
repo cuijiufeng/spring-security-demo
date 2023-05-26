@@ -57,6 +57,7 @@ INSERT INTO `sys_permission` VALUES ('201', '200', 'M', '操作日志', 'log:ope
 INSERT INTO `sys_permission` VALUES ('202', '201', 'P', '查询', 'log:operator:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('203', '201', 'P', '审计', 'log:operator:audit', 0, 0);
 INSERT INTO `sys_permission` VALUES ('204', '201', 'P', '归档', 'log:operator:archive', 0, 0);
+INSERT INTO `sys_permission` VALUES ('205', '201', 'P', '导出', 'log:operator:export', 0, 0);
 INSERT INTO `sys_permission` VALUES ('210', '200', 'M', '日志归档', 'log:archive', 0, 0);
 INSERT INTO `sys_permission` VALUES ('211', '210', 'P', '查询', 'log:archive:select', 0, 0);
 INSERT INTO `sys_permission` VALUES ('212', '210', 'P', '下载', 'log:archive:download', 0, 0);
@@ -85,6 +86,7 @@ INSERT INTO `sys_role_permission` VALUES ('201', '1', '201');
 INSERT INTO `sys_role_permission` VALUES ('202', '1', '202');
 INSERT INTO `sys_role_permission` VALUES ('203', '1', '203');
 INSERT INTO `sys_role_permission` VALUES ('204', '1', '204');
+INSERT INTO `sys_role_permission` VALUES ('205', '1', '205');
 INSERT INTO `sys_role_permission` VALUES ('210', '1', '210');
 INSERT INTO `sys_role_permission` VALUES ('211', '1', '211');
 INSERT INTO `sys_role_permission` VALUES ('212', '1', '212');

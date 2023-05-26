@@ -16,10 +16,12 @@ public interface ILogService {
     @JsonFilter("logExcludeMacFilter")
     class LogExcludeMacFilter {
 
+
     }
     PageInfo<LogEntity> list(PageDto page, LogEntity searchLog, Boolean resultStatus);
-
     boolean audit(String id);
 
     void archive(List<String> ids) throws IOException;
+
+    byte[] export(List<String> ids);
 }

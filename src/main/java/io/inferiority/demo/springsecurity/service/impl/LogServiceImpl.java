@@ -17,6 +17,7 @@ import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.ILogService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.SnowflakeId;
+import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -146,6 +147,20 @@ public class LogServiceImpl implements ILogService {
         }
         logMapper.delete(Wrappers.<LogEntity>lambdaQuery()
                 .in(!CollectionUtils.isEmpty(ids), LogEntity::getId, ids));
+    }
+
+    @Override
+    public byte[] export(List<String> ids) {
+        List<LogEntity> logList = logMapper.selectList(Wrappers.<LogEntity>lambdaQuery()
+                .in(!CollectionUtils.isEmpty(ids), LogEntity::getId, ids));
+        try {
+            ExcelUtil<LogEntity> excelUtil = new ExcelUtil<>();
+            excelUtil.createSheet("log");
+            excelUtil.writeData(logList);
+            return excelUtil.export();
+        } catch (Exception e) {
+            throw new ServiceException(ErrorEnum.FILE_EXPORT_FAILED, e);
+        }
     }
 
     private String generateLogSql(LogEntity logEntity) {

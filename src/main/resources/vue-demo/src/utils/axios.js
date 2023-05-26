@@ -59,7 +59,12 @@ export default (param) => {
         localStorage.setItem(AUTHENTICATION, headers[AUTHENTICATION]);
       }
       if(param.binary) {
-        resolve([result, headers]);
+        try {
+          let res = JSON.parse(new TextDecoder('utf-8').decode(new Uint8Array(result)));
+          reject([res.data, headers]);
+        } catch(e) {
+          resolve([result, headers]);
+        }
       }
       if (result.code == 200) {
         resolve([result.data, headers]);

@@ -26,3 +26,13 @@ export const apiCompressArchive = (param) => {
     data: param
   });
 }
+
+//日志文件导出
+export const apiLogExport = (param) => {
+  return http({
+    method: 'POST',
+    url: '/log/export',
+    data: param,
+    binary: true
+  });
+}

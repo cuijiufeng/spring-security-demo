@@ -17,19 +17,25 @@ public @interface Excel {
 
     int order() default 0;
 
-    String nullOut() default "";
+    NullOut nullOut() default NullOut.SKIP;
 
     String dateFormat() default "yyyy-MM-dd HH:mm:ss";
 
+    Class<? extends ConvertAdapter> convertAdapter() default ConvertAdapter.class;
+
     Type[] type() default { Type.EXPORT, Type.IMPORT };
 
-    Class<ConvertAdapter> convert() default ConvertAdapter.class;
+    int width() default 1;
 
     enum Type {
         EXPORT, IMPORT
     }
 
+    enum NullOut {
+        SKIP, EMPTY_STR
+    }
+
     interface ConvertAdapter {
-        String convert(Object value);
+        String format(Object value);
     }
 }

@@ -25,7 +25,8 @@ public enum ErrorEnum implements BaseErrorEnum {
     LOG_ARCHIVE_FALIED("10013", "log archive failed"),
     EDIT_JOB_FAILED("10014", "edit job failed"),
     CRON_EXPRESSION_INVALID_FAILED("10015", "cron expression invalid"),
-    VERIFY_CODE_NO_MATCH_FAILED("10016", "verify code no match")
+    VERIFY_CODE_NO_MATCH_FAILED("10016", "verify code no match"),
+    FILE_EXPORT_FAILED("10017", "file export failed")
     ;
     private final String code;
     private final String message;

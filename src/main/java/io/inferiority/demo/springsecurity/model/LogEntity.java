@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.inferiority.demo.springsecurity.exception.BaseErrorEnum;
 import io.inferiority.demo.springsecurity.utils.poi.Excel;
+import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,10 +30,10 @@ public class LogEntity implements Serializable {
     //private String params;
     @Excel(title = "operator user")
     private String optUser;
-    @Excel(title = "operator description")
+    @Excel(title = "operator description", convertAdapter = ExcelUtil.MessageSourceConvertAdapter.class)
     @JsonSerialize(using = BaseErrorEnum.MessageStringJsonSerialize.class)
     private String optDesc;
-    @Excel(title = "result code")
+    @Excel(title = "operator status")
     private Integer resultCode;
     @Excel(title = "error code")
     private String errCode;

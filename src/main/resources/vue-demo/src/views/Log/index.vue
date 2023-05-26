@@ -28,7 +28,7 @@
     </el-form>
     <div style="margin-bottom: 10px;">
       <el-button plain size="small" icon="Collection" type="primary" @click="logCompressArchive">{{$t('log.compress archive')}}</el-button>
-      <el-button plain size="small" icon="Download" type="warning">{{$t('common.export')}}</el-button>
+      <el-button plain size="small" icon="Download" type="warning" @click="logExport">{{$t('common.export')}}</el-button>
       <div style="float: right;">
         <el-tooltip class="box-item" effect="dark" :content="$t('common.explicit implicit search')" placement="top">
           <el-button circle icon="Search" @click="visibleSearch = !visibleSearch"/>
@@ -100,7 +100,8 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { apiLogList, apiAuditLog, apiCompressArchive } from '@/api/log';
+import { saveAs } from 'file-saver';
+import { apiLogList, apiAuditLog, apiCompressArchive, apiLogExport } from '@/api/log';
 
 const i18n = useI18n();
 
@@ -147,6 +148,14 @@ const logList = () => {
   }).finally(() => {
     loading.value = false;
   });
+}
+
+const logExport = () => {
+  apiLogExport({ids: multiSelectLogs.value.map(l => l.id)}).then(([data, headers]) => {
+    saveAs(new Blob([data]), headers['content-disposition'])
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  })
 }
 
 const auditLog = (id) => {
