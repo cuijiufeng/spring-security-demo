@@ -4,4 +4,5 @@ export default {
   'change password': 'change password',
   'logout': 'logout',
   'index': 'index',
+  'modify password': 'modify password',
 }

@@ -96,6 +96,8 @@ public class UserServiceImpl implements IUserService {
                     throw new ServiceException(ErrorEnum.ORIGINAL_PASSWORD_NOT_MATCH_FAILED);
                 }
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
+                HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+                response.setHeader(JwtUtil.TOKEN_HEADER, JwtUtil.createJwt(jwtPrivKey, null, 0));
             }
             user.setLastUpdatePasswordTime(currentTime);
             if (userMapper.updateById(user) != 1) {

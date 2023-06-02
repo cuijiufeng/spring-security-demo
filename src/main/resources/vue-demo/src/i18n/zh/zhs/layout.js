@@ -4,4 +4,5 @@ export default {
   'change password': '修改密码',
   'logout': '退出登录',
   'index': '首页',
+  'modify password': '修改密码',
 }
