@@ -196,4 +196,11 @@ onMounted(() => {
   flex-direction: column;
   justify-content: space-between;
 }
+
+:deep(.el-input.is-disabled) {
+  cursor: pointer;
+  & .el-input__inner {
+    cursor: pointer;
+  }
+}
 </style>
