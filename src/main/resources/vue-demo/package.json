@@ -10,6 +10,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
+    "echarts": "^5.4.2",
     "element-plus": "^2.3.5",
     "file-saver": "^2.0.5",
     "fingerprintjs2": "^2.1.4",

@@ -3,18 +3,18 @@
     <canvas id="login-canvas"/>
     <language style="position: absolute;top: 10%;right: 7%;" color="white"/>
     <el-form class="login-form" :model="loginForm" ref="loginFormRef" inline-message :rules="{
-        username: [{ required: true, message: $t('login.please input username'), trigger: 'blur' }],
-        password: [{ required: true, message: $t('login.please input password'), trigger: 'blur' }],
-        verifyCode: [{ required: true, message: $t('login.please input verify code'), trigger: 'blur' }],
+        username: [{ required: true, message: $t('system.please input username'), trigger: 'blur' }],
+        password: [{ required: true, message: $t('system.please input password'), trigger: 'blur' }],
+        verifyCode: [{ required: true, message: $t('system.please input verify code'), trigger: 'blur' }],
       }">
         <img class="logo-img" style="width: 220px;height: 60px;margin-bottom: 10px;" src="@/assets/logo/logo.png">
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" :placeholder="$t('login.please input username')"
+        <el-input v-model="loginForm.username" :placeholder="$t('system.please input username')"
           prefix-icon="User"/>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" :type="passwordHide ? 'password' : 'text'" show-password
-          :placeholder="$t('login.please input password')" prefix-icon="Key" @keydown.enter="onSubmit" />
+          :placeholder="$t('system.please input password')" prefix-icon="Key" @keydown.enter="onSubmit" />
       </el-form-item>
       <el-form-item prop="verifyCode">
         <img style="height: 32px;width: 100px;margin-right: 20px;" :src="'data:image/jpg;base64,' + verifyCodeImg"
@@ -22,7 +22,7 @@
         <el-input style="width: calc(100% - 120px);" v-model="loginForm.verifyCode" @keydown.enter="onSubmit"/>
       </el-form-item>
       <el-button :loading="loginLoading" style="margin: 0 auto;width: 150px;" type="primary" @click="onSubmit">
-        {{ loginLoading ? $t('login.login')+'. . .' : $t('login.login')}}
+        {{ loginLoading ? $t('system.login')+'. . .' : $t('system.login')}}
       </el-button>
     </el-form>
   </div>

@@ -10,7 +10,7 @@ export default [
       menu: 'index',
       icon: 'home',
     },
-    component: () => import("@/views/Example"),
+    component: () => import("@/views/Index"),
   }, 
   job,
   system,

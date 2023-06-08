@@ -40,7 +40,7 @@ INSERT INTO `sys_role` VALUES ('3', '审计员', 'ROLE_auditor', 2, '1', '2023-0
 -- Records of sys_permission
 -- ----------------------------
 INSERT INTO `sys_permission` VALUES ('1', '0', 'M', '首页', 'index', 0, 0);
-INSERT INTO `sys_permission` VALUES ('2', '1', 'P', '查询', 'index:select', 0, 0);
+INSERT INTO `sys_permission` VALUES ('2', '1', 'P', '系统信息', 'index:system-info', 0, 0);
 INSERT INTO `sys_permission` VALUES ('100', '0', 'D', '系统管理', 'system', 0, 0);
 INSERT INTO `sys_permission` VALUES ('110', '100', 'M', '用户管理', 'system:user', 0, 0);
 INSERT INTO `sys_permission` VALUES ('111', '110', 'P', '查询', 'system:user:select', 0, 0);
@@ -53,6 +53,7 @@ INSERT INTO `sys_permission` VALUES ('122', '120', 'P', '新增/编辑', 'system
 INSERT INTO `sys_permission` VALUES ('123', '120', 'P', '删除', 'system:role:delete', 0, 0);
 INSERT INTO `sys_permission` VALUES ('124', '120', 'P', '权限树', 'system:permission:tree', 0, 0);
 INSERT INTO `sys_permission` VALUES ('125', '120', 'P', '角色拥有权限', 'system:permission:have', 0, 0);
+INSERT INTO `sys_permission` VALUES ('130', '100', 'M', 'License管理', 'system:license', 0, 0);
 INSERT INTO `sys_permission` VALUES ('200', '0', 'D', '日志管理', 'log', 0, 0);
 INSERT INTO `sys_permission` VALUES ('201', '200', 'M', '操作日志', 'log:operator', 0, 0);
 INSERT INTO `sys_permission` VALUES ('202', '201', 'P', '查询', 'log:operator:select', 0, 0);
@@ -83,6 +84,7 @@ INSERT INTO `sys_role_permission` VALUES ('122', '1', '122');
 INSERT INTO `sys_role_permission` VALUES ('123', '1', '123');
 INSERT INTO `sys_role_permission` VALUES ('124', '1', '124');
 INSERT INTO `sys_role_permission` VALUES ('125', '1', '125');
+INSERT INTO `sys_role_permission` VALUES ('130', '1', '130');
 INSERT INTO `sys_role_permission` VALUES ('200', '1', '200');
 INSERT INTO `sys_role_permission` VALUES ('201', '1', '201');
 INSERT INTO `sys_role_permission` VALUES ('202', '1', '202');

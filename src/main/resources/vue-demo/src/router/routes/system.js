@@ -25,5 +25,14 @@ export default {
       },
       component: () => import("@/views/RolePermission"),
     },
+    {
+      path: "/license",
+      name: "License",
+      meta: {
+        menu: 'system:license',
+        icon: 'license',
+      },
+      component: () => import("@/views/License"),
+    },
   ]
 }

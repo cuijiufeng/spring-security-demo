@@ -31,3 +31,12 @@ export const apiVerifyCodeImg = (param) => {
     data: param
   });
 }
+
+//首页接口
+export const apiSystemInfo = (param) => {
+  return http({
+    method: 'GET',
+    url: '/index/system-info',
+    data: param
+  });
+}
