@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,7 +17,6 @@ import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
 import io.inferiority.demo.springsecurity.utils.PermissionCompareUtil;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +43,8 @@ import java.util.Objects;
 public class UserServiceImpl implements IUserService {
     @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
+    @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -115,7 +117,7 @@ public class UserServiceImpl implements IUserService {
                 .eq(UserEntity::getUsername, user.getUsername())) > 0) {
             throw new ServiceException(ErrorEnum.EXIST_USER_FAILED);
         }
-        user.setId(SnowflakeId.generateStrId());
+        user.setId(snowflakeGenerator.next().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreateTime(currentTime);
         user.setLastUpdatePasswordTime(currentTime);

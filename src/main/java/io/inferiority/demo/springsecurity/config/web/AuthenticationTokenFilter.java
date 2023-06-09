@@ -71,16 +71,16 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request , response);
         } catch (ExpiredJwtException e) {
             log.warn("--------------------> jwt is expire: {} - {}", request.getServletPath(), e.getMessage());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         } catch (NullPointerException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException e) {
             log.warn("--------------------> invalid token: {} - {}", request.getServletPath(), e.getMessage());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         } catch (Exception e) {
             log.error("--------------------> exception: {}", request.getServletPath(), e);
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNKNOWN));
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         }
     }
 }

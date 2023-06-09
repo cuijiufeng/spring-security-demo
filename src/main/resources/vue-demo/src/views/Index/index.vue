@@ -1,6 +1,6 @@
 <template>
   <div class="home-body">
-    <el-card style="flex: 1;margin-bottom: 20px;">
+    <el-card style="margin-bottom: 20px;">
       <template #header>
         <span>{{ $t('system.system resource') }}</span>
       </template>
@@ -17,7 +17,7 @@
         </div>
       </div>
     </el-card>
-    <el-card>
+    <el-card style="flex: 1;">
       <template #header>
         <span>{{ $t('system.system resource') }}</span>
       </template>
@@ -48,7 +48,7 @@
             </template>
           </el-progress>
         </div>
-        <div id="diskBarChart" style="width: 25vw"/>
+        <div id="diskBarChart" style="width: 25vw;height: 35vh;"/>
       </div>
     </el-card>
   </div>
@@ -56,6 +56,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { useI18n } from "vue-i18n";
 import * as echarts from 'echarts';
 import { apiSystemInfo } from '@/api/system';
@@ -152,7 +153,7 @@ onMounted(() => {
         }]
       });
     }).catch(([data, headers]) => {
-      ElMessage({ type: 'error', message: data.message });
+      // ElMessage({ type: 'error', message: data.message });
     })
   }, 1000)
 });

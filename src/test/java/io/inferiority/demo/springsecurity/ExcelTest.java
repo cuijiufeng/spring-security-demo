@@ -1,7 +1,7 @@
 package io.inferiority.demo.springsecurity;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import io.inferiority.demo.springsecurity.model.LogEntity;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class ExcelTest {
 
     @Test
     public void testExcel() throws IOException, ReflectiveOperationException {
-        List<LogEntity> logs = Collections.singletonList(new LogEntity(SnowflakeId.generateStrId(), "admin", "list",
+        List<LogEntity> logs = Collections.singletonList(new LogEntity(new SnowflakeGenerator().next().toString(), "admin", "list",
                 200, null, null, new Date(), 20L, "fjdslf", null));
         ExcelUtil<LogEntity> excelUtil = new ExcelUtil<>();
         excelUtil.createSheet("log");

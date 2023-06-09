@@ -41,13 +41,13 @@ import java.time.Duration;
 public class SecurityConfig {
     public static final AuthenticationEntryPoint AUTHENTICATION_ENTRY_POINT = (request, response, ex) -> {
         log.warn("{} -->", request.getServletPath(), ex);
-        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.UNAUTHORIZED));
     };
     public static final AccessDeniedHandler ACCESS_DENIED_HANDLER = (request, response, ex) -> {
         log.warn("{} --> {}", request.getServletPath(), ex.toString());
-        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.PERMISSION_DENIED));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().print(new ObjectMapper().writeValueAsString(JsonResultUtil.PERMISSION_DENIED));
     };
 
     @Value("#{T(org.springframework.boot.convert.DurationStyle).detectAndParse('${token.duration:5m}')}")
@@ -56,7 +56,7 @@ public class SecurityConfig {
     private PublicKey jwtPubKey;
     @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
     private PrivateKey jwtPrivKey;
-    @Value("${auth.white.list:/auth/**}")
+    @Value("${auth.white.list:/auth/**,/license/**}")
     private String[] authWhiteList;
     @Autowired
     private UserDetailsService userDetailsService;

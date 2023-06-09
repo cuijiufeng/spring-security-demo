@@ -79,4 +79,13 @@
            timeToIdleSeconds="0"
            timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LRU" />
+
+    <cache name="io.inferiority.demo.springsecurity.dao.LicenseMapper"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="1800"
+           memoryStoreEvictionPolicy="LRU" />
 </ehcache>

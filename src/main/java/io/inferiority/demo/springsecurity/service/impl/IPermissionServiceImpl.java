@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.inferiority.demo.springsecurity.dao.PermissionMapper;
@@ -11,7 +12,6 @@ import io.inferiority.demo.springsecurity.model.vo.PermissionVo;
 import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class IPermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermissionEntity> implements IPermissionService {
+    @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
     @Autowired
     private PermissionMapper permissionMapper;
     @Autowired
@@ -83,7 +85,7 @@ public class IPermissionServiceImpl extends ServiceImpl<RolePermissionMapper, Ro
         //添加少的权限
         List<RolePermissionEntity> missing = pids.stream()
                 .filter(pId -> !originalPids.contains(pId))
-                .map(pId -> new RolePermissionEntity(SnowflakeId.generateStrId(), roleId, pId))
+                .map(pId -> new RolePermissionEntity(snowflakeGenerator.next().toString(), roleId, pId))
                 .collect(Collectors.toList());
         saveBatch(missing);
     }

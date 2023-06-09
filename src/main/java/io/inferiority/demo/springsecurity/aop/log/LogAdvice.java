@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.aop.log;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +15,6 @@ import io.inferiority.demo.springsecurity.model.vo.TokenVo;
 import io.inferiority.demo.springsecurity.service.ILogService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.JwtUtil;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -52,6 +52,8 @@ public class LogAdvice {
     private final ThreadLocal<Long> startCostTimeThreadLocal = new ThreadLocal<>();
     private final MessageDigest md5 = MessageDigest.getInstance("MD5");
     @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
+    @Autowired
     private LogMapper logMapper;
 
     public LogAdvice() throws NoSuchAlgorithmException {
@@ -75,7 +77,7 @@ public class LogAdvice {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Log log = signature.getMethod().getAnnotation(Log.class);
-            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), getCurrentUsername(),
+            LogEntity logEntity = new LogEntity(snowflakeGenerator.next().toString(), getCurrentUsername(),
                     log.value(), null, null, null, new Date(),
                     System.currentTimeMillis() - startCostTimeThreadLocal.get(), null, null);
             if (rs instanceof ResponseEntity) {
@@ -110,7 +112,7 @@ public class LogAdvice {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Log log = signature.getMethod().getAnnotation(Log.class);
-            LogEntity logEntity = new LogEntity(SnowflakeId.generateStrId(), getCurrentUsername(),
+            LogEntity logEntity = new LogEntity(snowflakeGenerator.next().toString(), getCurrentUsername(),
                     log.value(), 500, null, null, new Date(),
                     System.currentTimeMillis() - startCostTimeThreadLocal.get(), null, null);
             if (e instanceof ServiceException) {

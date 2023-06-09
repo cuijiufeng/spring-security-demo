@@ -145,4 +145,13 @@ CREATE TABLE `sys_job` (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
 
 
+-- ----------------------------
+-- Table structure for sys_license
+-- ----------------------------
+CREATE TABLE `sys_license` (
+  `id` varchar (32) NOT NULL,
+  `license` varchar (4096) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4;
+
 SET FOREIGN_KEY_CHECKS = 1;

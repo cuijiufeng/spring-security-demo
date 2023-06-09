@@ -1,8 +1,10 @@
 package io.inferiority.demo.springsecurity;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @Class: SpringSecurityDemoApplication
@@ -19,4 +21,8 @@ public class SpringSecurityDemoApplication {
         SpringApplication.run(SpringSecurityDemoApplication.class, args);
     }
 
+    @Bean
+    public SnowflakeGenerator snowflakeGenerator() {
+        return new SnowflakeGenerator();
+    }
 }

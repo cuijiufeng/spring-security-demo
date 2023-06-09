@@ -1,11 +1,11 @@
 package io.inferiority.demo.springsecurity;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.inferiority.demo.springsecurity.config.quartz.JobProperty;
 import io.inferiority.demo.springsecurity.config.quartz.QuartzManager;
 import io.inferiority.demo.springsecurity.dao.JobMapper;
 import io.inferiority.demo.springsecurity.model.JobEntity;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.quartz.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -26,6 +26,8 @@ import java.util.Map;
 @Component
 public class InitJobApplicationRunner implements ApplicationRunner {
     @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
+    @Autowired
     private ApplicationContext applicationContext;
     @Autowired
     private QuartzManager quartzManager;
@@ -39,7 +41,7 @@ public class InitJobApplicationRunner implements ApplicationRunner {
         for (Map.Entry<String, JobProperty> jobBean : jobBeans.entrySet()) {
             JobProperty jobProperty = jobBean.getValue();
             try {
-                jobMapper.insert(new JobEntity(SnowflakeId.generateStrId(), jobProperty.getJobName(), jobProperty.getClass().getName(),
+                jobMapper.insert(new JobEntity(snowflakeGenerator.next().toString(), jobProperty.getJobName(), jobProperty.getClass().getName(),
                         jobProperty.getJobGroupKey(), jobProperty.getJobKey(),
                         jobProperty.getTriggerGroupKey(), jobProperty.getTriggerKey(),
                         jobProperty.defaultCron(), false));

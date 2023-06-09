@@ -40,3 +40,21 @@ export const apiSystemInfo = (param) => {
     data: param
   });
 }
+
+//license信息
+export const apiLicenseInfo = (param) => {
+  return http({
+    method: 'GET',
+    url: '/license/info',
+    data: param
+  });
+}
+
+//license更新
+export const apiLicenseUpdate = (param) => {
+  return http({
+    method: 'POST',
+    url: '/license/update',
+    data: param
+  });
+}

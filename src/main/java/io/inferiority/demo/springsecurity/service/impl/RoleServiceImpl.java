@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,7 +16,6 @@ import io.inferiority.demo.springsecurity.service.IPermissionService;
 import io.inferiority.demo.springsecurity.service.IRoleService;
 import io.inferiority.demo.springsecurity.utils.AuthContextUtil;
 import io.inferiority.demo.springsecurity.utils.PermissionCompareUtil;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.security.PrivateKey;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +35,8 @@ import java.util.List;
 public class RoleServiceImpl implements IRoleService {
     @Value("${default.role.prefix:ROLE_}")
     private String defaultRolePrefix;
-    @Value("#{T(io.inferiority.demo.springsecurity.utils.CryptoUtil).parsePrivateKey('${jwt.priv.key:classpath:jwt/rsa.der}')}")
-    private PrivateKey jwtPrivKey;
+    @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
@@ -85,7 +84,7 @@ public class RoleServiceImpl implements IRoleService {
                 .eq(RoleEntity::getRoleKey, role.getRoleKey())) > 0) {
             throw new ServiceException(ErrorEnum.EXIST_ROLE_FAILED);
         }
-        role.setId(SnowflakeId.generateStrId());
+        role.setId(snowflakeGenerator.next().toString());
         role.setCreateUser(AuthContextUtil.currentRole().getId());
         role.setCreateTime(currentTime);
         if (roleMapper.insert(role) != 1) {

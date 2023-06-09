@@ -15,12 +15,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class CacheManagerCache implements Cache {
     private final String id;
-    private final CacheManager cacheManager;
+    private CacheManager cacheManager;
 
     public CacheManagerCache(String id) {
         this.id = id;
-        this.cacheManager = ApplicationContextHolder.getApplicationContext()
-                .getBean(CacheManager.class);
+    }
+
+    public void initCacheManager() {
+        if (this.cacheManager == null) {
+            this.cacheManager = ApplicationContextHolder.getApplicationContext()
+                    .getBean(CacheManager.class);
+        }
     }
 
     @Override
@@ -30,12 +35,14 @@ public class CacheManagerCache implements Cache {
 
     @Override
     public void putObject(Object key, Object value) {
+        initCacheManager();
         cacheManager.getCache(id).put(key, value);
     }
 
     @Override
     public Object getObject(Object key) {
         try {
+            initCacheManager();
             return cacheManager.getCache(id).get(key).get();
         } catch (NullPointerException e) {
             return null;
@@ -44,6 +51,7 @@ public class CacheManagerCache implements Cache {
 
     @Override
     public Object removeObject(Object key) {
+        initCacheManager();
         Object object = getObject(key);
         cacheManager.getCache(id).evict(key);
         return object;
@@ -51,6 +59,7 @@ public class CacheManagerCache implements Cache {
 
     @Override
     public void clear() {
+        initCacheManager();
         cacheManager.getCache(id).clear();
     }
 

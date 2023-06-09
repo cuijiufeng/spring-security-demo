@@ -152,6 +152,12 @@
             <artifactId>oshi-core</artifactId>
             <version>6.4.3</version>
         </dependency>
+        <!--bouncycastle-->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
         <!--poi-->
         <dependency>
             <groupId>org.apache.poi</groupId>

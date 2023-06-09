@@ -1,5 +1,6 @@
 package io.inferiority.demo.springsecurity.service.impl;
 
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +17,6 @@ import io.inferiority.demo.springsecurity.model.LogEntity;
 import io.inferiority.demo.springsecurity.model.vo.PageDto;
 import io.inferiority.demo.springsecurity.service.ILogService;
 import io.inferiority.demo.springsecurity.utils.JsonResultUtil;
-import io.inferiority.demo.springsecurity.utils.SnowflakeId;
 import io.inferiority.demo.springsecurity.utils.poi.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
@@ -55,6 +55,8 @@ public class LogServiceImpl implements ILogService {
     private final SimpleDateFormat Y_M_D_H_M_S_S = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
     private final SimpleDateFormat Y_M_D = new SimpleDateFormat("yyyy-MM-dd");
     private final MessageDigest MD5 = MessageDigest.getInstance("MD5");
+    @Autowired
+    private SnowflakeGenerator snowflakeGenerator;
     @Autowired
     private LogMapper logMapper;
     @Autowired
@@ -140,7 +142,7 @@ public class LogServiceImpl implements ILogService {
             zipOutputStream.finish();
 
             byte[] zipFile = zipBaos.toByteArray();
-            if (logArchiveMapper.insert(new LogArchiveEntity(SnowflakeId.generateStrId(), "log.zip", zipFile, zipFile.length, new Date(),
+            if (logArchiveMapper.insert(new LogArchiveEntity(snowflakeGenerator.next().toString(), "log.zip", zipFile, zipFile.length, new Date(),
                     logs.values().stream().mapToLong(Collection::size).sum())) < 1) {
                 throw new ServiceException(ErrorEnum.LOG_ARCHIVE_FALIED);
             }

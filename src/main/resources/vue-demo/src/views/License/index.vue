@@ -8,27 +8,35 @@
       <div style="display: flex;align-items: center;">
         <div style="position: relative;">
           <img style="width: 200px;" src="@/assets/imgs/license.png"/>
-          <img style="position: absolute;right: 5px;bottom: 8px;width: 65px;" src="@/assets/imgs/check_mark.png"/>
+          <img v-if="licenseData.name" style="position: absolute;right: 5px;bottom: 8px;width: 65px;" src="@/assets/imgs/check_mark.png"/>
         </div>
         <div style="margin-left: 50px;color: #7a8495;font-size: 12px;">
-          <div style="margin-bottom: 10px;font-size: 14px;font-weight:bold">{{ $t('license.you have uploaded a valid license') }}</div>
+          <div style="margin-bottom: 10px;font-size: 14px;font-weight:bold">
+            {{ licenseData.name ? $t('license.you have uploaded a valid license') : $t('license.please upload license') }}
+          </div>
           <div style="margin-bottom: 10px;">
             <span style="font-weight:bold">{{ $t('license.period of validity') }}：</span>
-            <span>2023-3-21 to 2023-6-21</span>
+            <span>{{ licenseData.validityPeriod }}</span>
           </div>
           <div style="margin-bottom: 10px;">
             <span style="font-weight:bold">{{ $t('license.name') }}：</span>
-            <span>data-security-gateway</span>
+            <span>{{ licenseData.name }}</span>
           </div>
           <div style="margin-bottom: 10px;">
             <span style="font-weight:bold">{{ $t('license.IP Address') }}：</span>
-            <span>192.168.0.206</span>
+            <span>{{ licenseData.ip }}</span>
           </div>
           <div style="margin-bottom: 10px;">
             <span style="font-weight:bold">{{ $t('license.MAC Address') }}：</span>
-            <span>00:0c:29:a1:66:39</span>
+            <span>{{ licenseData.mac }}</span>
           </div>
-          <el-button style="margin-top: 20px;" icon="Refresh" type="primary" size="small">{{ $t('license.update authorization file') }}</el-button>
+          <el-upload ref="licenseUpload" action="#" :multiple="false" :limit="1" :auto-upload="false" 
+            :show-file-list="false" accept=".license"
+            :on-exceed="handleExceed" :on-change="handleUpload">
+            <el-button style="margin-top: 20px;" icon="Refresh" type="primary" size="small">
+              {{ $t('license.update authorization file') }}
+            </el-button>
+          </el-upload>
         </div>
       </div>
     </div>
@@ -36,7 +44,42 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { useI18n } from "vue-i18n";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { apiLicenseInfo, apiLicenseUpdate } from '@/api/system';
+
+const i18n = useI18n();
+
+const licenseData = ref({});
+
+const licenseUpload = ref();
+const handleExceed = (files) => {
+  licenseUpload.value.clearFiles()
+}
+
+const handleUpload = (uploadFile) => {
+  apiLicenseUpdate({file: uploadFile.raw}).then(([data, headers]) => {
+    ElMessage({type: 'success', message: i18n.t('common.success')});
+    licenseInfo();
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  })
+}
+
+const licenseInfo = () => {
+  apiLicenseInfo().then(([data, headers]) => {
+    if(data) {
+      licenseData.value = data;
+    }
+  }).catch(([data, headers]) => {
+    ElMessage({ type: 'error', message: data.message });
+  })
+}
+
+onMounted(() => {
+  licenseInfo();
+});
 </script>
 
 <style lang="less" scoped>
